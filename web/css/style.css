@@ -1,0 +1,128 @@
+@font-face {
+    font-family: Dense;
+    src: url('../fonts/Dense-Regular.otf');
+}
+
+@font-face {
+    font-family: Proxima;
+    src: url('../fonts/Proxima.ttf');
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url('../fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: Lato;
+    src: url('../fonts/Lato-Thin.ttf');
+}
+
+html, body {
+  font-size: 100%;
+  background-image: url('../imgs/bg.png');
+  background-attachment: fixed;
+  font-family: Roboto;
+  background-size: cover;
+  color: white;
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
+.form-group, .form-control {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer{
+  margin-top:1em;
+  margin-bottom:1em;
+  font-size: 1.5em;
+  color: #fff;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+}
+
+.caret{
+    color: transparent; /*Double arrow bug with Boostrap 3 & 4 conflict*/
+}
+
+.btn, .btn:hover, .btn:focus, .btn:active, .btn.active, .btn:active:focus, .btn:active:hover, .btn.active:focus, .btn.active:hover, .open > .btn.dropdown-toggle, .open > .btn.dropdown-toggle:focus, .open > .btn.dropdown-toggle:hover, .btn.btn-default, .btn.btn-default:hover, .btn.btn-default:focus, .btn.btn-default:active, .btn.btn-default.active, .btn.btn-default:active:focus, .btn.btn-default:active:hover, .btn.btn-default.active:focus, .btn.btn-default.active:hover, .open > .btn.btn-default.dropdown-toggle, .open > .btn.btn-default.dropdown-toggle:focus, .open > .btn.btn-default.dropdown-toggle:hover{
+  color:black;
+  background-color: transparent;
+}
+
+p {
+  font-size: 3vh;
+  text-indent: 0px;
+  text-align: center;
+}
+
+h3 {
+  font-size: 10vh;
+  font-family: Dense;
+  text-align: center;
+  color: #fff;
+}
+
+h1, h2, h2.form-signin-heading {
+  font-size: 7em;
+  font-family: Dense;
+}
+
+ h2 {
+   text-align: left;
+   color: white;
+ }
+
+ .row{
+   width: 100%;
+ }
+
+ .button {
+   border-radius: 0;
+   border-style: none;
+   box-shadow: none;
+   background: #2980b9;
+ }
+
+ .button:hover {
+   background: #2f91ce;
+ }
+
+ .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+   vertical-align: middle;
+   text-align: center;
+ }
+
+.fa.fa-paper-plane, .fa.fa-eye, .fa.fa-pencil-square-o, .fa.fa-envelope, .fa.fa-times {
+  font-size: 2.5vh;
+  margin: 1vh;
+  color:#222222;
+}
+
+.fa.fa-sign-out{
+  font-size: 2.5vh;
+  margin: 1vh;
+  color:#ECF0F1;
+}
+
+.fa.fa-sign-out:hover{
+  color: #fff;
+}
+
+.fa.fa-paper-plane:hover, .fa.fa-eye:hover, .fa.fa-pencil-square-o:hover, .fa.fa-envelope:hover, .fa.fa-times:hover{
+  color: black;
+}
+
+.bootstrap-select  li.selected a{
+  background: #3086E4;
+  color: white;
+}
+.bootstrap-select  li.selected a:hover{
+    background: #256CB8;
+}
