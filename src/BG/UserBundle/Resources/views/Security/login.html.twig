@@ -1,0 +1,21 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+      {% block fos_user_content %}
+
+        <div class="container d-flex align-items-center">
+
+          <div class="card wizard-card" style="padding: 5vh;" data-color="blue">
+            <h2 class="form-signin-heading">BECO GESTION</h2>
+
+              {% include "BGUserBundle:Security:login_content.html.twig" %}
+
+          </div>
+        </div>
+
+      {% endblock fos_user_content %}
+
+  {{ parent() }}
+
+{% endblock %}

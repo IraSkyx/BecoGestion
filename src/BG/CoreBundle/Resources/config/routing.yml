@@ -1,0 +1,68 @@
+BG_CoreBundle_service:
+    path:     /view/{id}/{sid}
+    defaults: { _controller: BGCoreBundle:Core:service }
+    requirements:
+        id:   \d+
+        sid:  \d+
+
+BG_CoreBundle_addstate:
+    path:     /view/addstate/{id}/{sid}
+    defaults: { _controller: BGCoreBundle:Core:addState }
+    requirements:
+        id:   \d+
+        sid:  \d+
+
+BG_CoreBundle_removestate:
+    path:     /view/removestate/{id}/{sid}/{aid}
+    defaults: { _controller: BGCoreBundle:Core:removeState }
+    requirements:
+        id:   \d+
+        sid:  \d+
+        aid:  \d+
+
+BG_CoreBundle_view:
+    path:     /view/{id}
+    defaults: { _controller: BGCoreBundle:Core:view }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_generate:
+    path:     /generate/{id}
+    defaults: { _controller: BGCoreBundle:Core:generate }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_billstack:
+    path:     /billstack
+    defaults: { _controller: BGCoreBundle:Core:billStack }
+
+BG_CoreBundle_newquote:
+    path:     /newquote
+    defaults: { _controller: BGCoreBundle:Core:newQuote }
+
+BG_CoreBundle_archives:
+    path:     /archives
+    defaults: { _controller: BGCoreBundle:Core:archives }
+
+BG_CoreBundle_customers:
+    path:     /customers
+    defaults: { _controller: BGCoreBundle:Core:customers }
+
+BG_CoreBundle_plans:
+    path:     /plans
+    defaults: { _controller: BGCoreBundle:Core:plans }
+
+BG_CoreBundle_settings:
+    path:     /settings
+    defaults: { _controller: BGCoreBundle:Core:settings }
+
+BG_CoreBundle_changestatus:
+    path:     /changestatus/{id}/{status}
+    defaults: { _controller: BGCoreBundle:Core:changeStatus }
+    requirements:
+        id:   \d+
+        status: "awaiting|ongoing|finished|cancelled"
+
+BG_CoreBundle_home:
+    path:     /
+    defaults: { _controller: BGCoreBundle:Core:home }

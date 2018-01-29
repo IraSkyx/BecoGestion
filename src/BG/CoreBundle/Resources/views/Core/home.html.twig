@@ -1,0 +1,64 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <div align="right"><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i></a></div>
+  <div class="container d-flex align-items-center card wizard-card">
+  <h2 class="row justify-content-center" style="font-family:Proxima; font-size:7em;">BECO <strong>GESTION</strong></h1>
+
+  <div class="row dropdown">
+    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Actions
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_newquote') }}">Nouveau devis</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_billstack') }}">Factures en attente</a>
+      {% if app.request.attributes.get('_route') == "BG_CoreBundle_home" %}
+        <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives</a>
+      {% else %}
+        <a class="dropdown-item" href="{{ path('BG_CoreBundle_home') }}">Accéder aux devis</a>
+      {% endif %}
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_customers') }}">Gestion des clients</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_plans') }}">Gestion des plans</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_settings') }}">Gestion des paramètres</a>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Réf Devis</th>
+            <th>Status</th>
+            <th>Client</th>
+            <th>Date de création</th>
+            <th>Facture</th>
+            <th>Gérer</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for quote in quotes %}
+                <tr>
+                    <td>{{ quote.id }}</td>
+
+                    <td><button type="button" class="btn btn-outline-{{ quote.status.type}}">{{ quote.status.message }}</button></td>
+
+                    <td>{{ quote.customer.firstname }} {{ quote.customer.lastname }}</td>
+
+                    <td>{{ quote.date|date('d-m-Y')  }}</td>
+
+                    <td><a href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fa fa-paper-plane" aria-hidden="true"></i></a></td>
+
+                    <td><a href="{{ path('BG_CoreBundle_view', {'id': quote.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+
+  {{ parent() }}
+
+{% endblock %}
