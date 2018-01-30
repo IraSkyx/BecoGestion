@@ -1,0 +1,114 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+<!--Big container-->
+<div class="container">
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<!--Wizard container-->
+			<div class="wizard-container">
+				<div class="card wizard-card" data-color="blue" id="wizard">
+
+					<form id="myform" method="post" action="{{ path('BG_CoreBundle_postquote') }}">
+
+						<div class="wizard-header">
+							<h3 class="wizard-title">AJOUTER UN DEVIS</h3>
+						</div>
+
+						<div class="wizard-navigation">
+							<ul>
+								<li><a accesskey="1" href="#info" data-toggle="tab">Infos du devis</a></li>
+								<li><a accesskey="2" href="#facilities" data-toggle="tab">Choix du client</a></li>
+								<li><a accesskey="3" href="#description" data-toggle="tab">Choix des plans</a></li>
+								<li><a accesskey="4" href="#overview" data-toggle="tab">Aperçu</a></li>
+							</ul>
+						</div>
+
+
+						<div class="tab-content">
+
+							<div class="tab-pane" id="info">
+
+								<h4 class="info-text">Remplissez les champs.</h4>
+
+								<div class="row justify-content-center">
+
+									<div style="width:80%;">
+										<label class="control-label">Nombre de bâtiments</label>
+										<input id="nbBuilding" name="nbBuilding" type="number" min="0" class="form-control required" style="width:50%;" value="0">
+									</div>
+
+									<div style="width:80%;">
+										<label class="control-label">Taux horaire ingénieur</label>
+										<input id="engineerRate" name="engineerRate" type="number" class="form-control required" style="width:50%;" min ="0" step="0.01" value="{{ parameters.engRate }}">
+									</div>
+
+									<div style="width:80%;">
+										<label class="control-label">Taux horaire dessinateur</label>
+										<input id="drawingRate" name="drawingRate" type="number" class="form-control required" style="width:50%;" min ="0" step="0.01" value="{{ parameters.drawRate }}">
+									</div>
+
+                  <div style="width:80%;">
+										<label class="control-label">TVA</label>
+										<input id="vat" name="vat" type="number" class="form-control required" style="width:50%;" min ="0" step="0.01" value="{{ parameters.vat }}">
+									</div>
+
+								</div>
+							</div>
+
+
+							<div class="tab-pane" id="facilities">
+								<h4 class="info-text">Sélectionnez un client.</h4>
+								<div class="row justify-content-center">
+									<select id="selectCustomer" class="selectpicker" data-live-search="true">
+										<option disabled selected value> -- Sélectionnez un client -- </option>
+                    {% for customer in customers %}
+										          <option accesskey="{{ customer.id }}" data-tokens="{{ customer.firstName }} {{ customer.lastName }}">{{ customer.firstName }} {{ customer.lastName }}</option>
+                    {% endfor %}
+                  </select>
+									</div>
+								</div>
+
+
+								<div class="tab-pane" id="description">
+									<h4 class="info-text">Sélectionnez des plans.</h4>
+									<div class="row justify-content-center" id="multipleBat">
+										<!-- Plan selection depending on the number of building via js -->
+									</div>
+								</div>
+
+
+								<div class="tab-pane" id="overview">
+									<div class="row justify-content-center">
+										<div id="content">
+											<!-- Customer Info here via js -->
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="wizard-footer">
+								<div class="pull-right">
+									<input type='button' id="gonext" class='btn btn-next btn-fill btn-info btn-wd' name='next' value='Suivant' />
+									<input type="submit" id="validate" class='btn btn-finish btn-fill btn-info btn-wd' value='Terminé' />
+								</div>
+								<div class="pull-left">
+									<input type='button' class='btn btn-previous btn-fill btn-info btn-wd' name='previous' value='Retour' />
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- wizard container -->
+			</div>
+		</div>
+		<!-- row -->
+	</div>
+	<!--  big container -->
+
+  {{ parent() }}
+
+{% endblock %}

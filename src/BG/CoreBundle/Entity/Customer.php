@@ -217,4 +217,9 @@ class Customer
     {
         return $this->city;
     }
+
+    public function __toString()
+    {
+      return $this->firstName;
+    }
 }

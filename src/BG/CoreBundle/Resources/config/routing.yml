@@ -32,6 +32,10 @@ BG_CoreBundle_generate:
     requirements:
         id:   \d+
 
+BG_CoreBundle_getplans:
+    path:     /getplans
+    defaults: { _controller: BGCoreBundle:Core:getPlans }
+
 BG_CoreBundle_billstack:
     path:     /billstack
     defaults: { _controller: BGCoreBundle:Core:billStack }
@@ -43,6 +47,10 @@ BG_CoreBundle_newquote:
 BG_CoreBundle_archives:
     path:     /archives
     defaults: { _controller: BGCoreBundle:Core:archives }
+
+BG_CoreBundle_postquote:
+    path:     /postquote
+    defaults: { _controller: BGCoreBundle:Core:postquote }
 
 BG_CoreBundle_customers:
     path:     /customers

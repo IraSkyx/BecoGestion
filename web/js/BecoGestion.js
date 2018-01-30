@@ -1,8 +1,8 @@
 $("#nbBuilding").bind('keyup mouseup', function () {
+  alert("ok");
   $.ajax({
-  url: '../model/QuerySet.php',
-  type: 'post',
-  data: { "getPlans": "yes"},
+  url: Routing.generate('BG_CoreBundle_getplans'),
+  type: 'GET',
   success: function(result) {
     var rows = JSON.parse(result);
       var element='';
@@ -14,7 +14,7 @@ $("#nbBuilding").bind('keyup mouseup', function () {
             element+='<option disabled selected value> -- Sélectionnez des plans -- </option>';
 
             for (var j = 0; j < rows.length; ++j){
-              element+='<option accesskey="' + rows[j].code + '" data-tokens="' + rows[j].level + rows[j].drawing + '">' + rows[j].level + " " + rows[j].drawing + '</option>';
+              element+='<option accesskey="' + rows[j].id + '" data-tokens="' + rows[j].level + rows[j].drawing + '">' + rows[j].level + " " + rows[j].drawing + '</option>';
             }
 
             element+='</select>';

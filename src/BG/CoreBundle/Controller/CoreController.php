@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use BG\CoreBundle\Form\AdvancementType;
+use BG\CoreBundle\Form\QuoteType;
 
 class CoreController extends Controller
 {
@@ -36,9 +37,32 @@ class CoreController extends Controller
     ));
   }
 
-  public function newQuoteAction()
+  public function getPlans()
   {
-    return $this->render('@BGCore/Core/newQuote.html.twig');
+    return new Response(json_encode($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Plan')->findAll()));
+  }
+
+  public function newQuoteAction(Request $request)
+  {
+    $quote = new Quote();
+
+    $form = $this->get('form.factory')->create(QuoteType::class, $quote);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($quote);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Devis bien enregistrée.');
+
+      return $this->redirectToRoute('BG_CoreBundle_home');
+    }
+
+    return $this->render('@BGCore/Core/newquotetest.html.twig', array(
+      'form' => $form->createView(),
+      'customers' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll(),
+      'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1)
+    ));
   }
 
   public function customersAction()

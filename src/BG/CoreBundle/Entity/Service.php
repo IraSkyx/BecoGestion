@@ -239,4 +239,9 @@ class Service
     {
         return $this->states;
     }
+
+    public function __toString()
+    {
+      return $this->getPlan()->getLevel();
+    }
 }
