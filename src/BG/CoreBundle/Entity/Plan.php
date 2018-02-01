@@ -93,4 +93,9 @@ class Plan
     {
         return $this->drawing;
     }
+
+    public function __toString()
+    {
+      return "{$this->level} {$this->drawing}";
+    }
 }

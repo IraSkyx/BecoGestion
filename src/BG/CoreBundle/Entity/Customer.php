@@ -220,6 +220,6 @@ class Customer
 
     public function __toString()
     {
-      return $this->firstName;
+      return "{$this->firstName} {$this->lastName}";
     }
 }

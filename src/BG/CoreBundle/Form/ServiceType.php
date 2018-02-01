@@ -5,6 +5,10 @@ namespace BG\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ServiceType extends AbstractType
 {
@@ -13,12 +17,18 @@ class ServiceType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('building')->add('engTime')->add('drawTime')->add('plan');
-    }/**
+        $builder->add('building', IntegerType::class)->add('engTime', NumberType::class)->add('drawTime', NumberType::class)->add('plan');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        /*$resolver->setDefaults(array(
+            'data_class' => 'BG\CoreBundle\Entity\Service'
+        ));*/
+
         $resolver->setDefaults(array(
             'data_class' => 'BG\CoreBundle\Entity\Service'
         ));
