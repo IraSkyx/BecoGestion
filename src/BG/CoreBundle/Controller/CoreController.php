@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use BG\CoreBundle\Form\AdvancementType;
 use BG\CoreBundle\Form\QuoteType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CoreController extends Controller
 {
@@ -37,9 +38,24 @@ class CoreController extends Controller
     ));
   }
 
-  public function getPlans()
+  public function getPlansAction()
   {
-    return new Response(json_encode($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Plan')->findAll()));
+    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Plan')->findAll() as $plan)
+      $data[] = array(
+        'id' => $plan->getId(),
+        'text' => $plan->__toString(),
+      );
+    return new JsonResponse($data);
+  }
+
+  public function getCustomersAction()
+  {
+    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll() as $customer)
+      $data[] = array(
+        'id' => $customer->getId(),
+        'text' => $customer->__toString(),
+      );
+    return new JsonResponse($data);
   }
 
   public function newQuoteAction(Request $request)
@@ -58,10 +74,35 @@ class CoreController extends Controller
       return $this->redirectToRoute('BG_CoreBundle_home');
     }
 
-    return $this->render('@BGCore/Core/newquotetest.html.twig', array(
+    return $this->render('@BGCore/Core/quote.html.twig', array(
       'form' => $form->createView(),
       'customers' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll(),
-      'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1)
+      'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1),
+      'title' => 'AJOUTER UN DEVIS'
+    ));
+  }
+
+  public function modifyQuoteAction(int $id, Request $request)
+  {
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
+
+    $form = $this->get('form.factory')->create(QuoteType::class, $quote);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($quote);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Devis bien enregistrée.');
+
+      return $this->redirectToRoute('BG_CoreBundle_home');
+    }
+
+    return $this->render('@BGCore/Core/quote.html.twig', array(
+      'form' => $form->createView(),
+      'customers' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll(),
+      'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1),
+      'title' => 'MODIFIER LE DEVIS'
     ));
   }
 

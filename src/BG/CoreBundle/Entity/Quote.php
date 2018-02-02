@@ -52,14 +52,14 @@ class Quote
     /**
      * @var Status
      *
-     * @ORM\OneToOne(targetEntity="BG\CoreBundle\Entity\Status" , cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="BG\CoreBundle\Entity\Status" , cascade={"persist", "remove"})
      */
     private $status;
 
     /**
      * @var Customer
      *
-     * @ORM\OneToOne(targetEntity="BG\CoreBundle\Entity\Customer" , cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="BG\CoreBundle\Entity\Customer" , cascade={"persist"})
      */
     private $customer;
 

@@ -96,6 +96,6 @@ class Plan
 
     public function __toString()
     {
-      return "{$this->level} {$this->drawing}";
+      return "{$this->level} - {$this->drawing}";
     }
 }

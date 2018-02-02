@@ -17,7 +17,7 @@ class ServiceRepository extends \Doctrine\ORM\EntityRepository
     $states = $service->getStates();
 
     if($states->isEmpty())
-      throw new Exception("Advancement collection is null");
+      throw new \Exception("Advancement collection is null");
 
     $max = $states[0];
 

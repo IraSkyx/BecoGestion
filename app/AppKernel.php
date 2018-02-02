@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new BG\CoreBundle\BGCoreBundle(),
             new BG\UserBundle\BGUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Tetranz\Select2EntityBundle\TetranzSelect2EntityBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

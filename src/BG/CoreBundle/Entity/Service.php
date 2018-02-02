@@ -52,7 +52,7 @@ class Service
     /**
      * @var Plan
      *
-     * @ORM\OneToOne(targetEntity="BG\CoreBundle\Entity\Plan", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="BG\CoreBundle\Entity\Plan", cascade={"persist"})
      * @ORM\JoinColumn(nullable = false)
      */
     private $plan;
@@ -72,6 +72,7 @@ class Service
     {
         $this->billed=0;
         $this->states = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->addState(new \BG\CoreBundle\Entity\Advancement());
     }
 
     /**

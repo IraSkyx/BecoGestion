@@ -7,7 +7,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use BG\CoreBundle\Form\ServiceType;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class QuoteType extends AbstractType
 {
@@ -16,11 +19,28 @@ class QuoteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('engRate')->add('drawRate')->add('vat')->add('customer')->add('services', CollectionType::class, array(
-        'entry_type'   => ServiceType::class,
-        'allow_add'    => true,
-        'allow_delete' => true
-      ))->add('save',  SubmitType::class);
+        $builder
+          ->add('engRate', MoneyType::class)
+          ->add('drawRate', MoneyType::class)
+          ->add('vat', PercentType::class, [
+            'scale' => 2
+          ])
+          ->add('customer', Select2EntityType::class, [
+            'multiple' => false,
+            'remote_route' => 'BG_CoreBundle_getcustomers',
+            'class' => '\BG\CoreBundle\Entity\Customer',
+            'minimum_input_length' => 0,
+            'allow_clear' => true,
+            'page_limit' => 10,
+            'language' => 'fr',
+            'placeholder' => 'Choisir un client',
+          ])
+          ->add('services', CollectionType::class, array(
+          'entry_type'   => ServiceType::class,
+          'label'        => false,
+          'allow_add'    => true,
+          'allow_delete' => true))
+        ->add('save',  SubmitType::class);
     }
 
     /**
