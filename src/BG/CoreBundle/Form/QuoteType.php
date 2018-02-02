@@ -39,7 +39,9 @@ class QuoteType extends AbstractType
           'entry_type'   => ServiceType::class,
           'label'        => false,
           'allow_add'    => true,
-          'allow_delete' => true))
+          'allow_delete' => true,
+          'prototype'    => true
+          ))
         ->add('save',  SubmitType::class);
     }
 
