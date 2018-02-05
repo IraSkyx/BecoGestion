@@ -39,21 +39,8 @@
       <div class="well">
         <h4 class="wizard-title">Définition des plans</h4>
         <hr>
-
-        <ul id="service-field-list"
-            class="d-flex justify-content-center"
-            data-prototype="{{ form_widget(form.services.vars.prototype)|e }}"
-            data-widget-tags="{{ '<li></li>'|e }}">
-
-          {% for service in form.services %}
-              <li>
-                  {{ form_errors(service) }}
-                  {{ form_widget(service) }}
-              </li>
-          {% endfor %}
-        </ul>
-
-        <button class="btn btn-fill btn-info" data-list="#service-field-list" type="button" id="add_service">Ajouter un service</button>
+        {{ form_row(form.services) }}
+        <button class="btn btn-fill btn-info" type="button" id="add_service">Ajouter un service</button>
       </div>
 
       <div class="form-group" align="center">
