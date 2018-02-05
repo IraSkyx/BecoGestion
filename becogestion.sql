@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  ven. 26 jan. 2018 à 23:48
+-- Généré le :  lun. 05 fév. 2018 à 02:40
 -- Version du serveur :  5.7.19
 -- Version de PHP :  7.1.9
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `advancement` (
   `value` int(11) NOT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `advancement`
@@ -44,7 +44,15 @@ INSERT INTO `advancement` (`id`, `value`, `date`) VALUES
 (9, 0, '2018-01-25 23:21:41'),
 (10, 0, '2018-01-25 23:21:41'),
 (11, 0, '2018-01-25 23:21:41'),
-(12, 0, '2018-01-25 23:21:41');
+(12, 0, '2018-01-25 23:21:41'),
+(13, 0, '2018-02-01 16:02:50'),
+(14, 0, '2018-02-01 18:38:23'),
+(15, 0, '2018-02-01 18:38:23'),
+(16, 0, '2018-02-01 19:51:13'),
+(20, 0, '2018-02-01 20:35:17'),
+(21, 0, '2018-02-01 21:55:23'),
+(22, 0, '2018-02-01 21:55:23'),
+(23, 0, '2018-02-01 22:21:10');
 
 -- --------------------------------------------------------
 
@@ -77,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `bg_user` (
 --
 
 INSERT INTO `bg_user` (`id`, `username`, `username_canonical`, `email`, `email_canonical`, `enabled`, `salt`, `password`, `last_login`, `confirmation_token`, `password_requested_at`, `roles`) VALUES
-(5, 'adrien', 'adrien', 'adrien@adrien.com', 'adrien@adrien.com', 1, 'R7gRsPeMdNV8yjNqIn96fhQHcvSnOCQJwVMG4rQq714', 'rKmMPnVv9iZE90a2or47EjcCv/eGrWrPf8iR2F84YjT8b9nXLVISK44Q9s0ZE9Vob7sMzR9J0f3grxyXOxw/Zg==', '2018-01-25 23:22:44', NULL, NULL, 'a:0:{}');
+(5, 'adrien', 'adrien', 'adrien@adrien.com', 'adrien@adrien.com', 1, 'R7gRsPeMdNV8yjNqIn96fhQHcvSnOCQJwVMG4rQq714', 'rKmMPnVv9iZE90a2or47EjcCv/eGrWrPf8iR2F84YjT8b9nXLVISK44Q9s0ZE9Vob7sMzR9J0f3grxyXOxw/Zg==', '2018-02-01 22:48:15', NULL, NULL, 'a:0:{}');
 
 -- --------------------------------------------------------
 
@@ -124,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `parameters` (
 --
 
 INSERT INTO `parameters` (`id`, `eng_rate`, `draw_rate`, `vat`) VALUES
-(1, 9.8, 7.2, 19.6);
+(1, 9.8, 7.2, 0.196);
 
 -- --------------------------------------------------------
 
@@ -165,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `quote` (
   `vat` double NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_6B71CBF46BF700BD` (`status_id`),
-  UNIQUE KEY `UNIQ_6B71CBF49395C3F3` (`customer_id`)
+  KEY `IDX_6B71CBF49395C3F3` (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -173,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `quote` (
 --
 
 INSERT INTO `quote` (`id`, `status_id`, `customer_id`, `date`, `eng_rate`, `draw_rate`, `vat`) VALUES
-(1, 2, 3, '2018-01-25 23:21:41', 8.8, 9.9, 19.6);
+(1, 10, 3, '2018-02-01 21:55:23', 10, 7.2, 0.196);
 
 -- --------------------------------------------------------
 
@@ -195,8 +203,9 @@ CREATE TABLE IF NOT EXISTS `quote_service` (
 --
 
 INSERT INTO `quote_service` (`quote_id`, `service_id`) VALUES
-(1, 3),
-(1, 4);
+(1, 14),
+(1, 15),
+(1, 16);
 
 -- --------------------------------------------------------
 
@@ -213,8 +222,8 @@ CREATE TABLE IF NOT EXISTS `service` (
   `eng_time` double NOT NULL,
   `draw_time` double NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQ_E19D9AD2E899029B` (`plan_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `IDX_E19D9AD2E899029B` (`plan_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `service`
@@ -222,7 +231,16 @@ CREATE TABLE IF NOT EXISTS `service` (
 
 INSERT INTO `service` (`id`, `plan_id`, `building`, `billed`, `eng_time`, `draw_time`) VALUES
 (3, 3, 1, 0, 10, 5),
-(4, 4, 2, 0, 15, 7);
+(4, 4, 2, 0, 15, 7),
+(8, 3, 1, 0, 10, 10),
+(9, 3, 1, 0, 10, 10),
+(10, 3, 2, 0, 5, 5),
+(11, 4, 1, 0, 10, 10),
+(12, 3, 3, 0, 15, 15),
+(13, 3, 1, 0, 20, 0),
+(14, 3, 2, 0, 10, 12),
+(15, 4, 1, 0, 14, 16),
+(16, 3, 45, 0, 12, 11);
 
 -- --------------------------------------------------------
 
@@ -247,7 +265,15 @@ INSERT INTO `service_advancement` (`service_id`, `advancement_id`) VALUES
 (3, 9),
 (3, 10),
 (4, 11),
-(4, 12);
+(4, 12),
+(9, 13),
+(10, 14),
+(11, 15),
+(12, 16),
+(13, 20),
+(14, 21),
+(15, 22),
+(16, 23);
 
 -- --------------------------------------------------------
 
@@ -261,14 +287,20 @@ CREATE TABLE IF NOT EXISTS `status` (
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `message` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `status`
 --
 
 INSERT INTO `status` (`id`, `type`, `message`) VALUES
-(2, 'warning', 'En attente');
+(2, 'warning', 'En attente'),
+(5, 'warning', 'En attente'),
+(6, 'warning', 'En attente'),
+(7, 'warning', 'En attente'),
+(8, 'warning', 'En attente'),
+(9, 'warning', 'En attente'),
+(10, 'warning', 'En attente');
 
 --
 -- Contraintes pour les tables déchargées
