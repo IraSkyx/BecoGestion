@@ -38,16 +38,6 @@ class CoreController extends Controller
     ));
   }
 
-  public function getPlansAction()
-  {
-    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Plan')->findAll() as $plan)
-      $data[] = array(
-        'id' => $plan->getId(),
-        'text' => $plan->__toString(),
-      );
-    return new JsonResponse($data);
-  }
-
   public function getCustomersAction()
   {
     foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll() as $customer)
@@ -76,9 +66,10 @@ class CoreController extends Controller
 
     return $this->render('@BGCore/Core/quote.html.twig', array(
       'form' => $form->createView(),
-      'customers' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll(),
       'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1),
-      'title' => 'AJOUTER UN DEVIS'
+      'title' => 'AJOUTER UN DEVIS',
+      'route' => 'BG_CoreBundle_home',
+      'params' => []
     ));
   }
 
@@ -95,14 +86,15 @@ class CoreController extends Controller
 
       $request->getSession()->getFlashBag()->add('notice', 'Devis bien enregistrée.');
 
-      return $this->redirectToRoute('BG_CoreBundle_home');
+      return $this->redirectToRoute('BG_CoreBundle_view', array('id' => $id));
     }
 
     return $this->render('@BGCore/Core/quote.html.twig', array(
       'form' => $form->createView(),
-      'customers' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll(),
       'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1),
-      'title' => 'MODIFIER LE DEVIS'
+      'title' => 'MODIFIER LE DEVIS',
+      'route' => 'BG_CoreBundle_view',
+      'params' => ['id' => $id]
     ));
   }
 

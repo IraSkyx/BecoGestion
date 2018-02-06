@@ -28,12 +28,11 @@ class QuoteType extends AbstractType
           ->add('customer', Select2EntityType::class, [
             'multiple' => false,
             'remote_route' => 'BG_CoreBundle_getcustomers',
-            'class' => '\BG\CoreBundle\Entity\Customer',
+            'class' => Customer::class,
             'minimum_input_length' => 0,
             'allow_clear' => true,
-            'page_limit' => 10,
             'language' => 'fr',
-            'placeholder' => 'Choisir un client',
+            'placeholder' => 'Choisir un client'
           ])
           ->add('services', CollectionType::class, array(
           'entry_type'   => ServiceType::class,

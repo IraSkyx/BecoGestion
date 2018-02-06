@@ -17,11 +17,12 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle,
+            new Tetranz\Select2EntityBundle\TetranzSelect2EntityBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new BG\CoreBundle\BGCoreBundle(),
             new BG\UserBundle\BGUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-            new Tetranz\Select2EntityBundle\TetranzSelect2EntityBundle()
+            new Symfony\Bundle\AsseticBundle\AsseticBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

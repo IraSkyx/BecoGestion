@@ -4,18 +4,17 @@
 
   {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': {}  }) }}
 
-  <div class="container card wizard-card" data-color="blue">
+  <div class="container-fluid card wizard-card" data-color="blue">
 
     <h2 class="row form-signin-heading justify-content-center">Devis N°{{ quote.id }}</h2>
 
-    <button type="button" class="btn btn-outline-{{ quote.status.type }}">{{ quote.status.message }}</button>
+    <button type="button" class="btn btn-{{ quote.status.type }}">{{ quote.status.message }}</button>
 
     <div class="row">
       <div class="col">
         <div class="dropdown">
           <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
           <div class="dropdown-menu">
-             <a class="dropdown-item" href="PathToAdd">Ajouter un/des plan(s)</a>
              <a class="dropdown-item">Générer un bordereau</a>
              <h6 class="dropdown-header">Changer le status</h6>
              <a class="dropdown-item" href="{{ path('BG_CoreBundle_changestatus', {'id': quote.id, 'status': 'awaiting'}) }}">En attente</a>
@@ -26,7 +25,7 @@
         </div>
       </div>
       <div class="col d-flex justify-content-end align-self-center">
-        <a href="{{ path('BG_CoreBundle_modifyquote', {'id': quote.id}) }}"><i class="fa fa-cog"></i></a>
+        <a href="{{ path('BG_CoreBundle_modifyquote', {'id': quote.id}) }}"><i class="fas fa-cog"></i></a>
       </div>
     </div>
 
@@ -50,7 +49,7 @@
 
         {% for service in quote.services %}
           <tr>
-            <td><div class="checkbox"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
+            <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
             <td>{{ service.plan.id }}</td>
             <td>{{ service.building }}</td>
             <td>{{ service.plan.level }}</td>
@@ -65,7 +64,7 @@
 
             <td>{{ service.engTime }}</td>
             <td>{{ service.drawTime }}</td>
-            <td><a href="{{ path('BG_CoreBundle_service', {'id': quote.id, 'sid': service.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+            <td><a href="{{ path('BG_CoreBundle_service', {'id': quote.id, 'sid': service.id}) }}"><i class="fas fa-pencil-alt" aria-hidden="true"></i></a></td>
           </tr>
         {% endfor %}
 

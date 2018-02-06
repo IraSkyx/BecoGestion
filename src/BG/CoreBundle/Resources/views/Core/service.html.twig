@@ -4,7 +4,7 @@
 
   {{ include('BGCoreBundle::menu.html.twig', { 'route' : 'BG_CoreBundle_view', 'parameters': {'id': id, 'sid': service.id} }) }}
 
-  <div class="container card wizard-card" data-color="blue">
+  <div class="container-fluid card wizard-card" data-color="blue">
 
     <h2 class="row form-signin-heading justify-content-center">Édition des avancements</h2>
 
@@ -37,6 +37,7 @@
         <tr>
           <th>Date</th>
           <th>Pourcentage</th>
+          <th></th>
         </tr>
       </thead>
     <tbody>
@@ -46,7 +47,7 @@
         <tr>
           <td>{{ state.date|date('d-m-Y H:i:s') }}</td>
           <td>{{ state.value }}</td>
-          <td><a href="{{ path('BG_CoreBundle_removestate', {'id': id, 'sid': service.id, 'aid': state.id}) }}"><i class="fa fa-times" aria-hidden="true"></i></a></td>
+          <td><a href="{{ path('BG_CoreBundle_removestate', {'id': id, 'sid': service.id, 'aid': state.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
         </tr>
         {% endif %}
       {% endfor %}

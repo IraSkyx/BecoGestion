@@ -2,18 +2,19 @@
 
 {% block body %}
 
-  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': {}  }) }}
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': route, 'parameters': params }) }}
 
-  <div class="container card wizard-card" data-color="blue">
+  <div class="container-fluid card wizard-card" data-color="blue">
 
     <div class="wizard-header">
       <h3 class="wizard-title">{{ title }}</h3>
       <hr>
     </div>
 
-    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_start(form) }}
       {{ form_errors(form) }}
 
+      <!-- QUOTE INFORMATION -->
       <div class="well">
         <h4 class="wizard-title">Infos du devis</h4>
         <hr>
@@ -29,36 +30,42 @@
           </div>
         </div>
       </div>
+      <!-- QUOTE INFORMATION -->
 
+      <!-- CUSTOMER CHOICE -->
       <div class="well">
         <h4 class="wizard-title">Choix du client</h4>
         <hr>
-        {{ form_row(form.customer) }}
+        <div class="row">
+          <div class="col">
+            {{ form_row(form.customer) }}
+          </div>
+        </div>
       </div>
+      <!-- CUSTOMER CHOICE -->
 
+      <!-- PLANS DEFINITION -->
       <div class="well">
         <h4 class="wizard-title">Définition des plans</h4>
         <hr>
-
-        <ul id="service-field-list"
-            class="d-flex justify-content-center"
-            data-prototype="{{ form_widget(form.services.vars.prototype)|e }}"
-            data-widget-tags="{{ '<li></li>'|e }}">
-
-          {% for service in form.services %}
-              <li>
-                  {{ form_errors(service) }}
-                  {{ form_widget(service) }}
-              </li>
-          {% endfor %}
-        </ul>
-
-        <button class="btn btn-fill btn-info" data-list="#service-field-list" type="button" id="add_service">Ajouter un service</button>
+        <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}" data-index="{{ form.services|length }}">
+            {% for service in form.services %}
+                <div class="w-25 js-services-item">
+                    {{ form_errors(service) }}
+                    {{ form_widget(service) }}
+                    <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services pull-right" href="#"><i class="fa fa-times"></i> Delete</a></div>
+                </div>
+            {% endfor %}
+            <div class="row justify-content-center ">
+              <a class="btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter</a>
+            </div>
+        </div>
       </div>
+      <!-- PLANS DEFINITION -->
 
-      <div class="form-group" align="center">
-          {{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}
-      </div>
+      <!-- SAVE SUBMIT -->
+      <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>
+      <!-- SAVE SUBMIT -->
 
       {{ form_rest(form) }}
     {{ form_end(form) }}

@@ -5,16 +5,17 @@
       <meta charset="utf-8">
       <title>{% block title %}BecoGestion{% endblock %}</title>
 
-      <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link type="text/css" rel="stylesheet" href="http://localhost/BecoGestion/web/css/bootstrap.min.css">
-      <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-      <link type="text/css" rel="stylesheet" href="http://localhost/BecoGestion/web/css/material-bootstrap-wizard.css">
-      <link type="text/css" rel="stylesheet" href="http://localhost/BecoGestion/web/css/becogestion.css">
-      <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-      <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css"/>
-    {% endblock %}
+      <!--   Core CSS Files   -->
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css" rel="stylesheet" />
 
-    {% block stylesheets %}
+      {% stylesheets filter='cssrewrite, ?scssphp'
+      'bundles/bgcore/css/becogestion.css'
+      'bundles/bgcore/css/material-bootstrap-wizard.css'
+      %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+      {% endstylesheets %}
 
     {% endblock %}
   </head>
@@ -24,19 +25,17 @@
 
       {% block scripts %}
         <!--   Core JS Files   -->
-        <script type="text/javascript" src="http://localhost/BecoGestion/web/js/jquery-2.2.4.min.js"></script>
-        <script type="text/javascript" src="http://localhost/BecoGestion/web/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="http://localhost/BecoGestion/web/js/jquery.bootstrap.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-        <script type="text/javascript" src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+        <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/js/select2.min.js"></script>
 
-        <!--  Plugin for the Wizard -->
-        <script type="text/javascript" src="http://localhost/BecoGestion/web/js/material-bootstrap-wizard.js"></script>
-
-        <script type="text/javascript" src="http://localhost/BecoGestion/web/js/jquery.validate.min.js"></script>
-
-        <script type="text/javascript" src="http://localhost/BecoGestion/web/js/becogestion.js"></script>
+        {% javascripts filter='jsqueeze'
+        'bundles/bgcore/js/becogestion.js'
+        'bundles/tetranzselect2entity/js/select2entity.js'
+        %}
+          <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
 
       {% endblock %}
 

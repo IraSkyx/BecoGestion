@@ -32,15 +32,11 @@ BG_CoreBundle_generate:
     requirements:
         id:   \d+
 
-BG_CoreBundle_getplans:
-    path:     /getplans
-    defaults: { _controller: BGCoreBundle:Core:getPlans }
-    options:
-        expose: true
-
 BG_CoreBundle_getcustomers:
     path:     /getcustomers
     defaults: { _controller: BGCoreBundle:Core:getCustomers }
+    options:
+        expose: true
 
 BG_CoreBundle_billstack:
     path:     /billstack

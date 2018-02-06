@@ -66,7 +66,7 @@ class Quote
     /**
      * @var Service
      *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist", "remove"})
      */
     private $services;
 

@@ -1,8 +1,8 @@
 <header>
   <nav>
-    <div>
-      <div class="col-sm-6 d-flex justify-content-start"><a class="btn btn-info" href="{{ path(route, parameters) }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Retour</a></div>
-      <div class="col-sm-6 d-flex justify-content-end"><a href="{{ path("fos_user_security_logout") }}"><i class="fa fa-sign-out"></i></a></div>
+    <div class="row">
+      <div class="col d-flex justify-content-start"><a class="btn btn-info" style="margin-left:1vh;" href="{{ path(route, parameters) }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Retour</a></div>
+      <div class="col d-flex align-items-center justify-content-end"><a href="{{ path("fos_user_security_logout") }}"><i class="fas fa-sign-out-alt"></i></a></div>
     </div>
   </nav>
 </header>
