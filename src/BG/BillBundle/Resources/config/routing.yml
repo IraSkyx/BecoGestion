@@ -1,3 +1,0 @@
-bg_bill_homepage:
-    path:     /
-    defaults: { _controller: BGBillBundle:Default:index }

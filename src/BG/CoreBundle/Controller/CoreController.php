@@ -41,13 +41,12 @@ class CoreController extends Controller
 
   public function generateAction(int $id)
   {
-    $html = $this->render('@BGBill/bill.html.twig', array(
-
+    $html = $this->renderView('@BGBill/bill.html.twig', array(
     ));
 
-    return new PdfResponse(
+    return new Response(
         $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-        '@BGBill/bill'. $id .'.pdf'
+        'file.pdf'
     );
   }
 
