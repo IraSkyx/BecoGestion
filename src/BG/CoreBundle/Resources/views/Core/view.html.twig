@@ -39,6 +39,7 @@
               <th>Bâtiment</th>
               <th>Niveau</th>
               <th>Dessin</th>
+              <th>Indice</th>
               <th>Avancement global</th>
               <th>Temps ingénieur</th>
               <th>Temps dessinateur</th>
@@ -54,6 +55,7 @@
             <td>{{ service.building }}</td>
             <td>{{ service.plan.level }}</td>
             <td>{{ service.plan.drawing }}</td>
+            <td>{{ service.index }}</td>
 
             {% set maxValue = 0 %}
             {% for state in service.states %}

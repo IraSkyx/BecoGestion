@@ -50,6 +50,13 @@ class Service
     private $drawTime;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="index", type="integer")
+     */
+    private $index;
+
+    /**
      * @var Plan
      *
      * @ORM\ManyToOne(targetEntity="BG\CoreBundle\Entity\Plan", cascade={"persist"})
@@ -70,7 +77,8 @@ class Service
      */
     public function __construct()
     {
-        $this->billed=0;
+        $this->billed = 0;
+        $this->index = 0;
         $this->states = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addState(new \BG\CoreBundle\Entity\Advancement());
     }
@@ -179,6 +187,30 @@ class Service
     public function getDrawTime()
     {
         return $this->drawTime;
+    }
+
+    /**
+     * Set index.
+     *
+     * @param int $index
+     *
+     * @return Service
+     */
+    public function setIndex($index)
+    {
+        $this->index = $index;
+
+        return $this;
+    }
+
+    /**
+     * Get index.
+     *
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**

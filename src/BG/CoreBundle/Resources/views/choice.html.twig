@@ -1,0 +1,23 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': {}  }) }}
+
+  <div class="container-fluid card wizard-card d-flex align-items-center justify-content-center">
+
+    <div class="wizard-header">
+      <h2 class="wizard-title">{{ title }}</h2>
+      <hr>
+    </div>
+
+    <div class="well">
+        <a class="row btn btn-info" href="/BecoGestion/web/app_dev.php/"><i class="fa fa-plus" aria-hidden="true"></i> Ajouter</a>
+        <a class="row btn btn-info" href="/BecoGestion/web/app_dev.php/"><i class="fa fa-times" aria-hidden="true"></i> Supprimer</a>
+    </div>
+
+  </div>
+
+{{ parent() }}
+
+{% endblock %}

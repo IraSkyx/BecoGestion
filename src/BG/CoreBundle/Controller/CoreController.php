@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use BG\CoreBundle\Form\AdvancementType;
 use BG\CoreBundle\Form\QuoteType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
 class CoreController extends Controller
 {
@@ -36,6 +37,18 @@ class CoreController extends Controller
     return $this->render('@BGCore/Core/billstack.html.twig', array(
       'bills' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:StackedBill')->findAll()
     ));
+  }
+
+  public function generateAction(int $id)
+  {
+    $html = $this->render('@BGBill/bill.html.twig', array(
+
+    ));
+
+    return new PdfResponse(
+        $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+        '@BGBill/bill'. $id .'.pdf'
+    );
   }
 
   public function getCustomersAction()
@@ -107,8 +120,8 @@ class CoreController extends Controller
 
   public function plansAction()
   {
-    return $this->render('@BGCore/Core/plans.html.twig', array(
-      'plans' => array()
+    return $this->render('@BGCore/choice.html.twig', array(
+      'title' => 'Gestion des plans'
     ));
   }
 
