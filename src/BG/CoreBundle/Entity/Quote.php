@@ -5,7 +5,8 @@ namespace BG\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
  /**
-  * @ORM\Entity
+  * Quote
+  *
   * @ORM\InheritanceType("JOINED")
   * @ORM\DiscriminatorColumn(name="discr", type="string")
   * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\QuoteRepository")
