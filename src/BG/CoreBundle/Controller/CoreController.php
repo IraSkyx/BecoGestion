@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use BG\CoreBundle\Entity\Quote;
+use BG\CoreBundle\Entity\Bill;
 use BG\CoreBundle\Entity\Customer;
 use BG\CoreBundle\Entity\Advancement;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,13 +42,22 @@ class CoreController extends Controller
 
   public function generateAction(int $id)
   {
+    $bill = new Bill($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id));
+
+    //$em = $this->getDoctrine()->getManager();
+    //$em->persist($bill);
+    //$em->flush();
+
     $html = $this->renderView('@BGBill/bill.html.twig', array(
+      'bill' => $bill
     ));
 
     return new Response(
-        $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-        'file.pdf'
-    );
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+      200,
+      array(
+          'Content-Type' => 'application/pdf'
+      ));
   }
 
   public function getCustomersAction()
@@ -62,7 +72,8 @@ class CoreController extends Controller
 
   public function newQuoteAction(Request $request)
   {
-    $quote = new Quote();
+    $params = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1);
+    $quote = new Quote($params->getEngRate(), $params->getDrawRate(), $params->getVat());
 
     $form = $this->get('form.factory')->create(QuoteType::class, $quote);
 

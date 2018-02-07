@@ -42,6 +42,16 @@ class Parameters
      */
     private $vat;
 
+    /**
+     * Constructor.
+     *
+     */
+    public function __construct(float $engRate, float $drawRate, float $vat)
+    {
+      $this->engRate = $engRate;
+      $this->drawRate = $drawRate;
+      $this->vat = $vat;
+    }
 
     /**
      * Get id.

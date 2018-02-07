@@ -9,11 +9,16 @@ use BG\CoreBundle\Entity\Customer;
 use BG\CoreBundle\Entity\Advancement;
 use BG\CoreBundle\Entity\Service;
 use BG\CoreBundle\Entity\Plan;
+use BG\CoreBundle\Entity\Parameters;
 
 class LoadQuote implements FixtureInterface
 {
   public function load(ObjectManager $manager)
   {
+      //PARAMETERS
+      $params = new Parameters(8,12,0.21);
+      $manager->persist($params);
+
       //CREATE PLANS
       $myplan = new Plan();
       $myplan2 = new Plan();
@@ -22,10 +27,14 @@ class LoadQuote implements FixtureInterface
       $manager->persist($myplan);
       $manager->persist($myplan2);
 
+      $manager->flush();
+
       //CREATE CUSTOMERS
       $customer = new Customer();
       $customer->setFirstName("Billy")->setLastName("Bob")->setCompanyName("BillyBobCompany")->setAddress("16, rue billy")->setPostcode(63000)->setCity("BillyCity");
       $manager->persist($customer);
+
+      $manager->flush();
 
       //CREATE ADVANCEMENT
       $adv = new Advancement();
@@ -43,12 +52,12 @@ class LoadQuote implements FixtureInterface
       $manager->persist($service2);
 
       //CREATE QUOTE
-      $quote = new Quote();
+      $quote = new Quote($params->getEngRate(), $params->getDrawRate(), $params->getVat());
       $quote->setCustomer($customer);
       $quote->addService($service1);
       $quote->addService($service2);
       $manager->persist($quote);
 
-    $manager->flush();
+      $manager->flush();
   }
 }

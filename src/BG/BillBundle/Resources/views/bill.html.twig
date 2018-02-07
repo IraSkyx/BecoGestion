@@ -3,7 +3,7 @@
   <head>
     {% block head %}
       <meta charset="utf-8">
-      <title>{% block title %}Facture n°{{ 3 }}{% endblock %}</title>
+      <title>{% block title %}Facture n°{{ bill.id }}{% endblock %}</title>
 
       <!--   Core CSS Files   -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
@@ -20,15 +20,74 @@
 
   <body>
     <div class="container-fluid">
-      <div class="row justify-content-end">
-        BUREAU D'ETUDES BATIMENT
-        17 Rue Danielle Casanova 77130 MONTEREAU
-        TEL : 01 60 74 42 25 - FAX : 09 70 32 83 90
-        e.mail : bureau.etude@becofer.fr
+
+      <!-- Header -->
+      <div class="row justify-content-end" align="center">
+        <strong>BUREAU D'ÉTUDES BÂTIMENT</strong></br>
+        17, Rue Danielle Casanova, 77130 MONTEREAU</br>
+        TÉL : 01 60 74 42 25 - FAX : 09 70 32 83 90</br>
+        Email : bureau.etude@becofer.fr
       </div>
-      <div class="row justify-content-start">
-        Facture n°{{ 3 }}
+
+      <div class="row justify-content-start"><strong>FACTURE N°3</strong></div>
+      <table>
+        <tbody>
+          <tr>
+            <td>Date</td>
+            <td>{{ bill.date|date('d-m-Y') }}</td>
+          <tr>
+          <tr>
+            <td>Réf devis</td>
+            <td>{{ bill.ref }}</td>
+          <tr>
+          <tr>
+            <td>Client</td>
+            <td>{{ bill.customer }}</td>
+          <tr>
+          <tr>
+            <td>ID CEE</td>
+            <td>12332443</td>
+          <tr>
+          <tr>
+            <td>Dossier</td>
+            <td>12332443</td>
+          <tr>
+        </tbody>
+      </table>
+      <!-- Header -->
+
+      <!-- Body -->
+      <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Niveau</th>
+                <th>Plan</th>
+                <th>Désignation</th>
+                <th>P.U HT en €</th>
+                <th>P.U TTC en €</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for service in bill.services %}
+                    <tr>
+                        <td>{{ service.code }}</td>
+                        <td>{{ service.level }}</td>
+                        <td>{{ service.drawing }}</td>
+                        <td>???</td>
+                        <td>{{ service.prodPrice }} + {{ service.servPrice }}</td>
+                        {% set sttc = service.prodPrice * service.servPrice  %}
+                        {% set ttc = sttc + sttc * (bill.vat / 100)  %}
+                        <td>{{ ttc }}</td>
+                    </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
       </div>
+      <!-- Body -->
     </div>
   </body>
 </html>

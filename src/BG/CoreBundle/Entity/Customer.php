@@ -63,6 +63,21 @@ class Customer
      */
     private $city;
 
+    /**
+     * Deep clone method.
+     * @return Customer
+     */
+    public static function clone(Customer $customer) : Customer
+    {
+      $new = new Customer();
+      return $new
+      ->setFirstName($customer->getFirstName())
+      ->setLastName($customer->getLastName())
+      ->setCompanyName($customer->getCompanyName())
+      ->setAddress($customer->getAddress())
+      ->setPostcode($customer->getPostcode())
+      ->setCity($customer->getCity());
+    }
 
     /**
      * Get id.

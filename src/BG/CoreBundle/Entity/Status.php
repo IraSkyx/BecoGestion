@@ -45,6 +45,15 @@ class Status
     }
 
     /**
+     * Deep clone method.
+     * @return Status
+     */
+    public static function clone(Status $status) : Status
+    {
+      return new Status($status->getType(), $status->getMessage());
+    }
+
+    /**
      * Get id.
      *
      * @return int

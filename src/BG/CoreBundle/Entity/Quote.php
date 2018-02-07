@@ -4,12 +4,12 @@ namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Quote
- *
- * @ORM\Table(name="quote")
- * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\QuoteRepository")
- */
+ /**
+  * @ORM\Entity
+  * @ORM\InheritanceType("JOINED")
+  * @ORM\DiscriminatorColumn(name="discr", type="string")
+  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\QuoteRepository")
+  */
 class Quote
 {
     /**
@@ -66,20 +66,18 @@ class Quote
     /**
      * @var Service
      *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\IService", cascade={"persist", "remove"})
      */
     private $services;
 
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($engRate, $drawRate, $vat)
     {
-        global $kernel;
-        $parameters = $kernel->getContainer()->get('doctrine')->getManager()->getRepository('BGCoreBundle:Parameters')->find(1);
-        $this->engRate = $parameters->getEngRate();
-        $this->drawRate = $parameters->getDrawRate();
-        $this->vat = $parameters->getVat();
+        $this->engRate = $engRate;
+        $this->drawRate = $drawRate;
+        $this->vat = $vat;
 
         $this->status = new Status("warning", "En attente");
         $this->date = new \DateTime();
@@ -243,11 +241,11 @@ class Quote
     /**
      * Add service.
      *
-     * @param \BG\CoreBundle\Entity\Service $service
+     * @param \BG\CoreBundle\Entity\IService $service
      *
      * @return Quote
      */
-    public function addService(\BG\CoreBundle\Entity\Service $service)
+    public function addService(\BG\CoreBundle\Entity\IService $service)
     {
         $this->services[] = $service;
 
@@ -257,11 +255,11 @@ class Quote
     /**
      * Remove service.
      *
-     * @param \BG\CoreBundle\Entity\Service $service
+     * @param \BG\CoreBundle\Entity\IService $service
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeService(\BG\CoreBundle\Entity\Service $service)
+    public function removeService(\BG\CoreBundle\Entity\IService $service)
     {
         return $this->services->removeElement($service);
     }

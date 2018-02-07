@@ -25,15 +25,16 @@ class QuoteType extends AbstractType
           ->add('vat', PercentType::class, [
             'scale' => 2
           ])
-          ->add('customer', Select2EntityType::class, [
+          ->add('customer', Select2EntityType::class, array(
+            'class' => '\BG\CoreBundle\Entity\Customer',
             'multiple' => false,
             'remote_route' => 'BG_CoreBundle_getcustomers',
-            'class' => Customer::class,
             'minimum_input_length' => 0,
             'allow_clear' => true,
             'language' => 'fr',
+            'by_reference' => false,
             'placeholder' => 'Choisir un client'
-          ])
+          ))
           ->add('services', CollectionType::class, array(
           'entry_type'   => ServiceType::class,
           'label'        => false,

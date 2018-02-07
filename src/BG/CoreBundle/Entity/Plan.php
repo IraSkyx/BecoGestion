@@ -35,7 +35,6 @@ class Plan
      */
     private $drawing;
 
-
     /**
      * Get id.
      *

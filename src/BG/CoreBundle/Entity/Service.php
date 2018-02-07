@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="service")
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\ServiceRepository")
  */
-class Service
+class Service implements IService
 {
     /**
      * @var int
@@ -271,5 +271,14 @@ class Service
     public function getStates()
     {
         return $this->states;
+    }
+
+    public function getMaxState() : int
+    {
+      $max = 0;
+      foreach($this->getStates() as $state)
+        if($state->getValue() > $max)
+          $max = $state->getValue();
+      return $max;
     }
 }
