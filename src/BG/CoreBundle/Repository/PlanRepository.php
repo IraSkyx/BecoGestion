@@ -10,4 +10,13 @@ namespace BG\CoreBundle\Repository;
  */
 class PlanRepository extends \Doctrine\ORM\EntityRepository
 {
+  public function exists(int $code, string $level, string $drawing) : bool
+  {
+    return $this->_em->getRepository('BGCoreBundle:Plan')->findBy(
+      array(
+        'code' => $code,
+        'level' => $level,
+        'drawing' => $drawing
+      ))->count() > 0;
+  }
 }

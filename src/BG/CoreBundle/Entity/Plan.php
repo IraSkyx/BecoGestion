@@ -22,11 +22,11 @@ class Plan
     private $id;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="level", type="string", length=255)
+     * @ORM\Column(name="code", type="integer")
      */
-    private $level;
+    private $code;
 
     /**
      * @var string
@@ -36,6 +36,20 @@ class Plan
     private $drawing;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="level", type="string", length=255)
+     */
+    private $level;
+
+    public function __construct(int $code, string $level, string $drawing)
+    {
+      $this->code = $code;
+      $this->level = $level;
+      $this->drawing = $drawing;
+    }
+
+    /**
      * Get id.
      *
      * @return int
@@ -43,6 +57,54 @@ class Plan
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set code.
+     *
+     * @param int $code
+     *
+     * @return Plan
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code.
+     *
+     * @return int
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set drawing.
+     *
+     * @param string $drawing
+     *
+     * @return Plan
+     */
+    public function setDrawing($drawing)
+    {
+        $this->drawing = $drawing;
+
+        return $this;
+    }
+
+    /**
+     * Get drawing.
+     *
+     * @return string
+     */
+    public function getDrawing()
+    {
+        return $this->drawing;
     }
 
     /**
@@ -70,31 +132,12 @@ class Plan
     }
 
     /**
-     * Set drawing.
-     *
-     * @param string $drawing
-     *
-     * @return Plan
-     */
-    public function setDrawing($drawing)
-    {
-        $this->drawing = $drawing;
-
-        return $this;
-    }
-
-    /**
-     * Get drawing.
+     * To string.
      *
      * @return string
      */
-    public function getDrawing()
-    {
-        return $this->drawing;
-    }
-
     public function __toString()
     {
-      return "{$this->level} - {$this->drawing}";
+      return "{$this->level} {$this->drawing}";
     }
 }

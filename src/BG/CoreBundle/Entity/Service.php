@@ -3,14 +3,16 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 
 /**
  * Service
  *
  * @ORM\Table(name="service")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\ServiceRepository")
  */
-class Service implements IService
+class Service
 {
     /**
      * @var int
@@ -20,6 +22,13 @@ class Service implements IService
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="code", type="integer")
+     */
+    private $code;
 
     /**
      * @var int
@@ -52,17 +61,23 @@ class Service implements IService
     /**
      * @var int
      *
-     * @ORM\Column(name="index", type="integer")
+     * @ORM\Column(name="grade", type="integer")
      */
-    private $index;
+    private $grade;
 
     /**
-     * @var Plan
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="BG\CoreBundle\Entity\Plan", cascade={"persist"})
-     * @ORM\JoinColumn(nullable = false)
+     * @ORM\Column(name="level", type="string", length=255)
      */
-    private $plan;
+    private $level;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="drawing", type="string", length=255)
+     */
+    private $drawing;
 
     /**
      * @var Advancement
@@ -78,9 +93,25 @@ class Service implements IService
     public function __construct()
     {
         $this->billed = 0;
-        $this->index = 0;
+        $this->grade = 0;
         $this->states = new \Doctrine\Common\Collections\ArrayCollection();
         $this->addState(new \BG\CoreBundle\Entity\Advancement());
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function insertNewPlans(LifecycleEventArgs $args)
+    {
+      $entity = $args->getObject();
+      $em = $args->getObjectManager();
+
+      if($em->getRepository('BGCoreBundle:Plan')->exist($entity->getCode(), $entity->getLevel(), $entity->getDrawing()) == false)
+      {
+        $plan = new Plan($entity->getCode(), $entity->getLevel(), $entity->getDrawing());
+        $em->persist($plan);
+        $em->flush();
+      }
     }
 
     /**
@@ -91,6 +122,30 @@ class Service implements IService
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set code.
+     *
+     * @param int $code
+     *
+     * @return Service
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code.
+     *
+     * @return int
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**
@@ -190,51 +245,75 @@ class Service implements IService
     }
 
     /**
-     * Set index.
+     * Set grade.
      *
-     * @param int $index
+     * @param int $grade
      *
      * @return Service
      */
-    public function setIndex($index)
+    public function setGrade($grade)
     {
-        $this->index = $index;
+        $this->grade = $grade;
 
         return $this;
     }
 
     /**
-     * Get index.
+     * Get grade.
      *
      * @return int
      */
-    public function getIndex()
+    public function getGrade()
     {
-        return $this->index;
+        return $this->grade;
     }
 
     /**
-     * Set plan.
+     * Set level.
      *
-     * @param \BG\CoreBundle\Entity\Plan $plan
+     * @param string $level
      *
      * @return Service
      */
-    public function setPlan(\BG\CoreBundle\Entity\Plan $plan)
+    public function setLevel($level)
     {
-        $this->plan = $plan;
+        $this->level = $level;
 
         return $this;
     }
 
     /**
-     * Get plan.
+     * Get level.
      *
-     * @return \BG\CoreBundle\Entity\Plan
+     * @return string
      */
-    public function getPlan()
+    public function getLevel()
     {
-        return $this->plan;
+        return $this->level;
+    }
+
+    /**
+     * Set drawing.
+     *
+     * @param string $drawing
+     *
+     * @return Service
+     */
+    public function setDrawing($drawing)
+    {
+        $this->drawing = $drawing;
+
+        return $this;
+    }
+
+    /**
+     * Get drawing.
+     *
+     * @return string
+     */
+    public function getDrawing()
+    {
+        return $this->drawing;
     }
 
     /**
@@ -260,7 +339,10 @@ class Service implements IService
      */
     public function removeState(\BG\CoreBundle\Entity\Advancement $state)
     {
-        return $this->states->removeElement($state);
+        $res = $this->states->removeElement($state);
+        if($this->states->isEmpty())
+          $this->addState(new Advancement());
+        return $res;
     }
 
     /**
@@ -273,6 +355,25 @@ class Service implements IService
         return $this->states;
     }
 
+    /**
+     * Set states.
+     *
+     * @param \Doctrine\Common\Collections\Collection $states
+     *
+     * @return Service
+     */
+    public function setStates(\Doctrine\Common\Collections\Collection $states)
+    {
+        $this->states = $states;
+
+        return $this;
+    }
+
+    /**
+     * Get current max state.
+     *
+     * @return int
+     */
     public function getMaxState() : int
     {
       $max = 0;
@@ -280,5 +381,15 @@ class Service implements IService
         if($state->getValue() > $max)
           $max = $state->getValue();
       return $max;
+    }
+
+    /**
+     * To String.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+      return "{$this->level} - {$this->drawing}";
     }
 }

@@ -1,0 +1,29 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': {} }) }}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <div class="wizard-header">
+      <h3 class="wizard-title">Gestion des clients</h3>
+      <hr>
+    </div>
+
+    <div class="well">
+      <h4 class="wizard-title">Ajouter un client</h4>
+      <hr>
+      <a class="row btn btn-info" href="{{ path('BG_CoreBundle_customers') }}"><i class="fa fa-plus" aria-hidden="true"></i> Ajouter</a>
+    </div>
+
+    <div class="well">
+      <h4 class="wizard-title">Modifier un client</h4>
+      <hr>
+      {{ form(form) }}
+    </div>
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

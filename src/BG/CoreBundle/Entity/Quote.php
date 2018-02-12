@@ -4,13 +4,12 @@ namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
- /**
-  * Quote
-  *
-  * @ORM\InheritanceType("JOINED")
-  * @ORM\DiscriminatorColumn(name="discr", type="string")
-  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\QuoteRepository")
-  */
+/**
+ * Quote
+ *
+ * @ORM\Table(name="quote")
+ * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\QuoteRepository")
+ */
 class Quote
 {
     /**
@@ -67,7 +66,7 @@ class Quote
     /**
      * @var Service
      *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\IService", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist", "remove"})
      */
     private $services;
 
@@ -83,6 +82,46 @@ class Quote
         $this->status = new Status("warning", "En attente");
         $this->date = new \DateTime();
         $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function billService(Service $service) : Service
+    {
+      //OPERATIONS
+      $advancement = $service->getMaxState();
+      $engPrice = (($service->getEngTime() * $this->getEngRate()) * $advancement) - $service->getBilled();
+      $drawPrice = (($service->getDrawTime() * $this->getDrawRate()) * $advancement) - $service->getBilled();
+      $service->setBilled($service->getBilled() + $engPrice + $drawPrice);
+
+      //COPY
+      $serv = new Service();
+      $serv->setCode($service->getCode());
+      $serv->setBuilding($service->getBuilding());
+      $serv->setBilled($service->getBilled());
+      $serv->setEngTime($service->getEngTime());
+      $serv->setDrawTime($service->getDrawTime());
+      $serv->setGrade($service->getGrade());
+      $serv->setLevel($service->getLevel());
+      $serv->setDrawing($service->getDrawing());
+      $serv->setStates(new \Doctrine\Common\Collections\ArrayCollection());
+
+      return $serv;
+    }
+
+    public function generateInvoice() : Invoice
+    {
+      $invoice = new Invoice();
+      $invoice->setRef($this->getId());
+      $invoice->setDate($this->getDate());
+      $invoice->setEngRate($this->getEngRate());
+      $invoice->setDrawRate($this->getDrawRate());
+      $invoice->setVat($this->getVat());
+      $invoice->setStatus(new Status("warning","En attente"));
+      $invoice->setCustomer(Customer::clone($this->getCustomer()));
+
+      foreach($this->getServices() as $service)
+        $invoice->addService($this->billService($service));
+
+      return $invoice;
     }
 
     /**
@@ -242,11 +281,11 @@ class Quote
     /**
      * Add service.
      *
-     * @param \BG\CoreBundle\Entity\IService $service
+     * @param \BG\CoreBundle\Entity\Service $service
      *
      * @return Quote
      */
-    public function addService(\BG\CoreBundle\Entity\IService $service)
+    public function addService(\BG\CoreBundle\Entity\Service $service)
     {
         $this->services[] = $service;
 
@@ -256,11 +295,11 @@ class Quote
     /**
      * Remove service.
      *
-     * @param \BG\CoreBundle\Entity\IService $service
+     * @param \BG\CoreBundle\Entity\Service $service
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeService(\BG\CoreBundle\Entity\IService $service)
+    public function removeService(\BG\CoreBundle\Entity\Service $service)
     {
         return $this->services->removeElement($service);
     }

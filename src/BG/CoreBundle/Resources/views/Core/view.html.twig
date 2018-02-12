@@ -35,7 +35,6 @@
           <thead>
             <tr>
               <th>Sélection</th>
-              <th>Code</th>
               <th>Bâtiment</th>
               <th>Niveau</th>
               <th>Dessin</th>
@@ -51,11 +50,10 @@
         {% for service in quote.services %}
           <tr>
             <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
-            <td>{{ service.plan.id }}</td>
             <td>{{ service.building }}</td>
-            <td>{{ service.plan.level }}</td>
-            <td>{{ service.plan.drawing }}</td>
-            <td>{{ service.index }}</td>
+            <td>{{ service.level }}</td>
+            <td>{{ service.drawing }}</td>
+            <td>{{ service.grade }}</td>
 
             {% set maxValue = 0 %}
             {% for state in service.states %}

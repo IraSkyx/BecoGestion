@@ -13,7 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use BG\CoreBundle\Form\AdvancementType;
+use BG\CoreBundle\Form\ParametersType;
 use BG\CoreBundle\Form\QuoteType;
+use BG\CoreBundle\Form\CustomerChoiceType;
+use BG\CoreBundle\Form\CustomerType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
@@ -33,23 +36,31 @@ class CoreController extends Controller
     ));
   }
 
-  public function billStackAction()
+  public function invoicesAction()
   {
-    return $this->render('@BGCore/Core/billstack.html.twig', array(
-      'bills' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:StackedBill')->findAll()
+    return $this->render('@BGCore/Core/invoices.html.twig', array(
+      'bills' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->findAllByStatus(array("En attente", "En cours"))
+    ));
+  }
+
+  public function archivedInvoicesAction()
+  {
+    return $this->render('@BGCore/Core/archived_invoices.html.twig', array(
+      'bills' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:ArchivedInvoices')->findAllByStatus(array("Validé"))
     ));
   }
 
   public function generateAction(int $id)
   {
-    $bill = new Bill($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id));
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
+    $invoice = $quote->generateInvoice();
 
-    //$em = $this->getDoctrine()->getManager();
-    //$em->persist($bill);
-    //$em->flush();
+    $em = $this->getDoctrine()->getManager();
+    $em->persist($invoice);
+    $em->flush();
 
     $html = $this->renderView('@BGBill/bill.html.twig', array(
-      'bill' => $bill
+      'invoice' => $invoice
     ));
 
     return new Response(
@@ -60,12 +71,23 @@ class CoreController extends Controller
       ));
   }
 
+  public function getPlansAction()
+  {
+    $data = null;
+    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Plan')->findAll() as $plan)
+      $data[] = array(
+        'id' => $plan->getId(),
+        'text' => $plan->__toString()
+      );
+    return new JsonResponse($data);
+  }
+
   public function getCustomersAction()
   {
-    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findAll() as $customer)
+    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findByIsCloned(0) as $customer)
       $data[] = array(
         'id' => $customer->getId(),
-        'text' => $customer->__toString(),
+        'text' => $customer->__toString()
       );
     return new JsonResponse($data);
   }
@@ -121,10 +143,32 @@ class CoreController extends Controller
     ));
   }
 
-  public function customersAction()
+  public function customersAction(Request $request, $action)
   {
+    $customer = $action == 'add' ? new Customer : $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->find($action);
+
+    $form = $this->get('form.factory')->create(CustomerType::class, $customer);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($customer);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Client bien enregistrée.');
+
+      return $this->redirectToRoute('BG_CoreBundle_home');
+    }
+
     return $this->render('@BGCore/Core/customers.html.twig', array(
-      'customers' => array()
+      'form' => $form->createView(),
+      'title' => $action == 'add' ? 'AJOUTER UN CLIENT' : 'MODIFIER UN CLIENT'
+    ));
+  }
+
+  public function customerAction()
+  {
+    return $this->render('@BGCore/Core/customer.html.twig', array(
+      'form' => $form = $this->get('form.factory')->create(CustomerChoiceType::class)->createView()
     ));
   }
 
@@ -135,10 +179,24 @@ class CoreController extends Controller
     ));
   }
 
-  public function settingsAction()
+  public function settingsAction(Request $request)
   {
+    $parameters = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1);
+
+    $form = $this->get('form.factory')->create(ParametersType::class, $parameters);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($parameters);
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Paramètres bien enregistrés.');
+
+      return $this->redirectToRoute('BG_CoreBundle_home');
+    }
+
     return $this->render('@BGCore/Core/settings.html.twig', array(
-      'settings' => array()
+      'form' => $form->createView()
     ));
   }
 

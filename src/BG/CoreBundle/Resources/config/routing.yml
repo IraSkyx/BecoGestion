@@ -32,11 +32,25 @@ BG_CoreBundle_generate:
     requirements:
         id:   \d+
 
+BG_CoreBundle_getplans:
+    path:     /getplans
+    defaults: { _controller: BGCoreBundle:Core:getPlans }
+    options:
+        expose: true
+
 BG_CoreBundle_getcustomers:
     path:     /getcustomers
     defaults: { _controller: BGCoreBundle:Core:getCustomers }
     options:
         expose: true
+
+BG_CoreBundle_customer:
+    path:     /customer
+    defaults: { _controller: BGCoreBundle:Core:customer }
+
+BG_CoreBundle_customers:
+    path:     /customers/{action}
+    defaults: { _controller: BGCoreBundle:Core:customers, action: add }
 
 BG_CoreBundle_billstack:
     path:     /billstack
@@ -59,10 +73,6 @@ BG_CoreBundle_archives:
 BG_CoreBundle_postquote:
     path:     /postquote
     defaults: { _controller: BGCoreBundle:Core:postquote }
-
-BG_CoreBundle_customers:
-    path:     /customers
-    defaults: { _controller: BGCoreBundle:Core:customers }
 
 BG_CoreBundle_plans:
     path:     /plans

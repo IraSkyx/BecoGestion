@@ -8,27 +8,28 @@
 
     <h2 class="row form-signin-heading justify-content-center">Édition des avancements</h2>
 
-    <h3 class="row form-signin-heading justify-content-center">{{ service.plan.level }} - {{ service.plan.drawing }}</h2>
+    <h3 class="row form-signin-heading justify-content-center">{{ service.level }} - {{ service.drawing }}</h2>
 
-      {% for flashMessage in app.session.flashbag %}
-          {{ flashMessage }}
-      {% endfor %}
+    {% if max.value != 100 %}
+      <div>
+        <a href="{{ path('BG_CoreBundle_addstate', {'id': id, "sid": service.id}) }}" class="btn btn-info">Ajouter un avancement</a>
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
-    <div>
-      <a href="{{ path('BG_CoreBundle_addstate', {'id': id, "sid": service.id}) }}" class="btn btn-info">Ajouter un avancement</a>
-      {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+        <div class="form-group">
+          {{ form_label(form.value, "Pourcentage actuel", {'label_attr': {'class': 'control-label'}}) }}
+          {{ form_errors(form.value) }}
+          {{ form_widget(form.value, {'attr': {'class': 'form-control', 'min': max.value, 'max': 100}}) }}
+        </div>
 
-      <div class="form-group">
-        {{ form_label(form.value, "Pourcentage actuel", {'label_attr': {'class': 'control-label'}}) }}
-        {{ form_errors(form.value) }}
-        {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
       </div>
 
-      {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
-
-      {{ form_rest(form) }}
-      {{ form_end(form) }}
-    </div>
+      {% else %}
+        <h2>Plan terminée à 100% !</h2>
+    {% endif %}
 
     <h3 class="row form-signin-heading justify-content-center">Historique</h3>
 
@@ -43,13 +44,11 @@
     <tbody>
 
       {% for state in service.states %}
-        {% if state != max %}
         <tr>
           <td>{{ state.date|date('d-m-Y H:i:s') }}</td>
           <td>{{ state.value }}</td>
           <td><a href="{{ path('BG_CoreBundle_removestate', {'id': id, 'sid': service.id, 'aid': state.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
         </tr>
-        {% endif %}
       {% endfor %}
 
     </tbody>

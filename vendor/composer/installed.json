@@ -1040,17 +1040,17 @@
     },
     {
         "name": "friendsofsymfony/jsrouting-bundle",
-        "version": "2.1.1",
-        "version_normalized": "2.1.1.0",
+        "version": "2.2.0",
+        "version_normalized": "2.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git",
-            "reference": "18112980f96407cbcec30c3b9cd543054b309c84"
+            "reference": "0f74f4f9d73580bd039cee54c4744b546a6a7990"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/18112980f96407cbcec30c3b9cd543054b309c84",
-            "reference": "18112980f96407cbcec30c3b9cd543054b309c84",
+            "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/0f74f4f9d73580bd039cee54c4744b546a6a7990",
+            "reference": "0f74f4f9d73580bd039cee54c4744b546a6a7990",
             "shasum": ""
         },
         "require": {
@@ -1064,7 +1064,7 @@
             "symfony/expression-language": "~2.7||~3.0|^4.0",
             "symfony/phpunit-bridge": "^3.3|^4.0"
         },
-        "time": "2017-12-13T12:00:14+00:00",
+        "time": "2018-02-07T20:08:48+00:00",
         "type": "symfony-bundle",
         "extra": {
             "branch-alias": {
@@ -1545,17 +1545,17 @@
     },
     {
         "name": "leafo/scssphp",
-        "version": "v0.7.4",
-        "version_normalized": "0.7.4.0",
+        "version": "v0.7.5",
+        "version_normalized": "0.7.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/leafo/scssphp.git",
-            "reference": "d7296256bd1bfacb8bd24e69030fd5e187181835"
+            "reference": "8b538d828bbb75276974605c4a1a435e939da74e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/leafo/scssphp/zipball/d7296256bd1bfacb8bd24e69030fd5e187181835",
-            "reference": "d7296256bd1bfacb8bd24e69030fd5e187181835",
+            "url": "https://api.github.com/repos/leafo/scssphp/zipball/8b538d828bbb75276974605c4a1a435e939da74e",
+            "reference": "8b538d828bbb75276974605c4a1a435e939da74e",
             "shasum": ""
         },
         "require": {
@@ -1565,7 +1565,7 @@
             "phpunit/phpunit": "~4.6",
             "squizlabs/php_codesniffer": "~2.5"
         },
-        "time": "2017-12-21T00:18:53+00:00",
+        "time": "2018-02-09T02:04:21+00:00",
         "bin": [
             "bin/pscss"
         ],
@@ -2076,17 +2076,17 @@
     },
     {
         "name": "sensio/framework-extra-bundle",
-        "version": "v5.1.4",
-        "version_normalized": "5.1.4.0",
+        "version": "v5.1.5",
+        "version_normalized": "5.1.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-            "reference": "072c00c52b947e88a1e619e9ff426cee6c8c482b"
+            "reference": "93ae48d5f4b567105bcc058c3a8ba506176eca8a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/072c00c52b947e88a1e619e9ff426cee6c8c482b",
-            "reference": "072c00c52b947e88a1e619e9ff426cee6c8c482b",
+            "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/93ae48d5f4b567105bcc058c3a8ba506176eca8a",
+            "reference": "93ae48d5f4b567105bcc058c3a8ba506176eca8a",
             "shasum": ""
         },
         "require": {
@@ -2116,7 +2116,7 @@
             "symfony/psr-http-message-bridge": "To use the PSR-7 converters",
             "symfony/security-bundle": ""
         },
-        "time": "2018-01-12T13:08:16+00:00",
+        "time": "2018-02-06T19:53:10+00:00",
         "type": "symfony-bundle",
         "extra": {
             "branch-alias": {

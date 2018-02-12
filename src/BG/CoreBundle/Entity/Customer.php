@@ -64,6 +64,13 @@ class Customer
     private $city;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_cloned", type="boolean")
+     */
+    private $isCloned;
+
+    /**
      * Deep clone method.
      * @return Customer
      */
@@ -76,7 +83,8 @@ class Customer
       ->setCompanyName($customer->getCompanyName())
       ->setAddress($customer->getAddress())
       ->setPostcode($customer->getPostcode())
-      ->setCity($customer->getCity());
+      ->setCity($customer->getCity())
+      ->setIsCloned(true);
     }
 
     /**
@@ -233,6 +241,35 @@ class Customer
         return $this->city;
     }
 
+    /**
+     * Set isCloned.
+     *
+     * @param bool $isCloned
+     *
+     * @return Customer
+     */
+    public function setIsCloned($isCloned)
+    {
+        $this->isCloned = $isCloned;
+
+        return $this;
+    }
+
+    /**
+     * Get isCloned.
+     *
+     * @return bool
+     */
+    public function getIsCloned()
+    {
+        return $this->isCloned;
+    }
+
+    /**
+     * To string.
+     *
+     * @return string
+     */
     public function __toString()
     {
       return "{$this->firstName} {$this->lastName}";

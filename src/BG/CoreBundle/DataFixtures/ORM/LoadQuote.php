@@ -19,16 +19,6 @@ class LoadQuote implements FixtureInterface
       $params = new Parameters(8,12,0.21);
       $manager->persist($params);
 
-      //CREATE PLANS
-      $myplan = new Plan();
-      $myplan2 = new Plan();
-      $myplan->setDrawing("Descente de charges")->setLevel("DDC");
-      $myplan2->setDrawing("Coffrage")->setLevel("Voile par passes");
-      $manager->persist($myplan);
-      $manager->persist($myplan2);
-
-      $manager->flush();
-
       //CREATE CUSTOMERS
       $customer = new Customer();
       $customer->setFirstName("Billy")->setLastName("Bob")->setCompanyName("BillyBobCompany")->setAddress("16, rue billy")->setPostcode(63000)->setCity("BillyCity");
@@ -46,8 +36,8 @@ class LoadQuote implements FixtureInterface
       //CREATE SERVICE
       $service1 = new Service();
       $service2 = new Service();
-      $service1->setBuilding(1)->setEngTime(10)->setDrawTime(5)->setPlan($myplan)->addState($adv)->addState($adv2);
-      $service2->setBuilding(2)->setEngTime(15)->setDrawTime(7)->setPlan($myplan2)->addState($adv3)->addState($adv4);
+      $service1->setDrawing("Descente de charges")->setLevel("DDC")->setBuilding(1)->setEngTime(10)->setDrawTime(5)->addState($adv)->addState($adv2);
+      $service2->setDrawing("Coffrage")->setLevel("Voile par passes")->setBuilding(2)->setEngTime(15)->setDrawTime(7)->addState($adv3)->addState($adv4);
       $manager->persist($service1);
       $manager->persist($service2);
 
