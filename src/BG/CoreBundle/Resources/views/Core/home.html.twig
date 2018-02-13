@@ -2,14 +2,6 @@
 
 {% block body %}
 
-  <div class="flash">
-    {% for flash_message in app.session.flashBag.get('notice') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
-  </div>
-
   <div align="right"><a href="{{ path('fos_user_security_logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>

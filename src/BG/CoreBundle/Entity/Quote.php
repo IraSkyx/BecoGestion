@@ -88,8 +88,9 @@ class Quote
     {
       //OPERATIONS
       $advancement = $service->getMaxState();
-      $engPrice = (($service->getEngTime() * $this->getEngRate()) * $advancement) - $service->getBilled();
-      $drawPrice = (($service->getDrawTime() * $this->getDrawRate()) * $advancement) - $service->getBilled();
+      echo $advancement;
+      $engPrice = (($service->getEngTime() * $this->getEngRate()) * ($advancement/100)) - $service->getBilled();
+      $drawPrice = (($service->getDrawTime() * $this->getDrawRate()) * ($advancement/100)) - $service->getBilled();
       $service->setBilled($service->getBilled() + $engPrice + $drawPrice);
 
       //COPY

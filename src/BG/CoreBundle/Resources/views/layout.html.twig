@@ -24,6 +24,14 @@
   <body>
     {% block body %}
 
+    <div class="flash">
+      {% for flash_message in app.session.flashBag.get('notice') %}
+          <div class="alert alert-success">
+              {{ flash_message }}
+          </div>
+      {% endfor %}
+    </div>
+
       {% block scripts %}
         <!--   Core JS Files   -->
         <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

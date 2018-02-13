@@ -43,13 +43,6 @@ class CoreController extends Controller
     ));
   }
 
-  public function archivedInvoicesAction()
-  {
-    return $this->render('@BGCore/Core/archived_invoices.html.twig', array(
-      'bills' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:ArchivedInvoices')->findAllByStatus(array("Validé"))
-    ));
-  }
-
   public function generateAction(int $id)
   {
     $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
@@ -59,8 +52,13 @@ class CoreController extends Controller
     $em->persist($invoice);
     $em->flush();
 
-    $html = $this->renderView('@BGBill/bill.html.twig', array(
-      'invoice' => $invoice
+    return $this->redirectToRoute('BG_CoreBundle_invoice', array('id' => $invoice->getId()));
+  }
+
+  public function invoiceAction(int $id)
+  {
+    $html = $this->renderView('@BGBill/invoice.html.twig', array(
+      'invoice' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->find($id)
     ));
 
     return new Response(

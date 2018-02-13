@@ -32,6 +32,12 @@ BG_CoreBundle_generate:
     requirements:
         id:   \d+
 
+BG_CoreBundle_invoice:
+    path:     /invoice/{id}
+    defaults: { _controller: BGCoreBundle:Core:invoice }
+    requirements:
+        id:   \d+
+
 BG_CoreBundle_getplans:
     path:     /getplans
     defaults: { _controller: BGCoreBundle:Core:getPlans }
