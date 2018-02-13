@@ -145,7 +145,8 @@ class CoreController extends Controller
 
   public function customersAction(Request $request, $action)
   {
-    $customer = $action == 'add' ? new Customer : $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->find($action);
+    $customer = $action == 'add' ? new Customer() : $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->find($action);
+    $customer->setIsCloned(0);
 
     $form = $this->get('form.factory')->create(CustomerType::class, $customer);
 
@@ -154,7 +155,7 @@ class CoreController extends Controller
       $em->persist($customer);
       $em->flush();
 
-      $request->getSession()->getFlashBag()->add('notice', 'Client bien enregistrée.');
+      $request->getSession()->getFlashBag()->add('notice', 'Client bien enregistré.');
 
       return $this->redirectToRoute('BG_CoreBundle_home');
     }
@@ -172,12 +173,12 @@ class CoreController extends Controller
     ));
   }
 
-  public function plansAction()
+  /*public function plansAction()
   {
     return $this->render('@BGCore/choice.html.twig', array(
       'title' => 'Gestion des plans'
     ));
-  }
+  }*/
 
   public function settingsAction(Request $request)
   {

@@ -26,6 +26,7 @@ class ComposerStaticInit3978278c851311fa629e159ebd667061
         ),
         'T' => 
         array (
+            'Twig\\Extensions\\' => 16,
             'Twig\\' => 5,
             'Tests\\' => 6,
         ),
@@ -105,6 +106,10 @@ class ComposerStaticInit3978278c851311fa629e159ebd667061
         'h4cc\\WKHTMLToPDF\\' => 
         array (
             0 => __DIR__ . '/..' . '/h4cc/wkhtmltopdf-amd64',
+        ),
+        'Twig\\Extensions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/extensions/src',
         ),
         'Twig\\' => 
         array (
@@ -295,6 +300,10 @@ class ComposerStaticInit3978278c851311fa629e159ebd667061
     public static $prefixesPsr0 = array (
         'T' => 
         array (
+            'Twig_Extensions_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/extensions/lib',
+            ),
             'Twig_' => 
             array (
                 0 => __DIR__ . '/..' . '/twig/twig/lib',

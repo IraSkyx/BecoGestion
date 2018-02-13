@@ -33,8 +33,11 @@ $(document).ready(function() {
 
 
 $(document).ready(function(){
-  $('#bg_corebundle_customer_customer').on("select2:selecting", function(e) {
-    window.location.replace(Routing.generate('BG_CoreBundle_customers', $('#bg_corebundle_customer_customer').val()));
+
+  $('.flash').delay(2000).fadeOut('slow');
+
+  $('#bg_corebundle_customer_customer').on("select2:select", function(e) {
+    window.location.replace(Routing.generate('BG_CoreBundle_customers', { action: $('#bg_corebundle_customer_customer').val() } ));
   });
   }
 );

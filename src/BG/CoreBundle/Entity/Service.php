@@ -106,7 +106,7 @@ class Service
       $entity = $args->getObject();
       $em = $args->getObjectManager();
 
-      if($em->getRepository('BGCoreBundle:Plan')->exist($entity->getCode(), $entity->getLevel(), $entity->getDrawing()) == false)
+      if($em->getRepository('BGCoreBundle:Plan')->exists($entity->getCode(), $entity->getLevel(), $entity->getDrawing()) == false)
       {
         $plan = new Plan($entity->getCode(), $entity->getLevel(), $entity->getDrawing());
         $em->persist($plan);

@@ -51,10 +51,12 @@ BG_CoreBundle_customer:
 BG_CoreBundle_customers:
     path:     /customers/{action}
     defaults: { _controller: BGCoreBundle:Core:customers, action: add }
+    options:
+        expose: true
 
-BG_CoreBundle_billstack:
-    path:     /billstack
-    defaults: { _controller: BGCoreBundle:Core:billStack }
+BG_CoreBundle_invoices:
+    path:     /invoices
+    defaults: { _controller: BGCoreBundle:Core:invoices }
 
 BG_CoreBundle_newquote:
     path:     /newquote

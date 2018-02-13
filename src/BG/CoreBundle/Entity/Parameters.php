@@ -3,11 +3,13 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 /**
  * Parameters
  *
  * @ORM\Table(name="parameters")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\ParametersRepository")
  */
 class Parameters
@@ -51,6 +53,27 @@ class Parameters
       $this->engRate = $engRate;
       $this->drawRate = $drawRate;
       $this->vat = $vat;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateVat(PreUpdateEventArgs $args)
+    {
+      $entity = $args->getObject();
+      $em = $args->getObjectManager();
+
+      $vat = $entity->getVat();
+
+      /*if ($args->hasChangedField('vat'))
+      {
+        $quotes = $em->getRepository('BGCoreBundle:Quote')->findAllByStatus(array('En attente', 'En cours'));
+        foreach($quotes as $quote)
+        {
+          $quote->setVat($vat);
+        }
+        $em->flush();
+      }*/
     }
 
     /**

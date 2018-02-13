@@ -2,6 +2,14 @@
 
 {% block body %}
 
+  <div class="flash">
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+  </div>
+
   <div align="right"><a href="{{ path('fos_user_security_logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>
@@ -13,7 +21,7 @@
     <div class="dropdown-menu">
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_newquote') }}">Nouveau devis</a>
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="{{ path('BG_CoreBundle_billstack') }}">Factures en attente</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_invoices') }}">Accéder aux factures</a>
       {% if app.request.attributes.get('_route') == "BG_CoreBundle_home" %}
         <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives</a>
       {% else %}
@@ -21,7 +29,7 @@
       {% endif %}
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_customer') }}">Gestion des clients</a>
-      <a class="dropdown-item" href="{{ path('BG_CoreBundle_plans') }}">Gestion des plans</a>
+      <!--<a class="dropdown-item" href="{{ path('BG_CoreBundle_plans') }}">Gestion des plans</a>-->
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_settings') }}">Gestion des paramètres</a>
     </div>
   </div>

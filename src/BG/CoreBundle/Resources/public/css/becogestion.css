@@ -18,6 +18,13 @@ html, body {
   padding:2vh !important;
 }
 
+.flash {
+  position:fixed;
+  bottom: 2em;
+  right: 2em;
+  z-index: 9999;
+}
+
 .row {
   width:100%;
   margin-left: 0 !important;
@@ -61,7 +68,7 @@ h3 {
    vertical-align: middle;
    text-align: center;
  }
- 
+
  .well {
    margin:2vh;
  }
