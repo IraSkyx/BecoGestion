@@ -38,8 +38,8 @@ class CoreController extends Controller
 
   public function invoicesAction()
   {
-    return $this->render('@BGCore/Core/invoices.html.twig', array(
-      'bills' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->findAllByStatus(array("En attente", "En cours"))
+    return $this->render('@BGBill/invoices.html.twig', array(
+      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->findAllByStatus(array("En attente", "En cours"))
     ));
   }
 
@@ -53,6 +53,24 @@ class CoreController extends Controller
     $em->flush();
 
     return $this->redirectToRoute('BG_CoreBundle_invoice', array('id' => $invoice->getId()));
+  }
+
+  public function invalidateAction(int $id)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $em->remove($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->find($id));
+    $em->flush();
+
+    return $this->redirectToRoute('BG_CoreBundle_invoices');
+  }
+
+  public function validateAction(int $id)
+  {
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->find($id);
+    $invoice->getStatus()->setType("success")->setMessage("Terminé");
+    $this->getDoctrine()->getManager()->flush();
+
+    return $this->redirectToRoute('BG_CoreBundle_invoices');
   }
 
   public function invoiceAction(int $id)

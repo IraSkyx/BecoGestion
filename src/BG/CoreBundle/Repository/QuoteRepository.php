@@ -22,7 +22,8 @@ class QuoteRepository extends \Doctrine\ORM\EntityRepository
   public function changeStatus(int $id, string $status)
   {
     $quote = $this->_em->getRepository('BGCoreBundle:Quote')->find($id);
-    switch ($status) {
+    switch ($status)
+    {
       case 'awaiting': $quote->setStatus(new Status("warning", "En attente"));
         break;
       case 'ongoing': $quote->setStatus(new Status("primary", "En cours"));

@@ -26,6 +26,18 @@ BG_CoreBundle_view:
     requirements:
         id:   \d+
 
+BG_CoreBundle_validate:
+      path:     /validate/{id}
+      defaults: { _controller: BGCoreBundle:Core:validate }
+      requirements:
+          id:   \d+
+
+BG_CoreBundle_invalidate:
+      path:     /invalidate/{id}
+      defaults: { _controller: BGCoreBundle:Core:invalidate }
+      requirements:
+          id:   \d+
+
 BG_CoreBundle_generate:
     path:     /generate/{id}
     defaults: { _controller: BGCoreBundle:Core:generate }

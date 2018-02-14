@@ -18,10 +18,10 @@ class IndexExtension extends \Twig_Extension
      */
     public function indexFilter($value)
     {
-        $quot = $value/26;
-        $rem = $value%26;
+        $quot = intval($value/26);
+        $rem = intval($value%26);
         $letter = chr((ord('A') + $rem));
 
-        return $quot == 0 ? "".$letter : indexFilter($quot-1).$letter;
+        return $quot == 0 ? $letter : $this->indexFilter($quot-1).$letter;
     }
 }

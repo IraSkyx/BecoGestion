@@ -1,0 +1,64 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <div align="right"><a href="{{ path('fos_user_security_logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+  <div class="container-fluid align-items-center card wizard-card">
+  <h1 class="row justify-content-center">BECO GESTION</h1>
+
+  <div class="row">
+    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Actions
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_newquote') }}">Nouveau devis</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_home') }}">Accéder aux devis</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_customer') }}">Gestion des clients</a>
+      <!--<a class="dropdown-item" href="{{ path('BG_CoreBundle_plans') }}">Gestion des plans</a>-->
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_settings') }}">Gestion des paramètres</a>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Réf Facture</th>
+            <th>Status</th>
+            <th>Client</th>
+            <th>Date de création</th>
+            <th>Valider</th>
+            <th>Supprimer</th>
+            <th>Voir</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.id }}</td>
+
+                    <td><button type="button" class="btn btn-{{ invoice.status.type}}">{{ invoice.status.message }}</button></td>
+
+                    <td>{{ invoice.customer.firstname }} {{ invoice.customer.lastname }}</td>
+
+                    <td>{{ invoice.date|date('d-m-Y')  }}</td>
+
+                    <td><a href="{{ path('BG_CoreBundle_validate', {'id': invoice.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
+
+                    <td><a href="{{ path('BG_CoreBundle_invalidate', {'id': invoice.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
+
+                    <td><a href="{{ path('BG_CoreBundle_invoice', {'id': invoice.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+                </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}
