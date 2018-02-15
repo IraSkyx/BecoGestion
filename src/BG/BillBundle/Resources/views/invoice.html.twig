@@ -9,11 +9,7 @@
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-      {% stylesheets filter='cssrewrite, ?scssphp'
-      'bundles/bginvoicebundle/css/becogestion-invoice.css'
-      %}
-        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-      {% endstylesheets %}
+      <link rel="stylesheet" href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/bgbill/css/becogestion-bill.css') }}" type="text/css" />
 
     {% endblock %}
   </head>
@@ -34,56 +30,113 @@
         <tbody>
           <tr>
             <td>Date</td>
-            <td>{{ invoice.date|date('d-m-Y') }}</td>
+            <td align="center">{{ invoice.creationDate|date('d-m-Y') }}</td>
           <tr>
           <tr>
             <td>Réf devis</td>
-            <td>{{ invoice.ref }}</td>
+            <td align="center">{{ invoice.ref }}</td>
           <tr>
           <tr>
             <td>Client</td>
-            <td>{{ invoice.customer }}</td>
+            <td align="center">{{ invoice.customer }}</td>
           <tr>
           <tr>
             <td>ID CEE</td>
-            <td>12332443</td>
+            <td align="center">12332443</td>
           <tr>
           <tr>
             <td>Dossier</td>
-            <td>12332443</td>
+            <td align="center">12332443</td>
           <tr>
         </tbody>
       </table>
       <!-- Header -->
 
+    </br>
+
       <!-- Body -->
-      <div class="table-responsive">
+      <div class="table-responsive box-margin">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Niveau</th>
-                <th>Plan</th>
-                <th>Désignation</th>
-                <th>P.U HT en €</th>
-                <th>P.U TTC en €</th>
+                <th>CODE</th>
+                <th>NIVEAU</th>
+                <th>PLAN</th>
+                <th>DÉSIGNATION</th>
+                <th>P.U HT EN €</th>
+                <th>P.U TTC EN €</th>
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td colspan="6" align="center"><h6>PRODUCTION</h6></td>
+              </tr>
 
               {% for service in invoice.services %}
                     <tr>
+                        <td>{{ service.code }}</td>
                         <td>{{ service.level }}</td>
                         <td>{{ service.drawing }}</td>
                         <td>???</td>
-                        <td>{{ service.billed }}</td>
-                        <td>{{ service.billed + (service.billed * invoice.vat) }}</td>
+                        <td>{{ (service.billed) * 0.8 }}</td>
+                        <td>{{ (service.billed + (service.billed * invoice.vat)) * 0.8 }}</td>
                     </tr>
               {% endfor %}
 
+              <tr>
+                <td colspan="6" align="center"><h6>SERVICES</h6></td>
+              </tr>
+
+              {% for service in invoice.services %}
+                    <tr>
+                        <td>{{ service.code }}</td>
+                        <td>{{ service.level }}</td>
+                        <td>{{ service.drawing }}</td>
+                        <td>???</td>
+                        <td>{{ (service.billed) * 0.2 }}</td>
+                        <td>{{ (service.billed + (service.billed * invoice.vat)) * 0.2 }}</td>
+                    </tr>
+              {% endfor %}
+
+              <tr>
+                <td colspan="4" rowspan="5">
+                  <p class="align-items-center" align="left">
+                    <strong>CONDITIONS DE PAIEMENT : PAR CHEQUE</strong></br>
+                    Nos factures sont payables au comptant net sans escompte.</br>
+                    Les pénalités de retard sont égales à 1.5 fois le taux d’intérêt légal
+                    (conformément à la loi 92-1442 du 31/12/92)</br>
+                    <strong>DATE DE RÉGLEMENT : écheance le : {{ invoice.payementDate|date('d/m/Y') }}</strong>
+                  </p>
+                </td>
+                <td class="small"><strong>TOTAL HT</strong></td>
+                <td>30000</td>
+              </tr>
+
+              <tr>
+                <td class="small"><strong>TVA {{ invoice.vat * 100 }} %</strong></td>
+                <td>30000</td>
+              </tr>
+
+              <tr>
+                <td class="small"><strong>TOTAL TTC</strong></td>
+                <td>30000</td>
+              </tr>
+
+              <tr>
+                <td class="small"><strong>NET A PAYER</strong></td>
+                <td>31000</td>
+              </tr>
+
             </tbody>
           </table>
+
+
+
       </div>
       <!-- Body -->
     </div>
+
+    <hr>
+
   </body>
 </html>

@@ -3,6 +3,7 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use BG\BillBundle\Entity\Invoice;
 
 /**
  * Quote
@@ -113,7 +114,9 @@ class Quote
     {
       $invoice = new Invoice();
       $invoice->setRef($this->getId());
-      $invoice->setDate($this->getDate());
+      $invoice->setCreationDate(new \DateTime('NOW'));
+      $invoice->setPayementDate(new \DateTime('NOW'));
+      $invoice->getPayementDate()->modify('+30 days');
       $invoice->setEngRate($this->getEngRate());
       $invoice->setDrawRate($this->getDrawRate());
       $invoice->setVat($this->getVat());

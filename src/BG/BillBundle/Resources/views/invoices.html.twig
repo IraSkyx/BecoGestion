@@ -5,6 +5,8 @@
   <div align="right"><a href="{{ path('fos_user_security_logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>
+  <hr class="row">
+  <h7 class="row justify-content-center">FACTURES</h7>
 
   <div class="row">
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,7 +31,8 @@
             <th>Réf Facture</th>
             <th>Status</th>
             <th>Client</th>
-            <th>Date de création</th>
+            <th>Date d'émission</th>
+            <th>Date de payement</th>
             <th>Valider</th>
             <th>Supprimer</th>
             <th>Voir</th>
@@ -45,9 +48,11 @@
 
                     <td>{{ invoice.customer.firstname }} {{ invoice.customer.lastname }}</td>
 
-                    <td>{{ invoice.date|date('d-m-Y')  }}</td>
+                    <td>{{ invoice.creationDate|date('d-m-Y')  }}</td>
 
-                    <td><a href="{{ path('BG_CoreBundle_validate', {'id': invoice.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
+                    <td>{{ invoice.payementDate|date('d-m-Y')  }}</td>
+
+                    <td><a href="{{ path('BG_CoreBundle_pickdate', {'id': invoice.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
 
                     <td><a href="{{ path('BG_CoreBundle_invalidate', {'id': invoice.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
 

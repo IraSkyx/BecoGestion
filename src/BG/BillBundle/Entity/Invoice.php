@@ -1,13 +1,13 @@
 <?php
 
-namespace BG\CoreBundle\Entity;
+namespace BG\BillBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Invoice
  *
- * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\InvoiceRepository")
+ * @ORM\Entity(repositoryClass="BG\BillBundle\Repository\InvoiceRepository")
  */
 class Invoice
 {
@@ -31,9 +31,16 @@ class Invoice
   /**
    * @var \DateTime
    *
-   * @ORM\Column(name="date", type="datetime")
+   * @ORM\Column(name="creation_date", type="datetime")
    */
-  private $date;
+  private $creationDate;
+
+  /**
+   * @var \DateTime
+   *
+   * @ORM\Column(name="payement_date", type="datetime")
+   */
+  private $payementDate;
 
   /**
    * @var float
@@ -113,27 +120,51 @@ class Invoice
     }
 
     /**
-     * Set date.
+     * Set creation date.
      *
-     * @param \DateTime $date
+     * @param \DateTime $creationDate
      *
      * @return Invoice
      */
-    public function setDate($date)
+    public function setCreationDate($creationDate)
     {
-        $this->date = $date;
+        $this->creationDate = $creationDate;
 
         return $this;
     }
 
     /**
-     * Get date.
+     * Get creation date.
      *
      * @return \DateTime
      */
-    public function getDate()
+    public function getCreationDate()
     {
-        return $this->date;
+        return $this->creationDate;
+    }
+
+    /**
+     * Set payement date.
+     *
+     * @param \DateTime $payementDate
+     *
+     * @return Invoice
+     */
+    public function setPayementDate($payementDate)
+    {
+        $this->payementDate = $payementDate;
+
+        return $this;
+    }
+
+    /**
+     * Get payement date.
+     *
+     * @return \DateTime
+     */
+    public function getPayementDate()
+    {
+        return $this->payementDate;
     }
 
     /**

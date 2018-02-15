@@ -384,6 +384,22 @@ class Service
     }
 
     /**
+     * Equals function.
+     *
+     * @return boolean
+     */
+    public function equals(Service $service)
+    {
+      return $this->getLevel() == $service->getLevel()
+      && $this->getDrawing() == $service->getDrawing()
+      && $this->getBuilding() == $service->getBuilding()
+      && $this->getCode() == $service->getCode()
+      && $this->getEngTime() == $service->getEngTime()
+      && $this->getDrawTime() == $service->getDrawTime()
+      && $this->getGrade() == $service->getGrade();
+    }
+
+    /**
      * To String.
      *
      * @return string

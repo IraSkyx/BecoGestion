@@ -15,8 +15,10 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use BG\CoreBundle\Form\AdvancementType;
 use BG\CoreBundle\Form\ParametersType;
 use BG\CoreBundle\Form\QuoteType;
+use BG\BillBundle\Form\InvoiceType;
 use BG\CoreBundle\Form\CustomerChoiceType;
 use BG\CoreBundle\Form\CustomerType;
+use BG\BillBundle\Entity\Invoice;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
@@ -39,7 +41,7 @@ class CoreController extends Controller
   public function invoicesAction()
   {
     return $this->render('@BGBill/invoices.html.twig', array(
-      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->findAllByStatus(array("En attente", "En cours"))
+      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->findAllByStatus(array("En attente", "En cours"))
     ));
   }
 
@@ -58,15 +60,43 @@ class CoreController extends Controller
   public function invalidateAction(int $id)
   {
     $em = $this->getDoctrine()->getManager();
-    $em->remove($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->find($id));
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($invoice->getRef());
+
+    foreach($quote->getServices() as $service)
+      foreach($invoice->getServices() as $inv_service)
+        if($service->equals($inv_service))
+          $service->setBilled($service->getBilled() - $inv_service->getBilled());
+
+    $em->remove($invoice);
     $em->flush();
 
     return $this->redirectToRoute('BG_CoreBundle_invoices');
   }
 
+  public function pickDateAction(Request $request, int $id)
+  {
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
+
+    $form = $this->get('form.factory')->create(InvoiceType::class, $invoice);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->flush();
+
+      $request->getSession()->getFlashBag()->add('notice', 'Facture bien enregistrée.');
+
+      return $this->redirectToRoute('BG_CoreBundle_validate', array('id' => $id));
+    }
+
+    return $this->render('@BGBill/pickdate.html.twig', array(
+      'form' => $form->createView()
+    ));
+  }
+
   public function validateAction(int $id)
   {
-    $invoice = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->find($id);
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
     $invoice->getStatus()->setType("success")->setMessage("Terminé");
     $this->getDoctrine()->getManager()->flush();
 
@@ -75,12 +105,16 @@ class CoreController extends Controller
 
   public function invoiceAction(int $id)
   {
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
     $html = $this->renderView('@BGBill/invoice.html.twig', array(
-      'invoice' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Invoice')->find($id)
+      'invoice' => $invoice
     ));
 
     return new Response(
-      $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html, [
+        'header-html' => $this->renderView('@BGBill/header.html.twig'),
+        'footer-html' => $this->renderView('@BGBill/footer.html.twig')
+      ]),
       200,
       array(
           'Content-Type' => 'application/pdf'

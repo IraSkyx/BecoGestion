@@ -26,6 +26,12 @@ BG_CoreBundle_view:
     requirements:
         id:   \d+
 
+BG_CoreBundle_pickdate:
+    path:     /pick/{id}
+    defaults: { _controller: BGCoreBundle:Core:pickDate }
+    requirements:
+        id:   \d+
+
 BG_CoreBundle_validate:
       path:     /validate/{id}
       defaults: { _controller: BGCoreBundle:Core:validate }
