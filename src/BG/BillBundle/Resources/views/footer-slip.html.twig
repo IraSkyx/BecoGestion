@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  {% block head %}
+    <meta charset="utf-8">
+
+    <!--   Core CSS Files   -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/bgbill/css/becogestion-bill.css') }}" type="text/css" />
+
+  {% endblock %}
+</head>
+<body>
+  <div class="container">
+  </br></br>
+    <hr>
+    <p class="medium" align="center" style="margin:0;">
+      S.A.R.L. au capital de 8855 Euros
+      R.C.S MELUN 452 782 717 - APE 7112B - SIRET 452 782 717 00048
+      N° TVA Intracommunautaire : FR 30452782717
+    </p>
+  </br>
+  </div>
+</body>
+<html>

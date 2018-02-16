@@ -3,9 +3,14 @@
     src: url('../fonts/Roboto.ttf');
 }
 
+@font-face {
+    font-family: Bebas Neue;
+    src: url('../fonts/BebasNeue.otf');
+}
+
 html, body {
   font-size: 100%;
-  background-image: url('../imgs/Background.png');
+  background-image: url('../imgs/background.png');
   background-attachment: fixed;
   font-family: Roboto;
   background-size: cover;
@@ -51,7 +56,16 @@ html, body {
 }
 
 h1 {
+  font-family: 'Bebas Neue';
   font-size: 10vh !important;
+}
+
+h1.small {
+  font-size: 2vh !important;
+}
+
+.btn.btn-primary {
+  background-color: #17a2b8 !important;
 }
 
 h3 {
@@ -64,6 +78,10 @@ h3 {
   margin:2vh;
 }
 
+.box-margin {
+  margin:2vh !important;
+}
+
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
    vertical-align: middle;
    text-align: center;
@@ -74,7 +92,7 @@ h3 {
  }
 
 .fas {
-  font-size: 2em;
+  font-size: 1.5em;
   margin: 1vh;
 }
 

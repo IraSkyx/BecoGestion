@@ -84,6 +84,7 @@ class Service
      *
      * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Advancement", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable = false)
+     * @ORM\OrderBy({"date" = "DESC"})
      */
     private $states;
 

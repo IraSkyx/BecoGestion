@@ -26,6 +26,24 @@ BG_CoreBundle_view:
     requirements:
         id:   \d+
 
+BG_CoreBundle_generateslip:
+    path:     /generateslip/{id}
+    defaults: { _controller: BGCoreBundle:Core:generateSlip }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_slip:
+    path:     /slip/{id}
+    defaults: { _controller: BGCoreBundle:Core:slip }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_slips:
+    path:     /slips/{id}
+    defaults: { _controller: BGCoreBundle:Core:slips }
+    requirements:
+        id:   \d+
+
 BG_CoreBundle_pickdate:
     path:     /pick/{id}
     defaults: { _controller: BGCoreBundle:Core:pickDate }
@@ -81,6 +99,10 @@ BG_CoreBundle_customers:
 BG_CoreBundle_invoices:
     path:     /invoices
     defaults: { _controller: BGCoreBundle:Core:invoices }
+
+BG_CoreBundle_archivesinvoices:
+    path:     /archivesinvoices
+    defaults: { _controller: BGCoreBundle:Core:archivesInvoices }
 
 BG_CoreBundle_newquote:
     path:     /newquote

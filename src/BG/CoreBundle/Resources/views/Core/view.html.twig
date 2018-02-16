@@ -15,7 +15,6 @@
         <div class="dropdown">
           <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
           <div class="dropdown-menu">
-             <a class="dropdown-item">Générer un bordereau</a>
              <h6 class="dropdown-header">Changer le status</h6>
              <a class="dropdown-item" href="{{ path('BG_CoreBundle_changestatus', {'id': quote.id, 'status': 'awaiting'}) }}">En attente</a>
              <a class="dropdown-item" href="{{ path('BG_CoreBundle_changestatus', {'id': quote.id, 'status': 'ongoing'}) }}">En cours</a>
@@ -34,7 +33,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Sélection</th>
+              <th><div id="checkAll" class="check"><label><input type="checkbox" name="optionsCheckboxes"></label> Sélection</div></th>
               <th>Bâtiment</th>
               <th>Niveau</th>
               <th>Dessin</th>

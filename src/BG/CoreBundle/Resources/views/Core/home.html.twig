@@ -6,7 +6,7 @@
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>
   <hr class="row">
-  <h7 class="row justify-content-center">DEVIS</h7>
+  <h1 class="row justify-content-center small">DEVIS</h1>
 
   <div class="row">
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -15,15 +15,13 @@
     <div class="dropdown-menu">
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_newquote') }}">Nouveau devis</a>
       <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_home') }}">Accéder aux devis</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives de devis</a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_invoices') }}">Accéder aux factures</a>
-      {% if app.request.attributes.get('_route') == "BG_CoreBundle_home" %}
-        <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives</a>
-      {% else %}
-        <a class="dropdown-item" href="{{ path('BG_CoreBundle_home') }}">Accéder aux devis</a>
-      {% endif %}
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_archivesinvoices') }}">Accéder aux archives de factures</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_customer') }}">Gestion des clients</a>
-      <!--<a class="dropdown-item" href="{{ path('BG_CoreBundle_plans') }}">Gestion des plans</a>-->
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_settings') }}">Gestion des paramètres</a>
     </div>
   </div>
@@ -52,7 +50,7 @@
 
                     <td>{{ quote.date|date('d-m-Y')  }}</td>
 
-                    <td><a href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                    <td><a id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
 
                     <td><a href="{{ path('BG_CoreBundle_view', {'id': quote.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a></td>
                 </tr>

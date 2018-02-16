@@ -41,3 +41,18 @@ $(document).ready(function(){
   });
   }
 );
+
+$(document).ready(function(){
+
+  $('#generateInvoice').on("click", function(e) {
+    if (confirm('Êtes-vous sûr de vouloir générer une facture et un bordereau d\'envoi ?') == false) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  }
+);
+
+$(document).ready(function(){
+  
+});

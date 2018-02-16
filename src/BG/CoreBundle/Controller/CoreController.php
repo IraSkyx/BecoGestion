@@ -41,8 +41,45 @@ class CoreController extends Controller
   public function invoicesAction()
   {
     return $this->render('@BGBill/invoices.html.twig', array(
-      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->findAllByStatus(array("En attente", "En cours"))
+      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->findAllByStatus(array("En attente"))
     ));
+  }
+
+  public function archivesInvoicesAction()
+  {
+    return $this->render('@BGBill/invoices.html.twig', array(
+      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->findAllByStatus(array("Terminé")),
+      'archives' => true
+    ));
+  }
+
+  public function slipAction(int $id)
+  {
+    $slip = null;
+    //$slip = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Slip')->find($id);
+    $html = $this->renderView('@BGBill/slip.html.twig', array(
+      'slip' => $slip
+    ));
+
+    return new Response(
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html, [
+        'header-html' => $this->renderView('@BGBill/header.html.twig'),
+        'footer-html' => $this->renderView('@BGBill/footer-slip.html.twig')
+      ]),
+      200,
+      array(
+          'Content-Type' => 'application/pdf'
+      ));
+  }
+
+  public function slipsAction(int $id)
+  {
+
+  }
+
+  public function generateSlipAction(int $id)
+  {
+
   }
 
   public function generateAction(int $id)
@@ -63,13 +100,16 @@ class CoreController extends Controller
     $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
     $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($invoice->getRef());
 
-    foreach($quote->getServices() as $service)
-      foreach($invoice->getServices() as $inv_service)
-        if($service->equals($inv_service))
-          $service->setBilled($service->getBilled() - $inv_service->getBilled());
+    if($invoice->getStatus()->getMessage() == 'En attente')
+    {
+      foreach($quote->getServices() as $service)
+        foreach($invoice->getServices() as $inv_service)
+          if($service->equals($inv_service))
+            $service->setBilled($service->getBilled() - $inv_service->getBilled());
 
-    $em->remove($invoice);
-    $em->flush();
+      $em->remove($invoice);
+      $em->flush();
+    }
 
     return $this->redirectToRoute('BG_CoreBundle_invoices');
   }
@@ -97,8 +137,12 @@ class CoreController extends Controller
   public function validateAction(int $id)
   {
     $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
-    $invoice->getStatus()->setType("success")->setMessage("Terminé");
-    $this->getDoctrine()->getManager()->flush();
+
+    if($invoice->getStatus()->getMessage() == 'En attente')
+    {
+      $invoice->getStatus()->setType("success")->setMessage("Terminé");
+      $this->getDoctrine()->getManager()->flush();
+    }
 
     return $this->redirectToRoute('BG_CoreBundle_invoices');
   }
@@ -106,8 +150,12 @@ class CoreController extends Controller
   public function invoiceAction(int $id)
   {
     $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
+    $totalet = $invoice->getTotalEt();
+
     $html = $this->renderView('@BGBill/invoice.html.twig', array(
-      'invoice' => $invoice
+      'invoice' => $invoice,
+      'totalet' => $totalet,
+      'vat' => $totalet * $invoice->getVat()
     ));
 
     return new Response(
@@ -223,13 +271,6 @@ class CoreController extends Controller
     ));
   }
 
-  /*public function plansAction()
-  {
-    return $this->render('@BGCore/choice.html.twig', array(
-      'title' => 'Gestion des plans'
-    ));
-  }*/
-
   public function settingsAction(Request $request)
   {
     $parameters = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1);
@@ -272,8 +313,10 @@ class CoreController extends Controller
 
   public function viewAction(int $id)
   {
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
+
     return $this->render('@BGCore/Core/view.html.twig', array(
-      'quote' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id)
+      'quote' => $quote
     ));
   }
 

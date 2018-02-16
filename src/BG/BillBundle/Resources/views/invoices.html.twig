@@ -6,7 +6,7 @@
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>
   <hr class="row">
-  <h7 class="row justify-content-center">FACTURES</h7>
+  <h1 class="row justify-content-center small">FACTURES</h1>
 
   <div class="row">
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -15,11 +15,13 @@
     <div class="dropdown-menu">
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_newquote') }}">Nouveau devis</a>
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives</a>
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_home') }}">Accéder aux devis</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_archives') }}">Accéder aux archives de devis</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_invoices') }}">Accéder aux factures</a>
+      <a class="dropdown-item" href="{{ path('BG_CoreBundle_archivesinvoices') }}">Accéder aux archives de factures</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_customer') }}">Gestion des clients</a>
-      <!--<a class="dropdown-item" href="{{ path('BG_CoreBundle_plans') }}">Gestion des plans</a>-->
       <a class="dropdown-item" href="{{ path('BG_CoreBundle_settings') }}">Gestion des paramètres</a>
     </div>
   </div>
@@ -32,9 +34,11 @@
             <th>Status</th>
             <th>Client</th>
             <th>Date d'émission</th>
-            <th>Date de payement</th>
-            <th>Valider</th>
-            <th>Supprimer</th>
+            <th>Date de paiement</th>
+            {% if archives is not defined %}
+              <th>Valider</th>
+              <th>Supprimer</th>
+            {% endif %}
             <th>Voir</th>
           </tr>
         </thead>
@@ -52,9 +56,10 @@
 
                     <td>{{ invoice.payementDate|date('d-m-Y')  }}</td>
 
-                    <td><a href="{{ path('BG_CoreBundle_pickdate', {'id': invoice.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
-
-                    <td><a href="{{ path('BG_CoreBundle_invalidate', {'id': invoice.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
+                    {% if archives is not defined %}
+                      <td><a href="{{ path('BG_CoreBundle_pickdate', {'id': invoice.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
+                      <td><a href="{{ path('BG_CoreBundle_invalidate', {'id': invoice.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
+                    {% endif %}
 
                     <td><a href="{{ path('BG_CoreBundle_invoice', {'id': invoice.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
                 </tr>

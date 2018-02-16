@@ -45,7 +45,7 @@
 
       {% for state in service.states %}
         <tr>
-          <td>{{ state.date|date('d-m-Y H:i:s') }}</td>
+          <td>{{ state.date|date('d-m-Y à H:i:s') }}</td>
           <td>{{ state.value }}</td>
           <td><a href="{{ path('BG_CoreBundle_removestate', {'id': id, 'sid': service.id, 'aid': state.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
         </tr>

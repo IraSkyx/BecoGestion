@@ -322,4 +322,11 @@ class Invoice
     {
         return $this->services;
     }
+
+    public function getTotalEt() {
+      $sum = 0;
+      foreach($this->getServices() as $service)
+        $sum += $service->getBilled();
+      return $sum;
+    }
 }
