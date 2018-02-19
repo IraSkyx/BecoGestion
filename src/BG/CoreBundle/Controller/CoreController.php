@@ -19,6 +19,8 @@ use BG\BillBundle\Form\InvoiceType;
 use BG\CoreBundle\Form\CustomerChoiceType;
 use BG\CoreBundle\Form\CustomerType;
 use BG\BillBundle\Entity\Invoice;
+use BG\CoreBundle\Entity\Service;
+use BG\CoreBundle\Entity\Building;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
@@ -169,17 +171,6 @@ class CoreController extends Controller
       ));
   }
 
-  public function getPlansAction()
-  {
-    $data = null;
-    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Plan')->findAll() as $plan)
-      $data[] = array(
-        'id' => $plan->getId(),
-        'text' => $plan->__toString()
-      );
-    return new JsonResponse($data);
-  }
-
   public function getCustomersAction()
   {
     foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->findByIsCloned(0) as $customer)
@@ -194,6 +185,7 @@ class CoreController extends Controller
   {
     $params = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1);
     $quote = new Quote($params->getEngRate(), $params->getDrawRate(), $params->getVat());
+    $quote->addBuilding(Building::fromBase($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:BaseService')->findBase()));
 
     $form = $this->get('form.factory')->create(QuoteType::class, $quote);
 
@@ -227,7 +219,7 @@ class CoreController extends Controller
       $em->persist($quote);
       $em->flush();
 
-      $request->getSession()->getFlashBag()->add('notice', 'Devis bien enregistrée.');
+      $request->getSession()->getFlashBag()->add('notice', 'Devis bien enregistré.');
 
       return $this->redirectToRoute('BG_CoreBundle_view', array('id' => $id));
     }
@@ -244,7 +236,6 @@ class CoreController extends Controller
   public function customersAction(Request $request, $action)
   {
     $customer = $action == 'add' ? new Customer() : $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Customer')->find($action);
-    $customer->setIsCloned(0);
 
     $form = $this->get('form.factory')->create(CustomerType::class, $customer);
 
@@ -292,25 +283,6 @@ class CoreController extends Controller
     ));
   }
 
-  public function addStateAction(int $id, int $sid)
-  {
-    $adv = new Advancement();
-    $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Service')->find($sid)->addState(
-      $adv->setValue($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Service')->findMaxAdvancement($sid)->getValue())
-    );
-    $this->getDoctrine()->getManager()->flush();
-    return $this->redirectToRoute('BG_CoreBundle_service', array('id' => $id, 'sid' => $sid));
-  }
-
-  public function removeStateAction(int $id, int $sid, int $aid)
-  {
-    $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Service')->find($sid)->removeState(
-      $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Advancement')->find($aid)
-    );
-    $this->getDoctrine()->getManager()->flush();
-    return $this->redirectToRoute('BG_CoreBundle_service', array('id' => $id, 'sid' => $sid));
-  }
-
   public function viewAction(int $id)
   {
     $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
@@ -320,33 +292,10 @@ class CoreController extends Controller
     ));
   }
 
-  public function serviceAction(int $id, int $sid, Request $request)
-  {
-    $max = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Service')->findMaxAdvancement($sid);
-
-    $form = $this->get('form.factory')->create(AdvancementType::class, $max);
-
-    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($max);
-      $em->flush();
-
-      $request->getSession()->getFlashBag()->add('notice', 'Avancement bien enregistrée.');
-
-      return $this->redirectToRoute('BG_CoreBundle_service', array('id' => $id, 'sid' => $sid));
-    }
-
-    return $this->render('BGCoreBundle:Core:service.html.twig', array(
-      'form' => $form->createView(),
-      'id' => $id,
-      'max' => $max,
-      'service' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Service')->find($sid)
-    ));
-  }
-
   public function changeStatusAction(int $id, string $status)
   {
     $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->changeStatus($id, $status);
+    $request->getSession()->getFlashBag()->add('notice', 'Statut bien modifié.');
     return $this->redirectToRoute('BG_CoreBundle_view', array('id' => $id));
   }
 }

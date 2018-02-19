@@ -34,37 +34,27 @@
           <thead>
             <tr>
               <th><div id="checkAll" class="check"><label><input type="checkbox" name="optionsCheckboxes"></label> Sélection</div></th>
-              <th>Bâtiment</th>
-              <th>Niveau</th>
-              <th>Dessin</th>
+              <th>Désignation</th>
               <th>Indice</th>
               <th>Avancement global</th>
               <th>Temps ingénieur</th>
               <th>Temps dessinateur</th>
-              <th>Éditer les avancements</th>
             </tr>
           </thead>
           <tbody>
-
-        {% for service in quote.services %}
-          <tr>
-            <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
-            <td>{{ service.building }}</td>
-            <td>{{ service.level }}</td>
-            <td>{{ service.drawing }}</td>
-            <td>{{ service.grade|index }}</td>
-
-            {% set maxValue = 0 %}
-            {% for state in service.states %}
-                {% set maxValue = max(state.value, maxValue) %}
-            {% endfor %}
-
-            <td>{{ maxValue }}</td>
-
-            <td>{{ service.engTime }}</td>
-            <td>{{ service.drawTime }}</td>
-            <td><a href="{{ path('BG_CoreBundle_service', {'id': quote.id, 'sid': service.id}) }}"><i class="fas fa-pencil-alt" aria-hidden="true"></i></a></td>
-          </tr>
+        {% for building in quote.buildings %}
+          <h3>Bâtiment N°{{ building.num }}</h3>
+          <hr>
+          {% for service in building.services %}
+            <tr>
+              <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
+              <td>{{ service.level }} - {{ service.drawing }}</td>
+              <td>{{ service.grade|index }}</td>
+              <td>{{ service.advancement }}</td>
+              <td>{{ service.engTime }}</td>
+              <td>{{ service.drawTime }}</td>
+            </tr>
+          {% endfor %}
         {% endfor %}
 
     </tbody>

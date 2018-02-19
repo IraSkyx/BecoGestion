@@ -23,6 +23,13 @@ class Quote
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -42,6 +49,13 @@ class Quote
      * @ORM\Column(name="draw_rate", type="float")
      */
     private $drawRate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="delay", type="integer")
+     */
+    private $delay;
 
     /**
      * @var float
@@ -65,11 +79,11 @@ class Quote
     private $customer;
 
     /**
-     * @var Service
+     * @var Building
      *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Building", cascade={"persist", "remove"})
      */
-    private $services;
+    private $buildings;
 
     /**
      * Constructor
@@ -79,10 +93,11 @@ class Quote
         $this->engRate = $engRate;
         $this->drawRate = $drawRate;
         $this->vat = $vat;
+        $this->delay = 30;
 
         $this->status = new Status("warning", "En attente");
         $this->date = new \DateTime();
-        $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->buildings = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function billService(Service $service) : Service
@@ -137,6 +152,30 @@ class Quote
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return Quote
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -284,38 +323,88 @@ class Quote
     }
 
     /**
-     * Add service.
+     * Add building.
      *
-     * @param \BG\CoreBundle\Entity\Service $service
+     * @param \BG\CoreBundle\Entity\Building $buildings
      *
      * @return Quote
      */
-    public function addService(\BG\CoreBundle\Entity\Service $service)
+    public function addService(\BG\CoreBundle\Entity\Building $building)
     {
-        $this->services[] = $service;
+        $this->buildings[] = $building;
 
         return $this;
     }
 
     /**
-     * Remove service.
+     * Remove building.
      *
-     * @param \BG\CoreBundle\Entity\Service $service
+     * @param \BG\CoreBundle\Entity\Building $building
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeService(\BG\CoreBundle\Entity\Service $service)
+    public function removeService(\BG\CoreBundle\Entity\Building $building)
     {
-        return $this->services->removeElement($service);
+        return $this->buildings->removeElement($building);
     }
 
     /**
-     * Get services.
+     * Get buildings.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getServices()
+    public function getBuildings()
     {
-        return $this->services;
+        return $this->buildings;
+    }
+
+    /**
+     * Set delay.
+     *
+     * @param int $delay
+     *
+     * @return Quote
+     */
+    public function setDelay($delay)
+    {
+        $this->delay = $delay;
+
+        return $this;
+    }
+
+    /**
+     * Get delay.
+     *
+     * @return int
+     */
+    public function getDelay()
+    {
+        return $this->delay;
+    }
+
+    /**
+     * Add building.
+     *
+     * @param \BG\CoreBundle\Entity\Building $building
+     *
+     * @return Quote
+     */
+    public function addBuilding(\BG\CoreBundle\Entity\Building $building)
+    {
+        $this->buildings[] = $building;
+
+        return $this;
+    }
+
+    /**
+     * Remove building.
+     *
+     * @param \BG\CoreBundle\Entity\Building $building
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeBuilding(\BG\CoreBundle\Entity\Building $building)
+    {
+        return $this->buildings->removeElement($building);
     }
 }

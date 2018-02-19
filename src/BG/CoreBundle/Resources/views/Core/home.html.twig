@@ -31,6 +31,7 @@
         <thead>
           <tr>
             <th>Réf Devis</th>
+            <th>Nom</th>
             <th>Status</th>
             <th>Client</th>
             <th>Date de création</th>
@@ -44,9 +45,11 @@
                 <tr>
                     <td>{{ quote.id }}</td>
 
+                    <td>{{ quote.name }}</td>
+
                     <td><button type="button" class="btn btn-{{ quote.status.type}}">{{ quote.status.message }}</button></td>
 
-                    <td>{{ quote.customer.firstname }} {{ quote.customer.lastname }}</td>
+                    <td>{{ quote.customer }}</td>
 
                     <td>{{ quote.date|date('d-m-Y')  }}</td>
 

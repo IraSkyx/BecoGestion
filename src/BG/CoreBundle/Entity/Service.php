@@ -3,150 +3,71 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 
 /**
  * Service
  *
- * @ORM\Table(name="service")
- * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\ServiceRepository")
  */
-class Service
+class Service extends BaseService
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="code", type="integer")
-     */
-    private $code;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="building", type="integer")
-     */
-    private $building;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="billed", type="integer")
+     * @ORM\Column(name="billed", nullable=true, type="integer")
      */
     private $billed;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="eng_time", type="float")
+     * @ORM\Column(name="eng_time", nullable=true, type="float")
      */
     private $engTime;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="draw_time", type="float")
+     * @ORM\Column(name="draw_time", nullable=true, type="float")
      */
     private $drawTime;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="grade", type="integer")
+     * @ORM\Column(name="grade", nullable=true, type="integer")
      */
     private $grade;
 
     /**
-     * @var string
+     * @var float
      *
-     * @ORM\Column(name="level", type="string", length=255)
+     * @ORM\Column(name="advancement", nullable=true, type="float")
      */
-    private $level;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="drawing", type="string", length=255)
-     */
-    private $drawing;
-
-    /**
-     * @var Advancement
-     *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Advancement", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable = false)
-     * @ORM\OrderBy({"date" = "DESC"})
-     */
-    private $states;
+    private $advancement;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->billed = 0;
-        $this->grade = 0;
-        $this->states = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->addState(new \BG\CoreBundle\Entity\Advancement());
+      $this->isUsed = false;
+      $this->billed = 0;
+      $this->engTime = 0;
+      $this->drawTime = 0;
+      $this->grade = 0;
+      $this->advancement = 0;
     }
 
     /**
-     * @ORM\PostPersist
+     * Constructor from Base
      */
-    public function insertNewPlans(LifecycleEventArgs $args)
+    public static function fromBase(BaseService $serv)
     {
-      $entity = $args->getObject();
-      $em = $args->getObjectManager();
-
-      if($em->getRepository('BGCoreBundle:Plan')->exists($entity->getCode(), $entity->getLevel(), $entity->getDrawing()) == false)
-      {
-        $plan = new Plan($entity->getCode(), $entity->getLevel(), $entity->getDrawing());
-        $em->persist($plan);
-        $em->flush();
-      }
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set code.
-     *
-     * @param int $code
-     *
-     * @return Service
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get code.
-     *
-     * @return int
-     */
-    public function getCode()
-    {
-        return $this->code;
+      $service = new Service();
+      $service->setLevel($serv->getLevel());
+      $service->setDrawing($serv->getDrawing());
+      return $service;
     }
 
     /**
@@ -270,143 +191,26 @@ class Service
     }
 
     /**
-     * Set level.
+     * Set advancement.
      *
-     * @param string $level
+     * @param float $advancement
      *
      * @return Service
      */
-    public function setLevel($level)
+    public function setAdvancement($advancement)
     {
-        $this->level = $level;
+        $this->advancement = $advancement;
 
         return $this;
     }
 
     /**
-     * Get level.
+     * Get advancement.
      *
-     * @return string
+     * @return float
      */
-    public function getLevel()
+    public function getAdvancement()
     {
-        return $this->level;
-    }
-
-    /**
-     * Set drawing.
-     *
-     * @param string $drawing
-     *
-     * @return Service
-     */
-    public function setDrawing($drawing)
-    {
-        $this->drawing = $drawing;
-
-        return $this;
-    }
-
-    /**
-     * Get drawing.
-     *
-     * @return string
-     */
-    public function getDrawing()
-    {
-        return $this->drawing;
-    }
-
-    /**
-     * Add state.
-     *
-     * @param \BG\CoreBundle\Entity\Advancement $state
-     *
-     * @return Service
-     */
-    public function addState(\BG\CoreBundle\Entity\Advancement $state)
-    {
-        $this->states[] = $state;
-
-        return $this;
-    }
-
-    /**
-     * Remove state.
-     *
-     * @param \BG\CoreBundle\Entity\Advancement $state
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeState(\BG\CoreBundle\Entity\Advancement $state)
-    {
-        $res = $this->states->removeElement($state);
-        if($this->states->isEmpty())
-          $this->addState(new Advancement());
-        return $res;
-    }
-
-    /**
-     * Get states.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getStates()
-    {
-        return $this->states;
-    }
-
-    /**
-     * Set states.
-     *
-     * @param \Doctrine\Common\Collections\Collection $states
-     *
-     * @return Service
-     */
-    public function setStates(\Doctrine\Common\Collections\Collection $states)
-    {
-        $this->states = $states;
-
-        return $this;
-    }
-
-    /**
-     * Get current max state.
-     *
-     * @return int
-     */
-    public function getMaxState() : int
-    {
-      $max = 0;
-      foreach($this->getStates() as $state)
-        if($state->getValue() > $max)
-          $max = $state->getValue();
-      return $max;
-    }
-
-    /**
-     * Equals function.
-     *
-     * @return boolean
-     */
-    public function equals(Service $service)
-    {
-      return $this->getLevel() == $service->getLevel()
-      && $this->getDrawing() == $service->getDrawing()
-      && $this->getBuilding() == $service->getBuilding()
-      && $this->getCode() == $service->getCode()
-      && $this->getEngTime() == $service->getEngTime()
-      && $this->getDrawTime() == $service->getDrawTime()
-      && $this->getGrade() == $service->getGrade();
-    }
-
-    /**
-     * To String.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-      return "{$this->level} - {$this->drawing}";
+        return $this->advancement;
     }
 }

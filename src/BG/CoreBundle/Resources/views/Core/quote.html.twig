@@ -1,5 +1,51 @@
 {% extends "BGCoreBundle::layout.html.twig" %}
 
+{% import _self as formMacros %}
+{% macro printPrototype(building) %}
+    <div class="js-services-item">
+      {% if building.num.vars.value == 1 %}
+        <legend class="col-form-legend required">Bâtiment N°1</legend>
+      {% else %}
+        {{ form_label(building) }}
+      {% endif %}
+        <div class="row">
+          <div class="col">
+            {{ form_row(building.floors) }}
+          </div>
+          <div class="col">
+            {{ form_row(building.basements) }}
+          </div>
+        </div>
+      </br>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <th>Sélection</th>
+              <th>Niveau</th>
+              <th>Dessin</th>
+              <th>Temps ingénieur</th>
+              <th>Temps dessinateur</th>
+            </thead>
+            <tbody>
+              {% for service in building.services %}
+                <tr>
+                  <td>{{ form_row(service.isUsed) }}</td>
+                  <td>{{ form_row(service.level) }}</td>
+                  <td>{{ form_row(service.drawing) }}</td>
+                  <td>{{ form_row(service.engTime) }}</td>
+                  <td>{{ form_row(service.drawTime) }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% if building.num.vars.value != 1 %}
+          <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services pull-right" href="#"><i class="fa fa-times"></i> Supprimer</a></div>
+        {% endif %}
+        {{ form_rest(building) }}
+    </div>
+{% endmacro %}
+
 {% block body %}
 
   {{ include('BGCoreBundle::menu.html.twig', { 'route': route, 'parameters': params }) }}
@@ -20,6 +66,12 @@
         <hr>
         <div class="row">
           <div class="col">
+            {{ form_row(form.name) }}
+          </div>
+        </div>
+      </br>
+        <div class="row">
+          <div class="col">
             {{ form_row(form.engRate) }}
           </div>
           <div class="col">
@@ -27,6 +79,9 @@
           </div>
           <div class="col">
             {{ form_row(form.vat) }}
+          </div>
+          <div class="col">
+            {{ form_row(form.delay) }}
           </div>
         </div>
       </div>
@@ -48,13 +103,9 @@
       <div class="well">
         <h4 class="wizard-title">Définition des plans</h4>
         <hr>
-        <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}" data-index="{{ form.services|length }}">
-            {% for service in form.services %}
-                <div class="w-25 js-services-item">
-                    {{ form_errors(service) }}
-                    {{ form_widget(service) }}
-                    <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services pull-right" href="#"><i class="fa fa-times"></i> Delete</a></div>
-                </div>
+        <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printPrototype(form.buildings.vars.prototype)|e('html_attr') }}" data-index="{{ form.buildings|length }}">
+            {% for building in form.buildings %}
+                {{ formMacros.printPrototype(building) }}
             {% endfor %}
             <div class="row justify-content-center ">
               <a class="btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter</a>

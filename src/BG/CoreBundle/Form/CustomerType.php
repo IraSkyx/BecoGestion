@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 class CustomerType extends AbstractType
 {
@@ -18,9 +19,11 @@ class CustomerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add('firstName', TextType::class)
-          ->add('lastName', TextType::class)
           ->add('companyName', TextType::class)
+          ->add('siren', IntegerType::class)
+          ->add('intra', IntegerType::class)
+          ->add('phone', IntegerType::class)
+          ->add('mail', EmailType::class)
           ->add('address', TextType::class)
           ->add('postcode', IntegerType::class)
           ->add('city', TextType::class)

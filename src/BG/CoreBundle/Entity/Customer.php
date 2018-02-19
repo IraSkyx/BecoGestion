@@ -24,20 +24,6 @@ class Customer
     /**
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=255)
-     */
-    private $firstName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="last_name", type="string", length=255)
-     */
-    private $lastName;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="company_name", type="string", length=255)
      */
     private $companyName;
@@ -64,6 +50,41 @@ class Customer
     private $city;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="phone", type="integer")
+     */
+    private $phone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mail", type="string", length=255)
+     */
+    private $mail;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="siren", type="integer")
+     */
+    private $siren;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="intra", type="integer")
+     */
+    private $intra;
+
+    /**
+     * @var Representative
+     *
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Representative", cascade={"persist", "remove"})
+     */
+    private $representatives;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="is_cloned", type="boolean")
@@ -88,6 +109,14 @@ class Customer
     }
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->representatives = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Get id.
      *
      * @return int
@@ -95,54 +124,6 @@ class Customer
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set firstName.
-     *
-     * @param string $firstName
-     *
-     * @return Customer
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    /**
-     * Get firstName.
-     *
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * Set lastName.
-     *
-     * @param string $lastName
-     *
-     * @return Customer
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    /**
-     * Get lastName.
-     *
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
     }
 
     /**
@@ -242,6 +223,138 @@ class Customer
     }
 
     /**
+     * Set phone.
+     *
+     * @param int $phone
+     *
+     * @return Customer
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Get phone.
+     *
+     * @return int
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Set mail.
+     *
+     * @param string $mail
+     *
+     * @return Customer
+     */
+    public function setMail($mail)
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    /**
+     * Get mail.
+     *
+     * @return string
+     */
+    public function getMail()
+    {
+        return $this->mail;
+    }
+
+    /**
+     * Set siren.
+     *
+     * @param int $siren
+     *
+     * @return Customer
+     */
+    public function setSiren($siren)
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    /**
+     * Get siren.
+     *
+     * @return int
+     */
+    public function getSiren()
+    {
+        return $this->siren;
+    }
+
+    /**
+     * Set intra.
+     *
+     * @param int $intra
+     *
+     * @return Customer
+     */
+    public function setIntra($intra)
+    {
+        $this->intra = $intra;
+
+        return $this;
+    }
+
+    /**
+     * Get intra.
+     *
+     * @return int
+     */
+    public function getIntra()
+    {
+        return $this->intra;
+    }
+
+    /**
+     * Add representative.
+     *
+     * @param \BG\CoreBundle\Entity\Representative $representative
+     *
+     * @return Customer
+     */
+    public function addRepresentative(\BG\CoreBundle\Entity\Representative $representative)
+    {
+        $this->representatives[] = $representative;
+
+        return $this;
+    }
+
+    /**
+     * Remove representative.
+     *
+     * @param \BG\CoreBundle\Entity\Representative $representative
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeRepresentative(\BG\CoreBundle\Entity\Representative $representative)
+    {
+        return $this->representatives->removeElement($representative);
+    }
+
+    /**
+     * Get representatives.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRepresentatives()
+    {
+        return $this->representatives;
+    }
+
+    /**
      * Set isCloned.
      *
      * @param bool $isCloned
@@ -251,10 +364,8 @@ class Customer
     public function setIsCloned($isCloned)
     {
         $this->isCloned = $isCloned;
-
         return $this;
     }
-
     /**
      * Get isCloned.
      *
@@ -272,6 +383,6 @@ class Customer
      */
     public function __toString()
     {
-      return "{$this->firstName} {$this->lastName}";
+      return "{$this->companyName}";
     }
 }

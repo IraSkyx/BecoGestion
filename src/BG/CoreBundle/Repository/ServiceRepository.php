@@ -2,6 +2,8 @@
 
 namespace BG\CoreBundle\Repository;
 
+use BG\CoreBundle\Entity\Service;
+
 /**
  * ServiceRepository
  *
@@ -10,20 +12,4 @@ namespace BG\CoreBundle\Repository;
  */
 class ServiceRepository extends \Doctrine\ORM\EntityRepository
 {
-  public function findMaxAdvancement(int $id)
-  {
-    $service = $this->_em->getRepository('BGCoreBundle:Service')->find($id);
-
-    $states = $service->getStates();
-
-    if($states->isEmpty())
-      throw new \Exception("Advancement collection is null");
-
-    $max = $states[0];
-
-    foreach($states as $state)
-        if($max->getDate() < $state->getDate())
-            $max = $state;
-    return $max;
-  }
 }

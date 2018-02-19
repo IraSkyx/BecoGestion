@@ -23,6 +23,11 @@ html, body {
   padding:2vh !important;
 }
 
+.select2 {
+  width:100% !important;
+  margin:2vh !important;
+}
+
 .flash {
   position:fixed;
   bottom: 2em;
@@ -40,10 +45,6 @@ html, body {
   background-color: #f1f1f1;
   box-shadow: 0 2px 4px 0;
   margin:2vh !important;
-}
-
-.js-genus-services-item {
-  margin:2vh;
 }
 
 .form-group, .control-label  {
@@ -75,6 +76,7 @@ h3 {
  }
 
 .js-services-item {
+  width:100%;
   margin:2vh;
 }
 

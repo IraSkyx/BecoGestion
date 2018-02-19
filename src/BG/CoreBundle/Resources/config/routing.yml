@@ -1,25 +1,3 @@
-BG_CoreBundle_service:
-    path:     /view/{id}/{sid}
-    defaults: { _controller: BGCoreBundle:Core:service }
-    requirements:
-        id:   \d+
-        sid:  \d+
-
-BG_CoreBundle_addstate:
-    path:     /view/addstate/{id}/{sid}
-    defaults: { _controller: BGCoreBundle:Core:addState }
-    requirements:
-        id:   \d+
-        sid:  \d+
-
-BG_CoreBundle_removestate:
-    path:     /view/removestate/{id}/{sid}/{aid}
-    defaults: { _controller: BGCoreBundle:Core:removeState }
-    requirements:
-        id:   \d+
-        sid:  \d+
-        aid:  \d+
-
 BG_CoreBundle_view:
     path:     /view/{id}
     defaults: { _controller: BGCoreBundle:Core:view }
@@ -74,12 +52,6 @@ BG_CoreBundle_invoice:
     requirements:
         id:   \d+
 
-BG_CoreBundle_getplans:
-    path:     /getplans
-    defaults: { _controller: BGCoreBundle:Core:getPlans }
-    options:
-        expose: true
-
 BG_CoreBundle_getcustomers:
     path:     /getcustomers
     defaults: { _controller: BGCoreBundle:Core:getCustomers }
@@ -121,10 +93,6 @@ BG_CoreBundle_archives:
 BG_CoreBundle_postquote:
     path:     /postquote
     defaults: { _controller: BGCoreBundle:Core:postquote }
-
-BG_CoreBundle_plans:
-    path:     /plans
-    defaults: { _controller: BGCoreBundle:Core:plans }
 
 BG_CoreBundle_settings:
     path:     /settings

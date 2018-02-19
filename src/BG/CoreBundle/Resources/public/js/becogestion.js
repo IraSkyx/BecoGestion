@@ -3,10 +3,19 @@ $(document).ready(function() {
 
   $wrapper.on('click', '.js-remove-services', function(e) {
       e.preventDefault();
+
       $(this).closest('.js-services-item')
-          .fadeOut()
+          .fadeOut('slow')
           .remove();
+
+      $wrapper.data('index', $wrapper.data('index') - 1);
+
+      /*for ... {
+        $('#bg_corebundle_quote_buildings_' + index + '_num').val(index + 1);
+      }*/
+      //To do
   });
+
   $wrapper.on('click', '.js-services-add', function(e) {
       e.preventDefault();
 
@@ -14,21 +23,30 @@ $(document).ready(function() {
 
       var index = $wrapper.data('index');
 
-      var newForm = prototype.replace(/__name__/g, index);
-
-      var $newItem = jQuery('<div/>', {
-          class: 'w-25 js-services-item'
-      });
-
-      var $deletelink = $('<div class="d-flex justify-content-center"><a href="#" class="btn btn-danger js-remove-services"><i class="fa fa-times"></i> Delete</a></div>');
-
-      $newItem.html(newForm);
-      $deletelink.appendTo($newItem);
+      var newForm = prototype.replace(/__name__label__/g, 'Bâtiment N°' + (index+1)).replace(/__name__/g, index);
 
       $wrapper.data('index', index + 1);
 
-      $(this).parent().before($newItem);
+      $(this).parent().before(newForm);
+
+      $('#bg_corebundle_quote_buildings_' + index + '_num').val(index + 1);
   });
+
+  /*$wrapper.on('click', '.js-services-add', function(e) {
+      e.preventDefault();
+
+      var prototype = $wrapper.children().first().prop('outerHTML');
+
+      var index = $wrapper.data('index');
+
+      var newForm = prototype.replace(/__name__label__/g, 'Bâtiment N°' + (index+1)).replace(/__name__/g, index);
+
+      $wrapper.data('index', index + 1);
+
+      $(this).parent().before(newForm);
+
+      $('#bg_corebundle_quote_buildings_' + index + '_num').val(index + 1);
+  });*/
 });
 
 
@@ -54,5 +72,5 @@ $(document).ready(function(){
 );
 
 $(document).ready(function(){
-  
+
 });
