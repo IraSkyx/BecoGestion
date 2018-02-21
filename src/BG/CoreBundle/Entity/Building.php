@@ -44,11 +44,26 @@ class Building
     private $basements;
 
     /**
-     * @var BaseService
+     * @var int
      *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\BaseService", cascade={"persist", "remove"})
+     * @ORM\Column(name="garden_level", type="boolean")
+     */
+    private $gardenLevel;
+
+    /**
+     * @var Service
+     *
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist", "remove"})
      */
     private $services;
+
+    /**
+     * @var Service
+     *
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service", cascade={"persist", "remove"})
+     * @ORM\JoinTable(name="building_special_services")
+     */
+    private $specialServices;
 
     /**
      * Constructor
@@ -57,16 +72,18 @@ class Building
     {
       $this->floors = 0;
       $this->basements = 0;
+      $this->gardenLevel = false;
       $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+      $this->specialServices = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
      * From base
      */
-    public static function fromBase($baseServices)
+    public static function fromBase(int $num, $baseServices)
     {
       $building = new Building();
-      $building->setNum(1);
+      $building->setNum($num);
       foreach($baseServices as $service)
         $building->addService(Service::fromBase($service));
       return $building;
@@ -109,11 +126,11 @@ class Building
     /**
      * Add service.
      *
-     * @param \BG\CoreBundle\Entity\BaseService $service
+     * @param \BG\CoreBundle\Entity\Service $service
      *
      * @return Building
      */
-    public function addService(\BG\CoreBundle\Entity\BaseService $service)
+    public function addService(\BG\CoreBundle\Entity\Service $service)
     {
         $this->services[] = $service;
 
@@ -123,27 +140,13 @@ class Building
     /**
      * Remove service.
      *
-     * @param \BG\CoreBundle\Entity\BaseService $service
+     * @param \BG\CoreBundle\Entity\Service $service
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeService(\BG\CoreBundle\Entity\BaseService $service)
+    public function removeService(\BG\CoreBundle\Entity\Service $service)
     {
         return $this->services->removeElement($service);
-    }
-
-    /**
-     * Set services.
-     *
-     * @param \Doctrine\Common\Collections\Collection $services
-     *
-     * @return Building
-     */
-    public function setServices($services)
-    {
-        $this->services = $services;
-
-        return $this;
     }
 
     /**
@@ -202,5 +205,65 @@ class Building
     public function getBasements()
     {
         return $this->basements;
+    }
+
+    /**
+     * Set gardenLevel.
+     *
+     * @param bool $gardenLevel
+     *
+     * @return Building
+     */
+    public function setGardenLevel($gardenLevel)
+    {
+        $this->gardenLevel = $gardenLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get gardenLevel.
+     *
+     * @return bool
+     */
+    public function getGardenLevel()
+    {
+        return $this->gardenLevel;
+    }
+
+    /**
+     * Add specialService.
+     *
+     * @param \BG\CoreBundle\Entity\Service $specialService
+     *
+     * @return Building
+     */
+    public function addSpecialService(\BG\CoreBundle\Entity\Service $specialService)
+    {
+        $this->specialServices[] = $specialService;
+
+        return $this;
+    }
+
+    /**
+     * Remove specialService.
+     *
+     * @param \BG\CoreBundle\Entity\Service $specialService
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeSpecialService(\BG\CoreBundle\Entity\Service $specialService)
+    {
+        return $this->specialServices->removeElement($specialService);
+    }
+
+    /**
+     * Get specialServices.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSpecialServices()
+    {
+        return $this->specialServices;
     }
 }

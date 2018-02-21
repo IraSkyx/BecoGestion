@@ -50,7 +50,7 @@
 
                     <td><button type="button" class="btn btn-{{ invoice.status.type}}">{{ invoice.status.message }}</button></td>
 
-                    <td>{{ invoice.customer.firstname }} {{ invoice.customer.lastname }}</td>
+                    <td>{{ invoice.customer.companyName }}</td>
 
                     <td>{{ invoice.creationDate|date('d-m-Y')  }}</td>
 

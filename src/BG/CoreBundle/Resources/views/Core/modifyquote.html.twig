@@ -1,0 +1,172 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% import _self as formMacros %}
+{% macro printPrototype(building, quoteId) %}
+    <div class="js-services-item">
+        <legend class="col-form-legend required">Bâtiment N°{{ building.num.vars.value }}</legend>
+        <div class="row">
+          <div class="col">
+            {{ form_row(building.floors) }}
+          </div>
+          <div class="col">
+            {{ form_row(building.basements) }}
+          </div>
+          <div class="col d-flex justify-content-center align-items-center">
+            {{ form_row(building.gardenLevel) }}
+          </div>
+        </div>
+      </br>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <th><input id="selector{{ building.num.vars.value }}" type="checkbox"/> Sélection</th>
+              <th>Niveau</th>
+              <th>Dessin</th>
+              <th>Temps ingénieur</th>
+              <th>Temps dessinateur</th>
+              <th>Avancement</th>
+            </thead>
+            <tbody>
+              {% for service in building.services %}
+
+              {% set class = 'hide-0' %}
+
+              {% if service.level.vars.value == 'PH -1' %}
+                {% set class = 'hide--1' %}
+              {% elseif service.level.vars.value == 'PH -2' %}
+                {% set class = 'hide--2' %}
+              {% elseif service.level.vars.value == 'PH -3' %}
+                {% set class = 'hide--3' %}
+              {% elseif service.level.vars.value == 'PH -4' %}
+                {% set class = 'hide--4' %}
+              {% elseif service.level.vars.value == 'PH -5' %}
+                {% set class = 'hide--5' %}
+              {% elseif service.level.vars.value == 'PH 1' %}
+                {% set class = 'hide-1' %}
+              {% elseif service.level.vars.value == 'PH 2' %}
+                {% set class = 'hide-2' %}
+              {% elseif service.level.vars.value == 'PH 3' %}
+                {% set class = 'hide-3' %}
+              {% elseif service.level.vars.value == 'PH 4' %}
+                {% set class = 'hide-4' %}
+              {% elseif service.level.vars.value == 'PH 5' %}
+                {% set class = 'hide-5' %}
+              {% elseif service.level.vars.value == 'PH RDJ' %}
+                {% set class = 'hide-RDJ' %}
+              {% endif %}
+
+                <tr class="{{ class }}" data-attribute="{{ building.num.vars.value - 1 }}">
+                  <td>{{ form_row(service.isUsed) }}</td>
+                  <td>{{ form_row(service.level) }}</td>
+                  <td>{{ form_row(service.drawing) }}</td>
+                  <td>{{ form_row(service.engTime) }}</td>
+                  <td>{{ form_row(service.drawTime) }}</td>
+                  <td>{{ form_row(service.advancement) }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% if building.num.vars.value > 1 %}
+            <div class="d-flex justify-content-center"><a class="btn btn-danger" href="{{ path('BG_CoreBundle_changebuildings', {'id': quoteId, 'bid': building.num.vars.value, 'action': 'remove'}) }}"><i class="fa fa-times"></i> Supprimer</a></div>
+        {% endif %}
+        {{ form_rest(building) }}
+    </div>
+{% endmacro %}
+
+{% block body %}
+
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_view', 'parameters': params }) }}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <div class="wizard-header">
+      <h3 class="wizard-title">MODIFIER LE DEVIS</h3>
+      <hr>
+    </div>
+
+    {{ form_start(form) }}
+      {{ form_errors(form) }}
+
+      <!-- QUOTE INFORMATION -->
+      <div class="well">
+        <h4 class="wizard-title">Infos du devis</h4>
+        <hr>
+        <div class="row">
+          <div class="col">
+            {{ form_row(form.name) }}
+          </div>
+        </div>
+      </br>
+        <div class="row">
+          <div class="col">
+            {{ form_row(form.engRate) }}
+          </div>
+          <div class="col">
+            {{ form_row(form.drawRate) }}
+          </div>
+          <div class="col">
+            {{ form_row(form.vat) }}
+          </div>
+          <div class="col">
+            {{ form_row(form.delay) }}
+          </div>
+        </div>
+      </div>
+      <!-- QUOTE INFORMATION -->
+
+      <!-- CUSTOMER CHOICE -->
+      <div class="well">
+        <h4 class="wizard-title">Choix du client</h4>
+        <hr>
+        <div class="row">
+          <div class="col">
+            {{ form_row(form.customer) }}
+          </div>
+        </div>
+      </div>
+      <!-- CUSTOMER CHOICE -->
+
+      <!-- PLANS DEFINITION -->
+      <div class="well">
+        <h4 class="wizard-title">Définition des plans</h4>
+        <hr>
+        <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printPrototype(form.buildings.vars.prototype, params.id)|e('html_attr') }}" data-index="{{ form.buildings|length }}">
+            {% for building in form.buildings %}
+              {{ formMacros.printPrototype(building, params.id) }}
+            {% endfor %}
+            <div class="row justify-content-center">
+              <a class="btn btn-success" href="{{ path('BG_CoreBundle_changebuildings', {'id': params.id, 'bid': 0,'action': 'add'}) }}"><i class="fa fa-plus-circle"></i> Ajouter</a>
+            </div>
+        </div>
+      </div>
+      <!-- PLANS DEFINITION -->
+
+      <!-- SAVE SUBMIT -->
+      <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>
+      <!-- SAVE SUBMIT -->
+
+      {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+  </div>
+
+  {% block scripts %}
+    <!--   Core JS Files   -->
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+
+    {% javascripts
+    'bundles/fosjsrouting/js/router.min.js'
+    'bundles/tetranzselect2entity/js/select2entity.js'
+    'bundles/bgcore/js/becogestion2.js'
+    %}
+      <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+  {% endblock %}
+
+{% endblock %}

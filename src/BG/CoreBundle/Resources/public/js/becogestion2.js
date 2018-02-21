@@ -1,48 +1,9 @@
-$(document).ready(function() {
-  var $wrapper = $('.js-services-wrapper');
-
-  $wrapper.on('click', '.js-remove-services', function(e) {
-      e.preventDefault();
-
-      $(this).closest('.js-services-item')
-          .fadeOut('slow')
-          .remove();
-
-      $wrapper.data('index', $wrapper.data('index') - 1);
-  });
-
-  $wrapper.on('click', '.js-services-add', function(e) {
-      e.preventDefault();
-
-      var prototype = $wrapper.data('prototype');
-
-      var index = $wrapper.data('index');
-
-      var newForm = prototype.replace(/__name__/g, index);
-
-      $wrapper.data('index', index + 1);
-
-      $(this).parent().before(newForm);
-  });
-});
-
-
 $(document).ready(function(){
 
   $('.flash').delay(2000).fadeOut('slow');
 
   $('#bg_corebundle_customer_customer').on("select2:select", function(e) {
     window.location.replace(Routing.generate('BG_CoreBundle_customers', { action: $('#bg_corebundle_customer_customer').val() } ));
-  });
-});
-
-$(document).ready(function(){
-
-  $('#generateInvoice').on("click", function(e) {
-    if (confirm('Êtes-vous sûr de vouloir générer une facture et un bordereau d\'envoi ?') == false) {
-      e.preventDefault();
-      return false;
-    }
   });
 });
 
@@ -124,12 +85,6 @@ $(document).ready(function(){
     $('.hide-RDJ').filter(function() {
       return $(this).data("attribute") == building && $(this).is(":visible")
     }).find('.form-check-input').prop("checked", value);
-  }
-
-  for (var i = 0; i < $('.js-services-mywrapper').data('index'); i++){
-    hideShowFloors($('bg_corebundle_quote_buildings_' + i + '_floors').val(), i);
-    hideShowBasements($('bg_corebundle_quote_buildings_' + i + '_basements').val(), i);
-    hideShowGardenLevel($('bg_corebundle_quote_buildings_' + i + '_gardenLevel').prop("checked"), i);
   }
 
   $('input:regex(id,bg_corebundle_quote_buildings_[0-9]+_floors)').on('keydown change', function(e){

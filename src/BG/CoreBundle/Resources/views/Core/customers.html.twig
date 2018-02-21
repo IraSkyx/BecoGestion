@@ -1,8 +1,37 @@
 {% extends "BGCoreBundle::layout.html.twig" %}
 
+{% import _self as formMacros %}
+{% macro printPrototype(representative) %}
+    <div class="w-25 js-services-item">
+        <div class="row justify-content-center">
+            {{ form_row(representative.firstName) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ form_row(representative.lastName) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ form_row(representative.function) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ form_row(representative.phone) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ form_row(representative.mail) }}
+        </div>
+        <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services" href="#"><i class="fa fa-times"></i> Supprimer</a></div>
+        {{ form_rest(representative) }}
+    </div>
+{% endmacro %}
+
 {% block body %}
 
-  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_customer', 'parameters': {}  }) }}
+  {% if app.request.query.get("route") is not defined %}
+    {% set route = 'BG_CoreBundle_customer' %}
+  {% else %}
+    {% set route = 'BG_CoreBundle_newquote' %}
+  {% endif %}
+
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': route, 'parameters': {}  }) }}
 
   <div class="container-fluid card wizard-card" data-color="blue">
 
@@ -13,6 +42,7 @@
 
     {{ form_start(form) }}
       {{ form_errors(form) }}
+      <h1 class="small">Entreprise</h1>
         <div class="well justify-content-center">
           <div class="row justify-content-center">
             {{ form_row(form.companyName) }}
@@ -37,6 +67,16 @@
           </div>
           <div class="row justify-content-center">
             {{ form_row(form.city) }}
+          </div>
+          <hr>
+          <h1 class="small">Représentants</h1>
+          <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printPrototype(form.representatives.vars.prototype)|e('html_attr') }}" data-index="{{ form.representatives|length }}">
+              {% for representative in form.representatives %}
+                {{ formMacros.printPrototype(representative) }}
+              {% endfor %}
+              <div class="row justify-content-center">
+                  <a class="btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter</a>
+              </div>
           </div>
         </div>
         <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>

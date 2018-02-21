@@ -35,7 +35,7 @@
             <th>Status</th>
             <th>Client</th>
             <th>Date de création</th>
-            <th>Facture</th>
+            <th>Bordereau d'envoi</th>
             <th>Gérer</th>
           </tr>
         </thead>
@@ -53,7 +53,11 @@
 
                     <td>{{ quote.date|date('d-m-Y')  }}</td>
 
-                    <td><a id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                    {% if quote.status.message in ['En attente', 'Annulé', 'Terminé'] %}
+                      <td><a class="disabled" id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                    {% else %}
+                      <td><a id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                    {% endif %}
 
                     <td><a href="{{ path('BG_CoreBundle_view', {'id': quote.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a></td>
                 </tr>

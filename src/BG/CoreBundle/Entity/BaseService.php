@@ -7,10 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BaseService
  *
+ * @ORM\Table(name="base_service")
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\BaseServiceRepository")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"base" = "BaseService", "service" = "Service"})
  */
 class BaseService
 {
@@ -24,16 +22,9 @@ class BaseService
     private $id;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_used", nullable=true, type="boolean")
-     */
-    private $isUsed;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="level", type="string", length=255)
+     * @ORM\Column(name="level", nullable=true, type="string", length=255)
      */
     private $level;
 
@@ -57,11 +48,11 @@ class BaseService
     /**
      * Set level.
      *
-     * @param string $level
+     * @param string|null $level
      *
      * @return BaseService
      */
-    public function setLevel($level)
+    public function setLevel($level = null)
     {
         $this->level = $level;
 
@@ -71,7 +62,7 @@ class BaseService
     /**
      * Get level.
      *
-     * @return string
+     * @return string|null
      */
     public function getLevel()
     {
@@ -110,29 +101,5 @@ class BaseService
     public function __toString()
     {
       return "{$this->level} - {$this->drawing}";
-    }
-
-    /**
-     * Set isUsed.
-     *
-     * @param bool|null $isUsed
-     *
-     * @return BaseService
-     */
-    public function setIsUsed($isUsed = null)
-    {
-        $this->isUsed = $isUsed;
-
-        return $this;
-    }
-
-    /**
-     * Get isUsed.
-     *
-     * @return bool|null
-     */
-    public function getIsUsed()
-    {
-        return $this->isUsed;
     }
 }

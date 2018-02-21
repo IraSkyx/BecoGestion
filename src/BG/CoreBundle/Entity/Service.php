@@ -7,91 +7,182 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Service
  *
+ * @ORM\Table(name="service")
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\ServiceRepository")
  */
-class Service extends BaseService
+class Service
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="billed", nullable=true, type="integer")
-     */
-    private $billed;
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
+   * @var boolean
+   *
+   * @ORM\Column(name="is_used", type="boolean")
+   */
+  private $isUsed;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="level", nullable=true, type="string", length=255)
+   */
+  private $level;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="drawing", type="string", length=255)
+   */
+  private $drawing;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="billed", type="integer")
+   */
+  private $billed;
+
+  /**
+   * @var float
+   *
+   * @ORM\Column(name="eng_time", type="float")
+   */
+  private $engTime;
+
+  /**
+   * @var float
+   *
+   * @ORM\Column(name="draw_time", type="float")
+   */
+  private $drawTime;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(name="grade", type="integer")
+   */
+  private $grade;
+
+  /**
+   * @var float
+   *
+   * @ORM\Column(name="advancement", type="float")
+   */
+  private $advancement;
+
+  /**
+   * Constructor
+   */
+  public function __construct()
+  {
+    $this->isUsed = false;
+    $this->billed = 0;
+    $this->engTime = 0;
+    $this->drawTime = 0;
+    $this->grade = 0;
+    $this->advancement = 0;
+  }
+
+  /**
+   * Constructor from Base
+   */
+  public static function fromBase($serv)
+  {
+    $service = new Service();
+    $service->setLevel($serv->getLevel());
+    $service->setDrawing($serv->getDrawing());
+    if($serv instanceof Service)
+      $service->setIsUsed($serv->getisUsed());
+    return $service;
+  }
 
     /**
-     * @var float
+     * Get id.
      *
-     * @ORM\Column(name="eng_time", nullable=true, type="float")
+     * @return int
      */
-    private $engTime;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="draw_time", nullable=true, type="float")
-     */
-    private $drawTime;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="grade", nullable=true, type="integer")
-     */
-    private $grade;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="advancement", nullable=true, type="float")
-     */
-    private $advancement;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
+    public function getId()
     {
-      $this->isUsed = false;
-      $this->billed = 0;
-      $this->engTime = 0;
-      $this->drawTime = 0;
-      $this->grade = 0;
-      $this->advancement = 0;
+        return $this->id;
     }
 
     /**
-     * Constructor from Base
-     */
-    public static function fromBase(BaseService $serv)
-    {
-      $service = new Service();
-      $service->setLevel($serv->getLevel());
-      $service->setDrawing($serv->getDrawing());
-      return $service;
-    }
-
-    /**
-     * Set building.
+     * Set isUsed.
      *
-     * @param int $building
+     * @param bool $isUsed
      *
      * @return Service
      */
-    public function setBuilding($building)
+    public function setIsUsed($isUsed)
     {
-        $this->building = $building;
+        $this->isUsed = $isUsed;
 
         return $this;
     }
 
     /**
-     * Get building.
+     * Get isUsed.
      *
-     * @return int
+     * @return bool
      */
-    public function getBuilding()
+    public function getIsUsed()
     {
-        return $this->building;
+        return $this->isUsed;
+    }
+
+    /**
+     * Set level.
+     *
+     * @param string|null $level
+     *
+     * @return Service
+     */
+    public function setLevel($level = null)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level.
+     *
+     * @return string|null
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * Set drawing.
+     *
+     * @param string $drawing
+     *
+     * @return Service
+     */
+    public function setDrawing($drawing)
+    {
+        $this->drawing = $drawing;
+
+        return $this;
+    }
+
+    /**
+     * Get drawing.
+     *
+     * @return string
+     */
+    public function getDrawing()
+    {
+        return $this->drawing;
     }
 
     /**
@@ -212,5 +303,29 @@ class Service extends BaseService
     public function getAdvancement()
     {
         return $this->advancement;
+    }
+
+    /**
+     * Equals function.
+     *
+     * @return boolean
+     */
+    public function equals(Service $service)
+    {
+      return $this->getLevel() == $service->getLevel()
+      && $this->getDrawing() == $service->getDrawing()
+      && $this->getEngTime() == $service->getEngTime()
+      && $this->getDrawTime() == $service->getDrawTime()
+      && $this->getGrade() == $service->getGrade();
+    }
+
+    /**
+     * To String.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+      return "{$this->level} - {$this->drawing}";
     }
 }

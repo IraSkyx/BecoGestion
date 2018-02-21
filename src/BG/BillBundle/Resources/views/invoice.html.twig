@@ -5,8 +5,6 @@
       <meta charset="utf-8">
       <title>{% block title %}Facture n°{{ invoice.id }}{% endblock %}</title>
 
-      <!--   Core CSS Files   -->
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
       <link rel="stylesheet" href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/bgbill/css/becogestion-bill.css') }}" type="text/css" />
@@ -18,35 +16,35 @@
     <div class="container-fluid">
 
       <!-- Header -->
-      <div class="row justify-content-end" align="center">
+      <div class="row justify-content-end small" align="center">
         <strong>BUREAU D'ÉTUDES BÂTIMENT</strong></br>
         17, Rue Danielle Casanova, 77130 MONTEREAU</br>
         TÉL : 01 60 74 42 25 - FAX : 09 70 32 83 90</br>
         Email : bureau.etude@becofer.fr
       </div>
 
-      <div class="row justify-content-start"><strong>FACTURE N°{{ invoice.id }}</strong></div>
+      <div class="row justify-content-start small"><strong>FACTURE N°{{ invoice.id }}</strong></div>
       <table>
         <tbody>
           <tr>
-            <td>Date</td>
-            <td align="center">{{ invoice.creationDate|date('d-m-Y') }}</td>
+            <td class="small">Date</td>
+            <td class="small" align="center">{{ invoice.creationDate|date('d-m-Y') }}</td>
           <tr>
           <tr>
-            <td>Réf devis</td>
-            <td align="center">{{ invoice.ref }}</td>
+            <td class="small">Réf devis</td>
+            <td class="small" align="center">{{ invoice.ref }}</td>
           <tr>
           <tr>
-            <td>Client</td>
-            <td align="center">{{ invoice.customer }}</td>
+            <td class="small">Client</td>
+            <td class="small" align="center">{{ invoice.customer }}</td>
           <tr>
           <tr>
-            <td>ID CEE</td>
-            <td align="center">12332443</td>
+            <td class="small">ID CEE</td>
+            <td class="small" align="center">12332443</td>
           <tr>
           <tr>
-            <td>Dossier</td>
-            <td align="center">12332443</td>
+            <td class="small">Dossier</td>
+            <td class="small" align="center">{{ invoice.name }}</td>
           <tr>
         </tbody>
       </table>
@@ -54,86 +52,93 @@
 
     </br>
 
-      <!-- Body -->
-      <div class="table-responsive box-margin">
+      <!-- Production Body -->
+      <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>CODE</th>
-                <th>NIVEAU</th>
-                <th>PLAN</th>
-                <th>DÉSIGNATION</th>
-                <th>P.U HT EN €</th>
-                <th>P.U TTC EN €</th>
+                <th colspan="3"><h6>PRODUCTION</h6></th>
               </tr>
             </thead>
             <tbody>
+
               <tr>
-                <td colspan="6" align="center"><h6>PRODUCTION</h6></td>
+                <td><strong>DÉSIGNATION</strong></td>
+                <td><strong>P.U HT EN €</strong></td>
+                <td><strong>P.U TTC EN €</strong></td>
               </tr>
 
               {% for service in invoice.services %}
                     <tr>
-                        <td>{{ service.code }}</td>
-                        <td>{{ service.level }}</td>
-                        <td>{{ service.drawing }}</td>
-                        <td>???</td>
+                        <td>{{ service.level }} {{ service.drawing }}</td>
                         <td>{{ (service.billed) * 0.8 }}</td>
                         <td>{{ (service.billed + (service.billed * invoice.vat)) * 0.8 }}</td>
                     </tr>
               {% endfor %}
 
-              <tr>
-                <td colspan="6" align="center"><h6>SERVICES</h6></td>
-              </tr>
-
-              {% for service in invoice.services %}
-                    <tr>
-                        <td>{{ service.code }}</td>
-                        <td>{{ service.level }}</td>
-                        <td>{{ service.drawing }}</td>
-                        <td>???</td>
-                        <td>{{ (service.billed) * 0.2 }}</td>
-                        <td>{{ (service.billed + (service.billed * invoice.vat)) * 0.2 }}</td>
-                    </tr>
-              {% endfor %}
-
-              <tr>
-                <td colspan="4" rowspan="5">
-                  <p class="align-items-center" align="left">
-                    <strong>CONDITIONS DE PAIEMENT : PAR CHEQUE</strong></br>
-                    Nos factures sont payables au comptant net sans escompte.</br>
-                    Les pénalités de retard sont égales à 1.5 fois le taux d’intérêt légal
-                    (conformément à la loi 92-1442 du 31/12/92)</br>
-                    <strong>DATE DE RÉGLEMENT : écheance le : {{ invoice.payementDate|date('d/m/Y') }}</strong>
-                  </p>
-                </td>
-                <td class="small"><strong>TOTAL HT</strong></td>
-                <td>{{ totalet }}</td>
-              </tr>
-
-              <tr>
-                <td class="small"><strong>TVA {{ invoice.vat * 100 }} %</strong></td>
-                <td>{{ vat }}</td>
-              </tr>
-
-              <tr>
-                <td class="small"><strong>TOTAL TTC</strong></td>
-                <td>{{ totalet + vat }}</td>
-              </tr>
-
-              <tr>
-                <td class="small"><strong>NET A PAYER</strong></td>
-                <td>{{ totalet + vat }}</td>
-              </tr>
-
             </tbody>
           </table>
+        </div>
+        <!-- Production Body -->
 
+        <!-- Service Body -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="3"><h6>SERVICES</h6></th>
+                </tr>
+              </thead>
+              <tbody>
 
+                <tr>
+                  <td><strong>DÉSIGNATION</strong></td>
+                  <td><strong>P.U HT EN €</strong></td>
+                  <td><strong>P.U TTC EN €</strong></td>
+                </tr>
 
-      </div>
-      <!-- Body -->
+                {% for service in invoice.services %}
+                      <tr>
+                          <td>{{ service.level }} {{ service.drawing }}</td>
+                          <td>{{ (service.billed) * 0.2 }}</td>
+                          <td>{{ (service.billed + (service.billed * invoice.vat)) * 0.2 }}</td>
+                      </tr>
+                {% endfor %}
+
+                <tr>
+                  <td rowspan="4">
+                    <p class="align-items-center" align="left">
+                      <strong>CONDITIONS DE PAIEMENT : PAR CHEQUE</strong></br>
+                      Nos factures sont payables au comptant net sans escompte.</br>
+                      Les pénalités de retard sont égales à 1.5 fois le taux d’intérêt légal
+                      </br>(conformément à la loi 92-1442 du 31/12/92)</br>
+                      <strong>DATE DE RÉGLEMENT : écheance le : {{ invoice.payementDate|date('d/m/Y') }}</strong>
+                    </p>
+                  </td>
+                  <td class="small"><strong>TOTAL HT</strong></td>
+                  <td>{{ totalet }}</td>
+                </tr>
+
+                <tr>
+                  <td class="small"><strong>TVA {{ invoice.vat * 100 }} %</strong></td>
+                  <td>{{ vat }}</td>
+                </tr>
+
+                <tr>
+                  <td class="small"><strong>TOTAL TTC</strong></td>
+                  <td>{{ totalet + vat }}</td>
+                </tr>
+
+                <tr>
+                  <td class="small"><strong>NET A PAYER</strong></td>
+                  <td>{{ totalet + vat }}</td>
+                </tr>
+
+              </tbody>
+            </table>
+        </div>
+      <!-- Service Body -->
+
     </div>
 
     <hr>

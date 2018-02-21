@@ -29,6 +29,13 @@ class Invoice
   private $ref;
 
   /**
+   * @var string
+   *
+   * @ORM\Column(name="name", type="string", length=255)
+   */
+  private $name;
+
+  /**
    * @var \DateTime
    *
    * @ORM\Column(name="creation_date", type="datetime")
@@ -117,6 +124,30 @@ class Invoice
     public function getRef()
     {
         return $this->ref;
+    }
+
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return Invoice
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

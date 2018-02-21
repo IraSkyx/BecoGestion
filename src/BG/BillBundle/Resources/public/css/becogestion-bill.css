@@ -1,21 +1,17 @@
-h6 {
-   margin:0;
- }
-
-.margin-box {
-  margin-top: 200px !important;
-}
-
-thead, tfoot {
-  display: table-row-group;
-}
-
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
    vertical-align: middle;
    text-align: center;
  }
 
-.table-header-rotated {
+* {
+  overflow: visible !important;
+}
+
+tr {
+  page-break-inside: avoid !important;
+}
+
+/*.table-header-rotated {
   margin-right:30px;
 }
 
@@ -44,7 +40,7 @@ thead, tfoot {
  .table-header-rotated th.rotate-45 > div {
    position: relative;
    top: 0px;
-   left: 40px; /* 80 * tan(45) / 2 = 40 where 80 is the height on the cell and 45 is the transform angle*/
+   left: 40px;
    height: 100%;
    -ms-transform:skew(-45deg,0deg);
    -moz-transform:skew(-45deg,0deg);
@@ -63,10 +59,9 @@ thead, tfoot {
    -o-transform:skew(45deg,0deg) rotate(315deg);
    transform:skew(45deg,0deg) rotate(315deg);
    position: absolute;
-   bottom: 30px; /* 40 cos(45) = 28 with an additional 2px margin*/
-   left: -25px; /*Because it looked good, but there is probably a mathematical link here as well*/
+   bottom: 30px;
+   left: -25px;
    display: inline-block;
-   width: 85px; /* 80 / cos(45) - 40 cos (45) = 85 where 80 is the height of the cell, 40 the width of the cell and 45 the transform angle*/
+   width: 85px;
    text-align: left;
-   /* white-space: nowrap; *//*whether to display in one line or not*/
- }
+ }*/

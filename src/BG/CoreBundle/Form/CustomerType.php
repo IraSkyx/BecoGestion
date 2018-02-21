@@ -27,6 +27,13 @@ class CustomerType extends AbstractType
           ->add('address', TextType::class)
           ->add('postcode', IntegerType::class)
           ->add('city', TextType::class)
+          ->add('representatives', CollectionType::class, [
+            'entry_type' => RepresentativeType::class,
+            'label' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true
+          ])
           ->add('save', SubmitType::class);
     }
 

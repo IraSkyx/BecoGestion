@@ -12,8 +12,4 @@ use BG\CoreBundle\Entity\BaseService;
  */
 class BaseServiceRepository extends \Doctrine\ORM\EntityRepository
 {
-  public function findBase()
-  {
-    return $this->_em->createQuery('SELECT u FROM BGCoreBundle:BaseService u WHERE u INSTANCE OF BGCoreBundle:BaseService')->getResult();
-  }
 }

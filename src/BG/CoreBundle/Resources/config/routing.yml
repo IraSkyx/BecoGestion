@@ -77,14 +77,24 @@ BG_CoreBundle_archivesinvoices:
     defaults: { _controller: BGCoreBundle:Core:archivesInvoices }
 
 BG_CoreBundle_newquote:
-    path:     /newquote
-    defaults: { _controller: BGCoreBundle:Core:newQuote }
+    path:     /newquote/{nbBuilding}
+    defaults: { _controller: BGCoreBundle:Core:newQuote, nbBuilding: 1  }
+    requirements:
+        nbBuilding:   \d+
 
 BG_CoreBundle_modifyquote:
     path:     /modifyquote/{id}
     defaults: { _controller: BGCoreBundle:Core:modifyQuote }
     requirements:
         id:   \d+
+
+BG_CoreBundle_changebuildings:
+    path:     /changebuildings/{id}/{bid}/{action}
+    defaults: { _controller: BGCoreBundle:Core:changeBuildings }
+    requirements:
+        id:   \d+
+        bid:   \d+
+        action:   "add|remove"
 
 BG_CoreBundle_archives:
     path:     /archives

@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use BG\CoreBundle\Entity\BaseService;
 
@@ -22,10 +23,20 @@ class BuildingType extends AbstractType
         ->add('num', HiddenType::class)
         ->add('floors', NumberType::class)
         ->add('basements', NumberType::class)
+        ->add('gardenLevel', CheckboxType::class, [
+          'required' => false
+        ])
         ->add('num', HiddenType::class)
         ->add('services', CollectionType::class, [
           'entry_type' => ServiceType::class,
           'label' => false
+        ])
+        ->add('specialServices', CollectionType::class, [
+          'entry_type' => ServiceType::class,
+          'label' => false,
+          'allow_add' => true,
+          'allow_delete' => true,
+          'prototype' => true
         ]);
     }
 

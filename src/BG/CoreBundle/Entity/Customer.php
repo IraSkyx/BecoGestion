@@ -99,12 +99,14 @@ class Customer
     {
       $new = new Customer();
       return $new
-      ->setFirstName($customer->getFirstName())
-      ->setLastName($customer->getLastName())
       ->setCompanyName($customer->getCompanyName())
       ->setAddress($customer->getAddress())
       ->setPostcode($customer->getPostcode())
       ->setCity($customer->getCity())
+      ->setPhone($customer->getPhone())
+      ->setMail($customer->getMail())
+      ->setSiren($customer->getSiren())
+      ->setIntra($customer->getIntra())
       ->setIsCloned(true);
     }
 

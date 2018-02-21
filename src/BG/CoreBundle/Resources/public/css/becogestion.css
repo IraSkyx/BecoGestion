@@ -57,11 +57,12 @@ html, body {
 }
 
 h1 {
-  font-family: 'Bebas Neue';
-  font-size: 10vh !important;
+  font-family: 'Bebas Neue' !important;
+  font-size: 15vh !important;
 }
 
 h1.small {
+  font-family: 'Roboto' !important;
   font-size: 2vh !important;
 }
 

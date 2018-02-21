@@ -104,10 +104,11 @@ class CoreController extends Controller
 
     if($invoice->getStatus()->getMessage() == 'En attente')
     {
-      foreach($quote->getServices() as $service)
-        foreach($invoice->getServices() as $inv_service)
-          if($service->equals($inv_service))
-            $service->setBilled($service->getBilled() - $inv_service->getBilled());
+      foreach($quote->getBuildings() as $building)
+        foreach($building->getServices() as $service)
+          foreach($invoice->getServices() as $inv_service)
+            if($service->equals($inv_service))
+              $service->setBilled($service->getBilled() - $inv_service->getBilled());
 
       $em->remove($invoice);
       $em->flush();
@@ -181,15 +182,19 @@ class CoreController extends Controller
     return new JsonResponse($data);
   }
 
-  public function newQuoteAction(Request $request)
+  public function newQuoteAction(int $nbBuilding, Request $request)
   {
+    $value=0;
     $params = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1);
     $quote = new Quote($params->getEngRate(), $params->getDrawRate(), $params->getVat());
-    $quote->addBuilding(Building::fromBase($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:BaseService')->findBase()));
+
+    for($i=1; $i<=$nbBuilding;++$i)
+      $quote->addBuilding(Building::fromBase($i, $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:BaseService')->findAll()));
 
     $form = $this->get('form.factory')->create(QuoteType::class, $quote);
 
-    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
+    {
       $em = $this->getDoctrine()->getManager();
       $em->persist($quote);
       $em->flush();
@@ -201,11 +206,21 @@ class CoreController extends Controller
 
     return $this->render('@BGCore/Core/quote.html.twig', array(
       'form' => $form->createView(),
-      'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1),
-      'title' => 'AJOUTER UN DEVIS',
-      'route' => 'BG_CoreBundle_home',
-      'params' => []
+      'nbBuilding' => $nbBuilding,
+      'parameters' => $params
     ));
+  }
+
+  public function changeBuildingsAction(int $id, int $bid, string $action)
+  {
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
+    if($action == 'add')
+      $quote->addBuilding(Building::fromBase(count($quote->getBuildings())+1, $quote->getBuildings()[count($quote->getBuildings())-1]->getServices()));
+    else if($action == 'remove')
+      $quote->removeBuilding($quote->getBuildings()[$bid-1]);
+
+    $this->getDoctrine()->getManager()->flush();
+    return $this->redirectToRoute('BG_CoreBundle_modifyquote', ['id' => $id]);
   }
 
   public function modifyQuoteAction(int $id, Request $request)
@@ -219,16 +234,14 @@ class CoreController extends Controller
       $em->persist($quote);
       $em->flush();
 
-      $request->getSession()->getFlashBag()->add('notice', 'Devis bien enregistré.');
+      $request->getSession()->getFlashBag()->add('notice', 'Devis bien modifié.');
 
       return $this->redirectToRoute('BG_CoreBundle_view', array('id' => $id));
     }
 
-    return $this->render('@BGCore/Core/quote.html.twig', array(
+    return $this->render('@BGCore/Core/modifyquote.html.twig', array(
       'form' => $form->createView(),
       'parameters' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Parameters')->find(1),
-      'title' => 'MODIFIER LE DEVIS',
-      'route' => 'BG_CoreBundle_view',
       'params' => ['id' => $id]
     ));
   }
@@ -292,7 +305,7 @@ class CoreController extends Controller
     ));
   }
 
-  public function changeStatusAction(int $id, string $status)
+  public function changeStatusAction(Request $request, int $id, string $status)
   {
     $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->changeStatus($id, $status);
     $request->getSession()->getFlashBag()->add('notice', 'Statut bien modifié.');

@@ -43,17 +43,20 @@
           </thead>
           <tbody>
         {% for building in quote.buildings %}
-          <h3>Bâtiment N°{{ building.num }}</h3>
-          <hr>
+          <tr>
+            <td colspan="6"><h1 class="small">Bâtiment N°{{ building.num }}</h1></td>
+          </tr>
           {% for service in building.services %}
-            <tr>
-              <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
-              <td>{{ service.level }} - {{ service.drawing }}</td>
-              <td>{{ service.grade|index }}</td>
-              <td>{{ service.advancement }}</td>
-              <td>{{ service.engTime }}</td>
-              <td>{{ service.drawTime }}</td>
-            </tr>
+            {% if service.isUsed %}
+              <tr>
+                <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
+                <td>{{ service.level }} - {{ service.drawing }}</td>
+                <td>{{ service.grade|index }}</td>
+                <td>{{ service.advancement }}</td>
+                <td>{{ service.engTime }}</td>
+                <td>{{ service.drawTime }}</td>
+              </tr>
+            {% endif %}
           {% endfor %}
         {% endfor %}
 

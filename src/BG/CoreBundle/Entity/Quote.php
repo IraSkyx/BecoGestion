@@ -4,6 +4,7 @@ namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use BG\BillBundle\Entity\Invoice;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Quote
@@ -74,6 +75,7 @@ class Quote
     /**
      * @var Customer
      *
+     * @Assert\NotNull()
      * @ORM\ManyToOne(targetEntity="BG\CoreBundle\Entity\Customer" , cascade={"persist"})
      */
     private $customer;
@@ -103,7 +105,7 @@ class Quote
     public function billService(Service $service) : Service
     {
       //OPERATIONS
-      $advancement = $service->getMaxState();
+      $advancement = $service->getAdvancement();
       $engPrice = $service->getEngTime()*$this->getEngRate();
       $drawPrice = $service->getDrawTime()*$this->getDrawRate();
       $subtotal = ($engPrice+$drawPrice)*($advancement/100);
@@ -112,15 +114,14 @@ class Quote
 
       //COPY
       $serv = new Service();
-      $serv->setCode($service->getCode());
-      $serv->setBuilding($service->getBuilding());
+      $serv->setIsUsed($service->getIsUsed());
+      $serv->setLevel($service->getLevel());
+      $serv->setDrawing($service->getDrawing());
       $serv->setBilled($total);
       $serv->setEngTime($service->getEngTime());
       $serv->setDrawTime($service->getDrawTime());
       $serv->setGrade($service->getGrade());
-      $serv->setLevel($service->getLevel());
-      $serv->setDrawing($service->getDrawing());
-      $serv->setStates(new \Doctrine\Common\Collections\ArrayCollection());
+      $serv->setAdvancement($service->getAdvancement());
 
       return $serv;
     }
@@ -129,17 +130,27 @@ class Quote
     {
       $invoice = new Invoice();
       $invoice->setRef($this->getId());
+      $invoice->setName($this->getName());
       $invoice->setCreationDate(new \DateTime('NOW'));
       $invoice->setPayementDate(new \DateTime('NOW'));
-      $invoice->getPayementDate()->modify('+30 days');
+      $invoice->getPayementDate()->modify('+'.$this->getDelay().' days');
       $invoice->setEngRate($this->getEngRate());
       $invoice->setDrawRate($this->getDrawRate());
       $invoice->setVat($this->getVat());
       $invoice->setStatus(new Status("warning","En attente"));
       $invoice->setCustomer(Customer::clone($this->getCustomer()));
 
-      foreach($this->getServices() as $service)
-        $invoice->addService($this->billService($service));
+      foreach($this->getBuildings() as $building)
+      {
+        foreach($building->getServices() as $service)
+        {
+          if($service->getIsUsed())
+            $invoice->addService($this->billService($service));
+        }
+        foreach($building->getSpecialServices() as $specialService){
+          $invoice->addService($this->billService($specialService));
+        }
+      }
 
       return $invoice;
     }
@@ -301,11 +312,11 @@ class Quote
     /**
      * Set customer.
      *
-     * @param \BG\CoreBundle\Entity\Customer|null $customer
+     * @param \BG\CoreBundle\Entity\Customer $customer
      *
      * @return Quote
      */
-    public function setCustomer(\BG\CoreBundle\Entity\Customer $customer = null)
+    public function setCustomer(\BG\CoreBundle\Entity\Customer $customer)
     {
         $this->customer = $customer;
 
@@ -315,47 +326,11 @@ class Quote
     /**
      * Get customer.
      *
-     * @return \BG\CoreBundle\Entity\Customer|null
+     * @return \BG\CoreBundle\Entity\Customer
      */
     public function getCustomer()
     {
         return $this->customer;
-    }
-
-    /**
-     * Add building.
-     *
-     * @param \BG\CoreBundle\Entity\Building $buildings
-     *
-     * @return Quote
-     */
-    public function addService(\BG\CoreBundle\Entity\Building $building)
-    {
-        $this->buildings[] = $building;
-
-        return $this;
-    }
-
-    /**
-     * Remove building.
-     *
-     * @param \BG\CoreBundle\Entity\Building $building
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeService(\BG\CoreBundle\Entity\Building $building)
-    {
-        return $this->buildings->removeElement($building);
-    }
-
-    /**
-     * Get buildings.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getBuildings()
-    {
-        return $this->buildings;
     }
 
     /**
@@ -405,6 +380,19 @@ class Quote
      */
     public function removeBuilding(\BG\CoreBundle\Entity\Building $building)
     {
+        $array = $this->getBuildings();
+        foreach($array->slice($array->indexOf($building)) as $build)
+          $build->setNum($build->getNum() - 1);
         return $this->buildings->removeElement($building);
+    }
+
+    /**
+     * Get buildings.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBuildings()
+    {
+        return $this->buildings;
     }
 }

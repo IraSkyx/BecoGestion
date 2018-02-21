@@ -1,13 +1,9 @@
 {% extends "BGCoreBundle::layout.html.twig" %}
 
 {% import _self as formMacros %}
-{% macro printPrototype(building) %}
-    <div class="js-services-item">
-      {% if building.num.vars.value == 1 %}
-        <legend class="col-form-legend required">Bâtiment N°1</legend>
-      {% else %}
-        {{ form_label(building) }}
-      {% endif %}
+{% macro printPrototype(building, nbBuilding) %}
+    <div>
+        <legend class="col-form-legend required">Bâtiment N°{{ building.num.vars.value }}</legend>
         <div class="row">
           <div class="col">
             {{ form_row(building.floors) }}
@@ -15,20 +11,51 @@
           <div class="col">
             {{ form_row(building.basements) }}
           </div>
+          <div class="col d-flex justify-content-center align-items-center">
+            {{ form_row(building.gardenLevel) }}
+          </div>
         </div>
       </br>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
-              <th>Sélection</th>
+              <th><input id="selector{{ building.num.vars.value }}" type="checkbox"/> Sélection</th>
               <th>Niveau</th>
               <th>Dessin</th>
               <th>Temps ingénieur</th>
               <th>Temps dessinateur</th>
+              <th>Avancement</th>
             </thead>
             <tbody>
               {% for service in building.services %}
-                <tr>
+
+                  {% set class = 'hide-0' %}
+
+                  {% if service.level.vars.value == 'PH -1' %}
+                    {% set class = 'hide--1' %}
+                  {% elseif service.level.vars.value == 'PH -2' %}
+                    {% set class = 'hide--2' %}
+                  {% elseif service.level.vars.value == 'PH -3' %}
+                    {% set class = 'hide--3' %}
+                  {% elseif service.level.vars.value == 'PH -4' %}
+                    {% set class = 'hide--4' %}
+                  {% elseif service.level.vars.value == 'PH -5' %}
+                    {% set class = 'hide--5' %}
+                  {% elseif service.level.vars.value == 'PH 1' %}
+                    {% set class = 'hide-1' %}
+                  {% elseif service.level.vars.value == 'PH 2' %}
+                    {% set class = 'hide-2' %}
+                  {% elseif service.level.vars.value == 'PH 3' %}
+                    {% set class = 'hide-3' %}
+                  {% elseif service.level.vars.value == 'PH 4' %}
+                    {% set class = 'hide-4' %}
+                  {% elseif service.level.vars.value == 'PH 5' %}
+                    {% set class = 'hide-5' %}
+                  {% elseif service.level.vars.value == 'PH RDJ' %}
+                    {% set class = 'hide-RDJ' %}
+                  {% endif %}
+
+                <tr class="{{ class }}" data-attribute="{{ building.num.vars.value - 1 }}">
                   <td>{{ form_row(service.isUsed) }}</td>
                   <td>{{ form_row(service.level) }}</td>
                   <td>{{ form_row(service.drawing) }}</td>
@@ -39,21 +66,43 @@
             </tbody>
           </table>
         </div>
-        {% if building.num.vars.value != 1 %}
-          <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services pull-right" href="#"><i class="fa fa-times"></i> Supprimer</a></div>
+        {% if building.num.vars.value > 1 %}
+          <div class="d-flex justify-content-center"><a class="btn btn-danger" href="{{ path('BG_CoreBundle_newquote', {'nbBuilding': (nbBuilding - 1)}) }}"><i class="fa fa-times"></i> Supprimer</a></div>
         {% endif %}
         {{ form_rest(building) }}
     </div>
 {% endmacro %}
 
+{% macro printPrototypeService(specialService) %}
+    <div class="js-services-item">
+        <div class="col">
+            {{ form_row(specialService.isUsed) }}
+        </div>
+        <div class="col">
+            {{ form_row(specialService.level) }}
+        </div>
+        <div class="col">
+            {{ form_row(specialService.drawing) }}
+        </div>
+        <div class="col">
+            {{ form_row(specialService.engTime) }}
+        </div>
+        <div class="col">
+            {{ form_row(specialService.drawTime) }}
+        </div>
+        <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services" href="#"><i class="fa fa-times"></i> Supprimer</a></div>
+        {{ form_rest(specialService) }}
+    </div>
+{% endmacro %}
+
 {% block body %}
 
-  {{ include('BGCoreBundle::menu.html.twig', { 'route': route, 'parameters': params }) }}
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': [] }) }}
 
   <div class="container-fluid card wizard-card" data-color="blue">
 
     <div class="wizard-header">
-      <h3 class="wizard-title">{{ title }}</h3>
+      <h3 class="wizard-title">AJOUTER UN DEVIS</h3>
       <hr>
     </div>
 
@@ -92,8 +141,11 @@
         <h4 class="wizard-title">Choix du client</h4>
         <hr>
         <div class="row">
-          <div class="col">
+          <div class="col-9">
             {{ form_row(form.customer) }}
+          </div>
+          <div class="col-3" align="center">
+            <a class="btn btn-success" href="{{ path('BG_CoreBundle_customers', {'route': 'BG_CoreBundle_newquote'}) }}"><i class="fa fa-plus-circle"></i> Ajouter</a>
           </div>
         </div>
       </div>
@@ -103,12 +155,25 @@
       <div class="well">
         <h4 class="wizard-title">Définition des plans</h4>
         <hr>
-        <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printPrototype(form.buildings.vars.prototype)|e('html_attr') }}" data-index="{{ form.buildings|length }}">
+        <div class="js-services-mywrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printPrototype(form.buildings.vars.prototype, nbBuilding)|e('html_attr') }}" data-index="{{ form.buildings|length }}">
             {% for building in form.buildings %}
-                {{ formMacros.printPrototype(building) }}
+              {{ formMacros.printPrototype(building, nbBuilding) }}
+
+              <!-- Special services -->
+              <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ form_row(building.specialServices.vars.prototype)|e('html_attr') }}" data-index="{{ building.specialServices|length }}">
+                {% for specialService in building.specialServices %}
+                  {{ formMacros.printPrototypeService(specialService) }}
+                {% endfor %}
+
+                <div class="row justify-content-center">
+                    <a class="btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter un plan exceptionnel</a>
+                </div>
+              </div>
+              <!-- Special services -->
+
             {% endfor %}
-            <div class="row justify-content-center ">
-              <a class="btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter</a>
+            <div class="row justify-content-center">
+                <a class="btn btn-success" href="{{ path('BG_CoreBundle_newquote', {'nbBuilding': (nbBuilding + 1)}) }}"><i class="fa fa-plus-circle"></i> Ajouter un bâtiment</a>
             </div>
         </div>
       </div>
