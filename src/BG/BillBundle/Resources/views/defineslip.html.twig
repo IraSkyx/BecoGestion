@@ -1,0 +1,33 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': {} }) }}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <div class="wizard-header">
+      <h3 class="wizard-title">Générer un bordereau</h3>
+      <hr>
+    </div>
+
+    {{ form_start(form) }}
+
+      <div class="well">
+        <div class="row justify-content-center">
+          {{ form_row(form.followedBy) }}
+        </div>
+        <hr>
+        <div class="row justify-content-center">
+          {{ form_row(form.representatives) }}
+        </div>
+      </div>
+      <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>
+
+    {{ form_end(form) }}
+
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use BG\CoreBundle\Entity\BaseService;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class BuildingType extends AbstractType
 {
@@ -46,7 +48,8 @@ class BuildingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'BG\CoreBundle\Entity\Building'
+            'data_class' => 'BG\CoreBundle\Entity\Building',
+            'label' => false
         ));
     }
 

@@ -3,7 +3,7 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Parameters
@@ -56,24 +56,11 @@ class Parameters
     }
 
     /**
-     * @ORM\PreUpdate
+     * @ORM\PostUpdate
      */
-    public function updateVat(PreUpdateEventArgs $args)
+    public function updateVat(LifecycleEventArgs $args)
     {
-      $entity = $args->getObject();
-      $em = $args->getObjectManager();
-
-      $vat = $entity->getVat();
-
-      /*if ($args->hasChangedField('vat'))
-      {
-        $quotes = $em->getRepository('BGCoreBundle:Quote')->findAllByStatus(array('En attente', 'En cours'));
-        foreach($quotes as $quote)
-        {
-          $quote->setVat($vat);
-        }
-        $em->flush();
-      }*/
+      $args->getObjectManager()->getRepository('BGCoreBundle:Quote')->updateVat($args->getObject()->getVat());
     }
 
     /**

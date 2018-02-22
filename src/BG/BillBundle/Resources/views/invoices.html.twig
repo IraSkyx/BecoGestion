@@ -6,7 +6,7 @@
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>
   <hr class="row">
-  <h1 class="row justify-content-center small">FACTURES</h1>
+  <h1 class="row justify-content-center small">{% if archives is defined %}ARCHIVES DE {% endif %}FACTURES</h1>
 
   <div class="row">
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,7 +39,9 @@
               <th>Valider</th>
               <th>Supprimer</th>
             {% endif %}
-            <th>Voir</th>
+            <th>Production</th>
+            <th>Service</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
@@ -60,6 +62,10 @@
                       <td><a href="{{ path('BG_CoreBundle_pickdate', {'id': invoice.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
                       <td><a href="{{ path('BG_CoreBundle_invalidate', {'id': invoice.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
                     {% endif %}
+
+                    <td><a href="{{ path('BG_CoreBundle_invoice_prod', {'id': invoice.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+
+                    <td><a href="{{ path('BG_CoreBundle_invoice_service', {'id': invoice.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
 
                     <td><a href="{{ path('BG_CoreBundle_invoice', {'id': invoice.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
                 </tr>

@@ -11,7 +11,7 @@ tr {
   page-break-inside: avoid !important;
 }
 
-/*.table-header-rotated {
+.table-header-rotated {
   margin-right:30px;
 }
 
@@ -64,4 +64,4 @@ tr {
    display: inline-block;
    width: 85px;
    text-align: left;
- }*/
+ }

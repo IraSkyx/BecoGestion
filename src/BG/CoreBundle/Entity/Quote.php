@@ -106,8 +106,8 @@ class Quote
     {
       //OPERATIONS
       $advancement = $service->getAdvancement();
-      $engPrice = $service->getEngTime()*$this->getEngRate();
-      $drawPrice = $service->getDrawTime()*$this->getDrawRate();
+      $engPrice = ($service->getEngTime()*8)*$this->getEngRate();
+      $drawPrice = ($service->getDrawTime()*8)*$this->getDrawRate();
       $subtotal = ($engPrice+$drawPrice)*($advancement/100);
       $total = $subtotal-$service->getBilled();
       $service->setBilled($subtotal);

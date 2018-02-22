@@ -45,6 +45,7 @@ class QuoteType extends AbstractType
           'entry_type'   => BuildingType::class,
           'allow_add'    => true,
           'allow_delete' => true,
+          'label' => false,
           'prototype'    => true
           ])
           ->add('save',  SubmitType::class);

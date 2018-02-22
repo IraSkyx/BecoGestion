@@ -36,4 +36,14 @@ class QuoteRepository extends \Doctrine\ORM\EntityRepository
 
     $this->_em->flush();
   }
+
+  public function updateVat(float $vat)
+  {
+    $quotes = $this->findAllByStatus(array('En attente', 'En cours'));
+
+    foreach($quotes as $quote)
+      $quote->setVat($vat);
+
+    $this->_em->flush();
+  }
 }

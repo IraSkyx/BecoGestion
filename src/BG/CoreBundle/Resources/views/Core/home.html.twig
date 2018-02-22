@@ -6,7 +6,7 @@
   <div class="container-fluid align-items-center card wizard-card">
   <h1 class="row justify-content-center">BECO GESTION</h1>
   <hr class="row">
-  <h1 class="row justify-content-center small">DEVIS</h1>
+  <h1 class="row justify-content-center small">{% if app.request.attributes.get('_route') == "BG_CoreBundle_archives" %}ARCHIVES DE {% endif %}DEVIS</h1>
 
   <div class="row">
     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -36,6 +36,7 @@
             <th>Client</th>
             <th>Date de création</th>
             <th>Bordereau d'envoi</th>
+            <th>Facture</th>
             <th>Gérer</th>
           </tr>
         </thead>
@@ -47,11 +48,17 @@
 
                     <td>{{ quote.name }}</td>
 
-                    <td><button type="button" class="btn btn-{{ quote.status.type}}">{{ quote.status.message }}</button></td>
+                    <td><button type="button" class="btn btn-{{ quote.status.type }}">{{ quote.status.message }}</button></td>
 
                     <td>{{ quote.customer }}</td>
 
                     <td>{{ quote.date|date('d-m-Y')  }}</td>
+
+                    {% if quote.status.message in ['En attente', 'Annulé', 'Terminé'] %}
+                      <td><a class="disabled" id="generateSlip" href="{{ path('BG_CoreBundle_generateslip', {'id': quote.id}) }}"><i class="fas fa-envelope" aria-hidden="true"></i></a></td>
+                    {% else %}
+                      <td><a id="generateSlip" href="{{ path('BG_CoreBundle_generateslip', {'id': quote.id}) }}"><i class="fas fa-envelope" aria-hidden="true"></i></a></td>
+                    {% endif %}
 
                     {% if quote.status.message in ['En attente', 'Annulé', 'Terminé'] %}
                       <td><a class="disabled" id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>

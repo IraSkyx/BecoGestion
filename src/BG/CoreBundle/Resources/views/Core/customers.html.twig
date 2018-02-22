@@ -25,10 +25,10 @@
 
 {% block body %}
 
-  {% if app.request.query.get("route") is not defined %}
-    {% set route = 'BG_CoreBundle_customer' %}
-  {% else %}
+  {% if app.request.query.get("route") is not null %}
     {% set route = 'BG_CoreBundle_newquote' %}
+  {% else %}
+    {% set route = 'BG_CoreBundle_customer' %}
   {% endif %}
 
   {{ include('BGCoreBundle::menu.html.twig', { 'route': route, 'parameters': {}  }) }}

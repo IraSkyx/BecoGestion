@@ -39,7 +39,7 @@ $(document).ready(function(){
 $(document).ready(function(){
 
   $('#generateInvoice').on("click", function(e) {
-    if (confirm('Êtes-vous sûr de vouloir générer une facture et un bordereau d\'envoi ?') == false) {
+    if (confirm('Êtes-vous sûr de vouloir générer une facture ?') == false) {
       e.preventDefault();
       return false;
     }
@@ -61,8 +61,8 @@ $(document).ready(function(){
   }
 
   function hideShowFloors(value, building) {
-    for (var i = 1; i < 7; i++) {
-      if(i <= value){
+    for (var i = 0; i < 6; i++) {
+      if(i < value){
           $('.hide-' + i).filter(function() {
             return $(this).data("attribute") == building
           }).show("slow");
@@ -80,7 +80,7 @@ $(document).ready(function(){
   }
 
   function hideShowBasements(value, building) {
-    for (var i = -1; i > -4; i--) {
+    for (var i = -1; i > -6; i--) {
       if(i >= (value*(-1))){
           $('.hide-' + i).filter(function() {
             return $(this).data("attribute") == building
@@ -116,7 +116,7 @@ $(document).ready(function(){
   }
 
   function selectAll(value, building) {
-    for (var i = -4; i < 7; i++) {
+    for (var i = -5; i < 6; i++) {
       $('.hide-' + i).filter(function() {
         return $(this).data("attribute") == building && $(this).is(":visible")
       }).find('.form-check-input').prop("checked", value);
@@ -146,6 +146,29 @@ $(document).ready(function(){
 
   $('input:regex(id,selector[0-9]+)').change(function(e){
     selectAll(this.checked, parseInt(this.id.match(/\d+/g).map(Number)) - 1);
+  });
+
+  $('#showAll').on('click', function(e){
+    var building = $(this).data("attribute");
+    for (var i = -5; i < 6; i++) {
+      $('.hide-' + i).filter(function() {
+        return $(this).data("attribute") == building
+      }).show("slow");
+    }
+    e.preventDefault();
+  });
+
+  $('#hideAll').on('click', function(e){
+    var building = $(this).data("attribute");
+    for (var i = -5; i < 6; i++) {
+      $('.hide-' + i).filter(function() {
+        return $(this).data("attribute") == building && $(this).find('.form-check-input').is(":checked") == false
+      }).hide("slow");
+    }
+    $('.hide-NA, .hide-RDJ').filter(function() {
+      return $(this).data("attribute") == building && $(this).find('.form-check-input').is(":checked") == false
+    }).hide("slow");
+    e.preventDefault();
   });
 
 });

@@ -3,6 +3,7 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Service
@@ -53,6 +54,7 @@ class Service
    * @var float
    *
    * @ORM\Column(name="eng_time", type="float")
+   * @Assert\NotNull()
    */
   private $engTime;
 
@@ -60,6 +62,7 @@ class Service
    * @var float
    *
    * @ORM\Column(name="draw_time", type="float")
+   * @Assert\NotNull()
    */
   private $drawTime;
 
@@ -84,8 +87,6 @@ class Service
   {
     $this->isUsed = false;
     $this->billed = 0;
-    $this->engTime = 0;
-    $this->drawTime = 0;
     $this->grade = 0;
     $this->advancement = 0;
   }

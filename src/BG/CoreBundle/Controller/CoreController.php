@@ -15,11 +15,14 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use BG\CoreBundle\Form\AdvancementType;
 use BG\CoreBundle\Form\ParametersType;
 use BG\CoreBundle\Form\QuoteType;
+use BG\CoreBundle\Form\SlipType;
 use BG\BillBundle\Form\InvoiceType;
+use BG\BillBundle\Entity\ArchivedInvoice;
 use BG\CoreBundle\Form\CustomerChoiceType;
 use BG\CoreBundle\Form\CustomerType;
 use BG\BillBundle\Entity\Invoice;
 use BG\CoreBundle\Entity\Service;
+use BG\CoreBundle\Entity\Slip;
 use BG\CoreBundle\Entity\Building;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -50,38 +53,66 @@ class CoreController extends Controller
   public function archivesInvoicesAction()
   {
     return $this->render('@BGBill/invoices.html.twig', array(
-      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->findAllByStatus(array("Terminé")),
+      'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:ArchivedInvoice')->findAllByStatus(array("Terminé")),
       'archives' => true
     ));
   }
 
-  public function slipAction(int $id)
+  public function slipsAction(Request $request, int $id)
   {
-    $slip = null;
-    //$slip = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Slip')->find($id);
+    $slips = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Slip')->findByRef($id, ['date' => 'DESC']);
+    return $this->render('@BGBill/slips.html.twig', array(
+      'slips' => $slips,
+      'quote' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id)
+    ));
+  }
+
+  public function slipAction(Request $request, int $id)
+  {
     $html = $this->renderView('@BGBill/slip.html.twig', array(
-      'slip' => $slip
+      'slip' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Slip')->find($id)
     ));
 
     return new Response(
-      $this->get('knp_snappy.pdf')->getOutputFromHtml($html, [
-        'header-html' => $this->renderView('@BGBill/header.html.twig'),
-        'footer-html' => $this->renderView('@BGBill/footer-slip.html.twig')
-      ]),
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
       200,
       array(
           'Content-Type' => 'application/pdf'
       ));
   }
 
-  public function slipsAction(int $id)
+  public function generateSlipAction(Request $request, int $id)
   {
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
+    $slip = Slip::fromQuote($quote);
 
-  }
+    foreach($this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Representative')->findByIsBase(true) as $repr)
+      $slip->addRepresentative($repr);
 
-  public function generateSlipAction(int $id)
-  {
+    $form = $this->get('form.factory')->create(SlipType::class, $slip);
 
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($slip);
+      $em->flush();
+
+      $html = $this->renderView('@BGBill/slip.html.twig', array(
+        'slip' => $slip
+      ));
+
+      return new Response(
+        $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+        200,
+        array(
+            'Content-Type' => 'application/pdf'
+        ));
+    }
+
+    return $this->render('@BGBill/defineslip.html.twig', array(
+      'form' => $form->createView(),
+      'slip' => $slip
+    ));
   }
 
   public function generateAction(int $id)
@@ -121,6 +152,8 @@ class CoreController extends Controller
   {
     $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
 
+    $archivedInvoice = new ArchivedInvoice($invoice);
+
     $form = $this->get('form.factory')->create(InvoiceType::class, $invoice);
 
     if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -144,7 +177,11 @@ class CoreController extends Controller
     if($invoice->getStatus()->getMessage() == 'En attente')
     {
       $invoice->getStatus()->setType("success")->setMessage("Terminé");
-      $this->getDoctrine()->getManager()->flush();
+      $archivedInvoice = new ArchivedInvoice($invoice);
+
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($archivedInvoice);
+      $em->flush();
     }
 
     return $this->redirectToRoute('BG_CoreBundle_invoices');
@@ -156,6 +193,50 @@ class CoreController extends Controller
     $totalet = $invoice->getTotalEt();
 
     $html = $this->renderView('@BGBill/invoice.html.twig', array(
+      'invoice' => $invoice,
+      'totalet' => $totalet,
+      'vat' => $totalet * $invoice->getVat()
+    ));
+
+    return new Response(
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html, [
+        'header-html' => $this->renderView('@BGBill/header.html.twig'),
+        'footer-html' => $this->renderView('@BGBill/footer.html.twig')
+      ]),
+      200,
+      array(
+          'Content-Type' => 'application/pdf'
+      ));
+  }
+
+  public function invoiceProdAction(int $id)
+  {
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
+    $totalet = $invoice->getTotalEt();
+
+    $html = $this->renderView('@BGBill/invoiceProd.html.twig', array(
+      'invoice' => $invoice,
+      'totalet' => $totalet,
+      'vat' => $totalet * $invoice->getVat()
+    ));
+
+    return new Response(
+      $this->get('knp_snappy.pdf')->getOutputFromHtml($html, [
+        'header-html' => $this->renderView('@BGBill/header.html.twig'),
+        'footer-html' => $this->renderView('@BGBill/footer.html.twig')
+      ]),
+      200,
+      array(
+          'Content-Type' => 'application/pdf'
+      ));
+  }
+
+  public function invoiceServiceAction(int $id)
+  {
+    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Invoice')->find($id);
+    $totalet = $invoice->getTotalEt();
+
+    $html = $this->renderView('@BGBill/invoiceService.html.twig', array(
       'invoice' => $invoice,
       'totalet' => $totalet,
       'vat' => $totalet * $invoice->getVat()

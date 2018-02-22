@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Representative
  *
- * @ORM\Table(name="representative")
+ * @ORM\Table("representative")
  * @ORM\Entity(repositoryClass="BG\CoreBundle\Repository\RepresentativeRepository")
  */
 class Representative
@@ -22,16 +22,23 @@ class Representative
     private $id;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_base", type="boolean")
+     */
+    private $isBase;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=255)
+     * @ORM\Column(name="first_name", type="string", nullable=true, length=255)
      */
     private $firstName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="last_name", type="string", length=255)
+     * @ORM\Column(name="last_name", type="string", nullable=true, length=255)
      */
     private $lastName;
 
@@ -45,17 +52,16 @@ class Representative
     /**
      * @var int
      *
-     * @ORM\Column(name="phone", type="integer")
+     * @ORM\Column(name="phone", nullable=true, type="integer")
      */
     private $phone;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="mail", type="string", length=255)
+     * @ORM\Column(name="mail", type="string", nullable=true, length=255)
      */
     private $mail;
-
 
     /**
      * Get id.
@@ -68,23 +74,47 @@ class Representative
     }
 
     /**
-     * Set firstName.
+     * Set isBase.
      *
-     * @param string $firstName
+     * @param bool $isBase
      *
      * @return Representative
      */
-    public function setFirstName($firstName)
+    public function setIsBase($isBase)
+    {
+        $this->isBase = $isBase;
+
+        return $this;
+    }
+
+    /**
+     * Get isBase.
+     *
+     * @return bool
+     */
+    public function getIsBase()
+    {
+        return $this->isBase;
+    }
+
+    /**
+     * Set firstName.
+     *
+     * @param string|null $firstName
+     *
+     * @return Representative
+     */
+    public function setFirstName($firstName = null)
     {
         $this->firstName = $firstName;
-    
+
         return $this;
     }
 
     /**
      * Get firstName.
      *
-     * @return string
+     * @return string|null
      */
     public function getFirstName()
     {
@@ -94,21 +124,21 @@ class Representative
     /**
      * Set lastName.
      *
-     * @param string $lastName
+     * @param string|null $lastName
      *
      * @return Representative
      */
-    public function setLastName($lastName)
+    public function setLastName($lastName = null)
     {
         $this->lastName = $lastName;
-    
+
         return $this;
     }
 
     /**
      * Get lastName.
      *
-     * @return string
+     * @return string|null
      */
     public function getLastName()
     {
@@ -125,7 +155,7 @@ class Representative
     public function setFunction($function)
     {
         $this->function = $function;
-    
+
         return $this;
     }
 
@@ -142,21 +172,21 @@ class Representative
     /**
      * Set phone.
      *
-     * @param int $phone
+     * @param int|null $phone
      *
      * @return Representative
      */
-    public function setPhone($phone)
+    public function setPhone($phone = null)
     {
         $this->phone = $phone;
-    
+
         return $this;
     }
 
     /**
      * Get phone.
      *
-     * @return int
+     * @return int|null
      */
     public function getPhone()
     {
@@ -166,24 +196,34 @@ class Representative
     /**
      * Set mail.
      *
-     * @param string $mail
+     * @param string|null $mail
      *
      * @return Representative
      */
-    public function setMail($mail)
+    public function setMail($mail = null)
     {
         $this->mail = $mail;
-    
+
         return $this;
     }
 
     /**
      * Get mail.
      *
-     * @return string
+     * @return string|null
      */
     public function getMail()
     {
         return $this->mail;
+    }
+
+    /**
+     * To string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+      return $this->isBase ? "{$this->function}" : "{$this->lastName} {$this->firstName}";
     }
 }

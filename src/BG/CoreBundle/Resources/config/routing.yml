@@ -10,9 +10,9 @@ BG_CoreBundle_generateslip:
     requirements:
         id:   \d+
 
-BG_CoreBundle_slip:
-    path:     /slip/{id}
-    defaults: { _controller: BGCoreBundle:Core:slip }
+BG_CoreBundle_pickdate:
+    path:     /pick/{id}
+    defaults: { _controller: BGCoreBundle:Core:pickDate }
     requirements:
         id:   \d+
 
@@ -22,9 +22,9 @@ BG_CoreBundle_slips:
     requirements:
         id:   \d+
 
-BG_CoreBundle_pickdate:
-    path:     /pick/{id}
-    defaults: { _controller: BGCoreBundle:Core:pickDate }
+BG_CoreBundle_slip:
+    path:     /slip/{id}
+    defaults: { _controller: BGCoreBundle:Core:slip }
     requirements:
         id:   \d+
 
@@ -49,6 +49,18 @@ BG_CoreBundle_generate:
 BG_CoreBundle_invoice:
     path:     /invoice/{id}
     defaults: { _controller: BGCoreBundle:Core:invoice }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_invoice_prod:
+    path:     /invoice/prod/{id}
+    defaults: { _controller: BGCoreBundle:Core:invoiceProd }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_invoice_service:
+    path:     /invoice/service/{id}
+    defaults: { _controller: BGCoreBundle:Core:invoiceService }
     requirements:
         id:   \d+
 

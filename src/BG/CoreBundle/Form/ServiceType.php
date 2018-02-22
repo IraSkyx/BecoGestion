@@ -29,10 +29,14 @@ class ServiceType extends AbstractType
           'label' => false
         ])
         ->add('engTime', NumberType::class, [
-          'label' => false
+          'label' => false,
+          'required' => false,
+          'empty_data' => '0'
         ])
         ->add('drawTime', NumberType::class, [
-          'label' => false
+          'label' => false,
+          'required' => false,
+          'empty_data' => '0'
         ]);
     }
 
