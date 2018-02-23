@@ -7,8 +7,12 @@
   overflow: visible !important;
 }
 
-tr {
+tr, .break {
   page-break-inside: avoid !important;
+}
+
+td {
+  border-right: 1px solid #dee2e6; 
 }
 
 .table-header-rotated {
@@ -50,7 +54,12 @@ tr {
    overflow: hidden;
    border-left: 1px solid #dddddd;
    border-right: 1px solid #dddddd;
+   border-top: 1px solid #dddddd;
  }
+
+th {
+  border-top: none !important;
+}
 
  .table-header-rotated th.rotate-45 span {
    -ms-transform:skew(45deg,0deg) rotate(315deg);

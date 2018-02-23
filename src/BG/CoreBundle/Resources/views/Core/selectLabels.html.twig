@@ -1,0 +1,49 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  {{ include('BGCoreBundle::menu.html.twig', { 'route': 'BG_CoreBundle_home', 'parameters': {} }) }}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <div class="wizard-header">
+      <h3 class="wizard-title">Indiquer la quantité</h3>
+      <hr>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th class="small">Désignation</th>
+          {% for representative in slip.representatives %}
+            <th class="small">{{ representative }}</th>
+          {% endfor %}
+        </thead>
+        <tbody>
+          {% for building in form.buildings %}
+            <td colspan="{{ 6 + slip.representatives|length }}">Bâtiment N° {{ building.num.vars.value }}</td>
+            {{ form_row(building.num) }}
+            {% for service in building.services %}
+              {% if service.isUsed.vars.data %}
+                <tr>
+                  <td>{{ service.vars.value }}</td>
+                  {% for label in service.labels %}
+                    <td>{{ form_widget(label) }}</td>
+                  {% endfor %}
+                </tr>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+        <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

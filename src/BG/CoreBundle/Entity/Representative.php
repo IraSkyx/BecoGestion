@@ -64,6 +64,16 @@ class Representative
     private $mail;
 
     /**
+     * Create from customer.
+     *
+     * @return Representative
+     */
+     public static function fromCustomer(\BG\CoreBundle\Entity\Customer $customer)
+     {
+         return (new Representative())->setIsBase(false)->setFunction($customer->getCompanyName())->setPhone($customer->getPhone())->setMail($customer->getMail());
+     }
+
+    /**
      * Get id.
      *
      * @return int
@@ -224,6 +234,6 @@ class Representative
      */
     public function __toString()
     {
-      return $this->isBase ? "{$this->function}" : "{$this->lastName} {$this->firstName}";
+      return $this->isBase || ($this->lastName == null && $this->firstName == null)? "{$this->function}" : "{$this->lastName} {$this->firstName}";
     }
 }

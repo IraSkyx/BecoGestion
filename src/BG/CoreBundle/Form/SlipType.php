@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use BG\CoreBundle\Entity\Representative;
+use BG\CoreBundle\Repository\RepresentativeRepository;
 
 class SlipType extends AbstractType
 {
@@ -28,7 +29,11 @@ class SlipType extends AbstractType
         ->add('representatives', EntityType::class, [
           'class' => Representative::class,
           'multiple' => true,
-          'expanded' => true
+          'expanded' => true,
+          'query_builder' => function(RepresentativeRepository $er) {
+            return $er->createQueryBuilder('u')
+                      ->where('u.isBase = 1');
+            },
         ])
         ->add('save', SubmitType::class);
     }/**

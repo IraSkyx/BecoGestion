@@ -4,6 +4,7 @@
     {% block head %}
       <meta charset="utf-8">
       <title>{% block title %}Bordereau d'envoi{% endblock %}</title>
+      <link rel="icon" type="image/png" href="{{ asset('bundles/bgbill/imgs/logo.png') }}" />
 
       <!--   Core CSS Files   -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
@@ -45,43 +46,47 @@
 
     <!-- Body -->
     <div class="row scrollable-table justify-content-center" style="width:90%;">
-      <table class="table table-striped table-header-rotated justify-content-center">
+      <hr>
+      <table class="table table-striped table-header-rotated justify-content-center table-condensed">
         <thead>
           <tr>
             <!-- First column header is not rotated -->
-            <th>DÉSIGNATION</th>
+            <th class="th-border">DÉSIGNATION</th>
             <!-- Following headers are rotated -->
-            <th class="column criterion rotate-45"><div><span>{{ slip.customer }}</span></div></th>
             {% for representative in slip.representatives %}
               <th class="column criterion rotate-45"><div><span>{{ representative }}</span></div></th>
             {% endfor %}
           </tr>
         </thead>
         <tbody>
-          {% for service in slip.services %}
-            <tr>
-              <td class="row-header">{{ service }}</td>
-              {% for i in 0..slip.representatives|length %}
-                  <td></td>
-              {% endfor %}
-            </tr>
+          {% for building in slip.buildings %}
+            {% for service in building.services %}
+              <tr>
+                <td class="row-header small">{{ service }}</td>
+                {% for label in service.labels %}
+                    <td>{{ label }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
           {% endfor %}
         </tbody>
       </table>
     </div>
     <!-- Body -->
 
-    <p class="row justify-content-center"><u>E : documents envoyés par mail</u></p>
+    <div class="break">
+      <p class="row justify-content-center"><u>E : documents envoyés par mail</u></p>
 
-    <p class="row"><u>Documents transmis par courrier à :</u></p>
+      <p class="row"><u>Documents transmis par courrier à :</u></p>
 
-    {% for representative in slip.representatives %}
-      {% if representative.isBase == false %}
-        <p class="row"> {{ representative }} :  </p>
-      {% endif %}
-    {% endfor %}
+      {% for representative in slip.representatives %}
+        {% if representative.isBase == false %}
+          <p class="row"> {{ representative }} :  </p>
+        {% endif %}
+      {% endfor %}
 
-    <p class="row">Vous remerciant de votre confiance, veuillez agréer, Messieurs, l’expression de nos sentiments distingués.</p>
+      <p class="row">Vous remerciant de votre confiance, veuillez agréer, Messieurs, l’expression de nos sentiments distingués.</p>
+    </div>
 
   </div>
 

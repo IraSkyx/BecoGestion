@@ -81,6 +81,13 @@ class Service
   private $advancement;
 
   /**
+   * @var string|null
+   *
+   * @ORM\Column(name="labels", type="simple_array", nullable=true)
+   */
+  private $labels;
+
+  /**
    * Constructor
    */
   public function __construct()
@@ -306,6 +313,8 @@ class Service
         return $this->advancement;
     }
 
+
+
     /**
      * Equals function.
      *
@@ -321,6 +330,28 @@ class Service
     }
 
     /**
+     * Get price.
+     *
+     * @return float
+     */
+    public function getPrice(float $engRate, float $drawRate) : float
+    {
+      return (($this->getEngTime()*8)*$engRate) + (($this->getDrawTime()*8)*$drawRate);
+    }
+
+    /**
+     * Adjust the price.
+     *
+     */
+    public function adjust(float $expected, float $engRate, float $drawRate)
+    {
+      $engPrice = ($this->getEngTime()*8)*$engRate;
+      $drawPrice = ($this->getDrawTime()*8)*$drawRate;
+      $expectedEngPrice = $expected - $drawPrice;
+      $this->setEngTime($expectedEngPrice/$engRate/8);
+    }
+
+    /**
      * To String.
      *
      * @return string
@@ -328,5 +359,34 @@ class Service
     public function __toString()
     {
       return "{$this->level} - {$this->drawing}";
+    }
+
+    /**
+     * Set labels.
+     *
+     * @param array|null $labels
+     *
+     * @return Service
+     */
+    public function setLabels($labels = null)
+    {
+        $this->labels = $labels;
+
+        return $this;
+    }
+
+    /**
+     * Get labels.
+     *
+     * @return array|null
+     */
+    public function getLabels()
+    {
+        return $this->labels;
+    }
+
+    public function addLabel(string $value)
+    {
+      $this->labels[] = $value;
     }
 }

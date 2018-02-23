@@ -90,6 +90,19 @@ class Building
     }
 
     /**
+     * Clone without services
+     */
+    public static function cloneNoServices(Building $toClone)
+    {
+      $building = new Building();
+      $building->setNum($toClone->getNum());
+      $building->setFloors($toClone->getFloors());
+      $building->setBasements($toClone->getBasements());
+      $building->setGardenLevel($toClone->getGardenLevel());
+      return $building;
+    }
+
+    /**
      * Get id.
      *
      * @return int

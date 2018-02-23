@@ -61,9 +61,9 @@
                     {% endif %}
 
                     {% if quote.status.message in ['En attente', 'Annulé', 'Terminé'] %}
-                      <td><a class="disabled" id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                      <td><a class="disabled" id="generateInvoice" href="{{ path('BG_CoreBundle_setAdvancement', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
                     {% else %}
-                      <td><a id="generateInvoice" href="{{ path('BG_CoreBundle_generate', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                      <td><a id="generateInvoice" href="{{ path('BG_CoreBundle_setAdvancement', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
                     {% endif %}
 
                     <td><a href="{{ path('BG_CoreBundle_view', {'id': quote.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a></td>

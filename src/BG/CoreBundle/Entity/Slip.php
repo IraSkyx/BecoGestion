@@ -3,6 +3,7 @@
 namespace BG\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use \Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Slip
@@ -64,16 +65,17 @@ class Slip
     private $customer;
 
     /**
-     * @var Service
+     * @var Building
      *
-     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Service")
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Building", cascade={"persist", "remove"})
      */
-    private $services;
+    private $buildings;
 
     /**
      * @var Representative
      *
-    * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Representative")
+     * @ORM\ManyToMany(targetEntity="BG\CoreBundle\Entity\Representative", cascade={"persist"})
+     * @ORM\OrderBy({"isBase" = "ASC"})
      */
     private $representatives;
 
@@ -83,7 +85,7 @@ class Slip
     public function __construct()
     {
       $this->date = new \Datetime('NOW');
-      $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+      $this->buildings = new \Doctrine\Common\Collections\ArrayCollection();
       $this->representatives = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -99,9 +101,17 @@ class Slip
       $slip->customer = $quote->getCustomer();
 
       foreach($quote->getBuildings() as $building)
+      {
+        $build = Building::cloneNoServices($building);
         foreach($building->getServices() as $service)
+        {
           if($service->getIsUsed())
-            $slip->addService($service);
+          {
+            $build->addService($service);
+          }
+        }
+        $slip->addBuilding($build);
+      }
 
       foreach($quote->getCustomer()->getRepresentatives() as $representative)
         $slip->addRepresentative($representative);
@@ -264,39 +274,39 @@ class Slip
     }
 
     /**
-     * Add service.
+     * Add building.
      *
-     * @param \BG\CoreBundle\Entity\Service $service
+     * @param \BG\CoreBundle\Entity\Building $building
      *
      * @return Slip
      */
-    public function addService(\BG\CoreBundle\Entity\Service $service)
+    public function addBuilding(\BG\CoreBundle\Entity\Building $building)
     {
-        $this->services[] = $service;
+        $this->buildings[] = $building;
 
         return $this;
     }
 
     /**
-     * Remove service.
+     * Remove building.
      *
-     * @param \BG\CoreBundle\Entity\Service $service
+     * @param \BG\CoreBundle\Entity\Building $building
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeService(\BG\CoreBundle\Entity\Service $service)
+    public function removeBuilding(\BG\CoreBundle\Entity\Building $building)
     {
-        return $this->services->removeElement($service);
+        return $this->buildings->removeElement($building);
     }
 
     /**
-     * Get services.
+     * Get buildings.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getServices()
+    public function getBuildings()
     {
-        return $this->services;
+        return $this->buildings;
     }
 
     /**

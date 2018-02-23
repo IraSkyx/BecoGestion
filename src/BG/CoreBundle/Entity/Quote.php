@@ -395,4 +395,56 @@ class Quote
     {
         return $this->buildings;
     }
+
+    /**
+     * Reduce the total price.
+     *
+     */
+    public function reduce(int $value)
+    {
+      while($this->getTotal() > $value)
+      {
+        foreach($this->getBuildings() as $building)
+          foreach($building->getServices() as $service)
+          {
+            if($service->getEngTime() - 0.1 > 0)
+              $service->setEngTime($service->getEngTime() - 0.1);
+            if($service->getDrawTime() - 0.1 > 0)
+              $service->setDrawTime($service->getDrawTime() - 0.1);
+            if($this->getTotal() < $value)
+              return;
+          }
+      }
+    }
+
+    /**
+     * Round the total to a specific value.
+     *
+     */
+    public function round(int $value)
+    {
+      $total = $this->getTotal();
+      $service = $this->getBuildings()->first()->getServices()->first();
+      if($value > $total)
+        throw new \Exception("Veuillez indiquer une valeur inférieure au total");
+      else
+      {
+        $this->reduce($value);
+        $service->adjust($value - $total, $this->getEngRate(), $this->getDrawRate());
+      }
+    }
+
+    /**
+     * Get the total price of the quote.
+     *
+     * @return float
+     */
+    public function getTotal() : float
+    {
+      $total = 0;
+      foreach($this->getBuildings() as $building)
+        foreach($building->getServices() as $service)
+          $total += (($service->getEngTime()*8)*$this->getEngRate()) + (($service->getDrawTime()*8)*$this->getDrawRate());
+      return $total;
+    }
 }

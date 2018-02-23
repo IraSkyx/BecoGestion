@@ -171,4 +171,9 @@ $(document).ready(function(){
     e.preventDefault();
   });
 
+  $('#round').on("click", function(e) {
+    if($('#roundValue').val().length)
+      window.location.replace(Routing.generate('BG_CoreBundle_round', { id: $('#roundValue').data("attribute"), value: $('#roundValue').val() } ));
+  });
+
 });

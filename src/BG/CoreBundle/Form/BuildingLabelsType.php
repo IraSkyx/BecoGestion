@@ -14,7 +14,7 @@ use BG\CoreBundle\Entity\BaseService;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class BuildingType extends AbstractType
+class BuildingLabelsType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -23,21 +23,13 @@ class BuildingType extends AbstractType
     {
         $builder
         ->add('num', HiddenType::class)
-        ->add('floors', NumberType::class)
-        ->add('basements', NumberType::class)
-        ->add('gardenLevel', CheckboxType::class, [
-          'required' => false
-        ])
         ->add('services', CollectionType::class, [
-          'entry_type' => ServiceType::class,
+          'entry_type' => ServiceLabelsType::class,
           'label' => false
         ])
         ->add('specialServices', CollectionType::class, [
-          'entry_type' => ServiceType::class,
-          'label' => false,
-          'allow_add' => true,
-          'allow_delete' => true,
-          'prototype' => true
+          'entry_type' => ServiceLabelsType::class,
+          'label' => false
         ]);
     }
 
@@ -59,6 +51,4 @@ class BuildingType extends AbstractType
     {
         return 'bg_corebundle_building';
     }
-
-
 }

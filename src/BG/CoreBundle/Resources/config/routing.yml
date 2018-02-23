@@ -22,6 +22,21 @@ BG_CoreBundle_slips:
     requirements:
         id:   \d+
 
+BG_CoreBundle_selectLabels:
+    path:     /labels/{id}
+    defaults: { _controller: BGCoreBundle:Core:selectLabels }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_round:
+    path:     /round/{id}/{value}
+    defaults: { _controller: BGCoreBundle:Core:round }
+    requirements:
+        id:   \d+
+        value:   \d+
+    options:
+        expose: true
+
 BG_CoreBundle_slip:
     path:     /slip/{id}
     defaults: { _controller: BGCoreBundle:Core:slip }
@@ -43,6 +58,12 @@ BG_CoreBundle_invalidate:
 BG_CoreBundle_generate:
     path:     /generate/{id}
     defaults: { _controller: BGCoreBundle:Core:generate }
+    requirements:
+        id:   \d+
+
+BG_CoreBundle_setAdvancement:
+    path:     /set/{id}
+    defaults: { _controller: BGCoreBundle:Core:setAdvancement }
     requirements:
         id:   \d+
 

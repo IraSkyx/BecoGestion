@@ -4,7 +4,6 @@ namespace BG\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use BG\CoreBundle\Entity\Quote;
 use BG\CoreBundle\Entity\Bill;
 use BG\CoreBundle\Entity\Customer;
@@ -20,8 +19,11 @@ use BG\BillBundle\Form\InvoiceType;
 use BG\BillBundle\Entity\ArchivedInvoice;
 use BG\CoreBundle\Form\CustomerChoiceType;
 use BG\CoreBundle\Form\CustomerType;
+use BG\CoreBundle\Form\QuoteInvoiceType;
+use BG\CoreBundle\Form\SlipLabelsType;
 use BG\BillBundle\Entity\Invoice;
 use BG\CoreBundle\Entity\Service;
+use BG\CoreBundle\Entity\Representative;
 use BG\CoreBundle\Entity\Slip;
 use BG\CoreBundle\Entity\Building;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,6 +58,16 @@ class CoreController extends Controller
       'invoices' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:ArchivedInvoice')->findAllByStatus(array("Terminé")),
       'archives' => true
     ));
+  }
+
+  public function roundAction(int $id, int $value)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $em->getRepository('BGCoreBundle:Quote')->find($id)->round($value);
+    $em->flush();
+    return $this->redirectToRoute('BG_CoreBundle_view', [
+      'id' => $id
+    ]);
   }
 
   public function slipsAction(Request $request, int $id)
@@ -93,26 +105,65 @@ class CoreController extends Controller
 
     if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 
+      $slip->addRepresentative(Representative::fromCustomer($slip->getCustomer()));
       $em = $this->getDoctrine()->getManager();
       $em->persist($slip);
       $em->flush();
 
-      $html = $this->renderView('@BGBill/slip.html.twig', array(
-        'slip' => $slip
-      ));
-
-      return new Response(
-        $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-        200,
-        array(
-            'Content-Type' => 'application/pdf'
-        ));
+      return $this->redirectToRoute('BG_CoreBundle_selectLabels', [
+        'id' => $slip->getId()
+      ]);
     }
 
-    return $this->render('@BGBill/defineslip.html.twig', array(
+    return $this->render('@BGBill/defineslip.html.twig', [
+      'form' => $form->createView(),
+      'slip' => $slip
+    ]);
+  }
+
+  public function selectLabelsAction(Request $request, int $id)
+  {
+    $slip = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Slip')->find($id);
+
+    foreach($slip->getBuildings() as $building)
+      foreach($building->getServices() as $service)
+      {
+        $service->setLabels(array());
+        for($i=0; $i < count($slip->getRepresentatives()); $i++)
+          $service->addLabel('');
+      }
+
+    $form = $this->get('form.factory')->create(SlipLabelsType::class, $slip);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($slip);
+      $em->flush();
+
+      return $this->redirectToRoute('BG_CoreBundle_slip', ['id' => $slip->getId()]);
+    }
+
+    return $this->render('@BGCore/Core/selectLabels.html.twig', array(
       'form' => $form->createView(),
       'slip' => $slip
     ));
+  }
+
+  public function setAdvancementAction(Request $request, int $id)
+  {
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
+
+    $form = $this->get('form.factory')->create(QuoteInvoiceType::class, $quote);
+
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $this->getDoctrine()->getManager()->flush();
+      return $this->redirectToRoute('BG_CoreBundle_generate', ['id' => $id]);
+    }
+
+    return $this->render('@BGCore/Core/setAdvancement.html.twig', [
+      'form' => $form->createView()
+    ]);
   }
 
   public function generateAction(int $id)
@@ -382,7 +433,8 @@ class CoreController extends Controller
     $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
 
     return $this->render('@BGCore/Core/view.html.twig', array(
-      'quote' => $quote
+      'quote' => $quote,
+      'total' => $quote->getTotal()
     ));
   }
 

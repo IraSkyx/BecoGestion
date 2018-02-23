@@ -59,6 +59,7 @@ html, body {
 h1 {
   font-family: 'Bebas Neue' !important;
   font-size: 15vh !important;
+  word-wrap: break-word;
 }
 
 h1.small {
