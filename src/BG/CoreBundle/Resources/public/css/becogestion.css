@@ -3,11 +3,6 @@
     src: url('../fonts/Roboto.ttf');
 }
 
-@font-face {
-    font-family: Bebas Neue;
-    src: url('../fonts/BebasNeue.otf');
-}
-
 html, body {
   font-size: 100%;
   background-image: url('../imgs/background.png');
@@ -16,6 +11,14 @@ html, body {
   background-size: cover;
   color: white;
   height: 100%;
+}
+
+a, a:hover {
+  color: #222222 !important;
+}
+
+.a-white, .a-white:hover {
+  color: white !important;
 }
 
 .container-fluid {
@@ -82,7 +85,12 @@ h3 {
   margin:2vh;
 }
 
-.box-margin {
+.plan-block {
+  padding-left: 15px;
+  margin:2vh;
+}
+
+.well, .box-margin {
   margin:2vh !important;
 }
 
@@ -91,9 +99,9 @@ h3 {
    text-align: center;
  }
 
- .well {
-   margin:2vh;
- }
+.btn-margin-left {
+  margin-left:1vh;
+}
 
 .fas {
   font-size: 1.5em;
@@ -104,6 +112,20 @@ h3 {
   color:#222222 !important;
 }
 
-.fa-sign-out-alt, .fa-plus-circle, .fa-times {
+.fa-sign-out-alt, .fa-times, .fa-home, .fa-plus-circle {
   color:#fff;
+}
+
+.fa-green {
+  color:#4caf50;
+}
+
+.form-group .select2-container {
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+  display: table;
+  table-layout: fixed;
 }

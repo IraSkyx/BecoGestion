@@ -1,0 +1,4 @@
+services:
+#    bg_slip.example:
+#        class: BG\SlipBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

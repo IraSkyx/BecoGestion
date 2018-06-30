@@ -20,6 +20,22 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
 
+bg_bill:
+    resource: "@BGBillBundle/Resources/config/routing.yml"
+    prefix:   /bill
+
+bg_slip:
+    resource: "@BGSlipBundle/Resources/config/routing.yml"
+    prefix:   /slip
+
+bg_customer:
+    resource: "@BGCustomerBundle/Resources/config/routing.yml"
+    prefix:   /customer
+
+bg_quote:
+    resource: "@BGQuoteBundle/Resources/config/routing.yml"
+    prefix:   /quote
+
 bg_core:
     resource: "@BGCoreBundle/Resources/config/routing.yml"
     prefix:   /

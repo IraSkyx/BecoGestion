@@ -60,7 +60,7 @@ class Parameters
      */
     public function updateVat(LifecycleEventArgs $args)
     {
-      $args->getObjectManager()->getRepository('BGCoreBundle:Quote')->updateVat($args->getObject()->getVat());
+      $args->getObjectManager()->getRepository('BGQuoteBundle:Quote')->updateVat($args->getObject()->getVat());
     }
 
     /**

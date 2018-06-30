@@ -1,0 +1,204 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% import _self as formMacros %}
+{% macro printPrototype(building, quoteId) %}
+    <div class="js-services-item">
+        <div class="row align-items-center">
+          <div class="col">
+            <legend class="col-form-legend required">Bâtiment N°{{ building.num.vars.value }}</legend>
+          </div>
+          <div class="col">
+            <div class="row justify-content-end">
+              <a class="blank" id="showAll" data-attribute="{{ (building.num.vars.value|number_format) - 1 }}" href="#"><i class="fas fa-filter" aria-hidden="true"></i> Tout montrer</a>
+              <a class="blank" id="hideAll" data-attribute="{{ (building.num.vars.value|number_format) - 1 }}" href="#"><i class="fas fa-filter" aria-hidden="true"></i> Tout cacher</a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            {{ form_row(building.floors) }}
+          </div>
+          <div class="col">
+            {{ form_row(building.basements) }}
+          </div>
+          <div class="col d-flex justify-content-center align-items-center">
+            {{ form_row(building.gardenLevel) }}
+          </div>
+        </div>
+      </br>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <th><input id="selector{{ building.num.vars.value }}" type="checkbox"/> Sélection</th>
+              <th>Niveau</th>
+              <th>Dessin</th>
+              <th>Temps ingénieur</th>
+              <th>Temps dessinateur</th>
+            </thead>
+            <tbody>
+              {% for service in building.services %}
+
+              {% set class = 'hide-NA' %}
+
+              {% if service.level.vars.value == 'PH -1' %}
+                {% set class = 'hide--1' %}
+              {% elseif service.level.vars.value == 'PH -2' %}
+                {% set class = 'hide--2' %}
+              {% elseif service.level.vars.value == 'PH -3' %}
+                {% set class = 'hide--3' %}
+              {% elseif service.level.vars.value == 'PH -4' %}
+                {% set class = 'hide--4' %}
+              {% elseif service.level.vars.value == 'PH -5' %}
+                {% set class = 'hide--5' %}
+              {% elseif service.level.vars.value == 'PH 1' %}
+                {% set class = 'hide-1' %}
+              {% elseif service.level.vars.value == 'PH 2' %}
+                {% set class = 'hide-2' %}
+              {% elseif service.level.vars.value == 'PH 3' %}
+                {% set class = 'hide-3' %}
+              {% elseif service.level.vars.value == 'PH 4' %}
+                {% set class = 'hide-4' %}
+              {% elseif service.level.vars.value == 'PH 5' %}
+                {% set class = 'hide-5' %}
+              {% elseif service.level.vars.value == 'PH RDJ' %}
+                {% set class = 'hide-RDJ' %}
+              {% elseif service.level.vars.value in ['Soubassement', 'Escaliers infra', 'PH RDC'] %}
+                {% set class = 'hide-0' %}
+              {% endif %}
+
+                <tr class="{{ class }}" data-attribute="{{ building.num.vars.value - 1 }}">
+                  <td>{{ form_row(service.isUsed) }}</td>
+                  <td>{{ form_row(service.level) }}</td>
+                  <td>{{ form_row(service.drawing) }}</td>
+                  <td>{{ form_row(service.engTime) }}</td>
+                  <td>{{ form_row(service.drawTime) }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% if building.num.vars.value > 1 %}
+            <div class="d-flex justify-content-center"><a class="a-white btn btn-danger" href="{{ path('BG_QuoteBundle_changebuildings', {'id': quoteId, 'bid': building.num.vars.value, 'action': 'remove'}) }}"><i class="fa fa-times"></i> Supprimer</a></div>
+        {% endif %}
+        {{ form_row(building.num) }}
+    </div>
+{% endmacro %}
+
+{% macro printServicePrototype(special) %}
+    <div class="row js-services-item">
+        <div class="col">
+            {{ form_widget(special.isUsed, {'disabled': 'disabled', 'checked': 'checked'}) }}
+        </div>
+        <div class="col">
+            {{ form_row(special.level) }}
+        </div>
+        <div class="col">
+            {{ form_row(special.drawing) }}
+        </div>
+        <div class="col">
+            {{ form_row(special.engTime) }}
+        </div>
+        <div class="col">
+            {{ form_row(special.drawTime) }}
+        </div>
+        <div class="d-flex justify-content-center"><a class="btn btn-danger js-remove-services" href="#"><i class="fa fa-times"></i></a></div>
+    </div>
+{% endmacro %}
+
+{% block body %}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <h3 class="wizard-title">MODIFIER LE DEVIS</h3>
+    <hr>
+
+    {{ form_start(form) }}
+      {{ form_errors(form) }}
+
+      <div class="well row">
+          <!-- QUOTE INFORMATION -->
+        <div class="col">
+          <h4 class="wizard-title">Infos du devis</h4>
+          <hr>
+          <div class="row">
+            <div class="col">
+              {{ form_row(form.name) }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              {{ form_row(form.engRate) }}
+            </div>
+            <div class="col">
+              {{ form_row(form.drawRate) }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              {{ form_row(form.vat) }}
+            </div>
+            <div class="col">
+              {{ form_row(form.delay) }}
+            </div>
+          </div>
+        </div>
+        <!-- QUOTE INFORMATION -->
+
+        <!-- CUSTOMER CHOICE -->
+        <div class="col">
+          <h4 class="wizard-title">Choix du client</h4>
+          <hr>         
+          <div class="row">
+            <div class="col-md-10">
+              {{ form_row(form.customer) }}
+            </div>
+            <div class="col-md-2 align-self-center" align="center">
+              <a href="{{ path('BG_CustomerBundle_new')}}"><i class="fas fa-plus-circle fa-green" aria-hidden="true"></i></a>
+            </div>
+          </div>       
+        </div>
+        <!-- CUSTOMER CHOICE -->
+      </div>
+
+      <br>
+
+      <!-- PLANS DEFINITION -->
+      <div class="well">
+        <h4 class="col wizard-title">Définition des plans</h4>
+        <hr>
+        <div class="js-services-mywrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printPrototype(form.buildings.vars.prototype, id)|e('html_attr') }}" data-index="{{ form.buildings|length }}">
+            {% for building in form.buildings %}
+              {{ formMacros.printPrototype(building, id) }}
+
+              <!-- SPECIAL PLANS DEFINITION -->
+              <h1 class="row small">Plans exceptionnels</h1>
+              <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printServicePrototype(building.specialServices.vars.prototype)|e('html_attr') }}" data-index="{{ building.specialServices|length }}">
+
+                  {% for special in building.specialServices %}
+                    {{ formMacros.printServicePrototype(special) }}
+                  {% endfor %}
+                  <div class="row justify-content-center">
+                      <a class="a-white btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter un plan exceptionnel</a>
+                  </div>
+              </div>
+              <!-- SPECIAL PLANS DEFINITION -->
+
+            {% endfor %}
+            <div class="row justify-content-center">
+              <a class="a-white btn btn-success" href="{{ path('BG_QuoteBundle_changebuildings', {'id': id, 'bid': 0,'action': 'add'}) }}"><i class="fa fa-plus-circle"></i> Ajouter un bâtiment</a>
+            </div>
+        </div>
+      </div>
+      <!-- PLANS DEFINITION -->
+
+      <!-- SAVE SUBMIT -->
+      <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>
+      <!-- SAVE SUBMIT -->
+
+    {{ form_end(form) }}
+
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

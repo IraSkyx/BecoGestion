@@ -1,0 +1,21 @@
+BG_CustomerBundle:
+    path:     /options
+    defaults: { _controller: BGCustomerBundle:Customer:options }
+
+BG_CustomerBundle_new:
+    path:     /new
+    defaults: { _controller: BGCustomerBundle:Customer:new }
+
+BG_CustomerBundle_modify:
+    path:     /modify/{id}
+    defaults: { _controller: BGCustomerBundle:Customer:modify }
+    requirements:
+        id:   \d+
+    options:
+        expose: true
+
+BG_CustomerBundle_get:
+    path:     /get
+    defaults: { _controller: BGCustomerBundle:Customer:get }
+    options:
+        expose: true

@@ -24,7 +24,10 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new BG\BillBundle\BGBillBundle(),
-            new Knp\Bundle\SnappyBundle\KnpSnappyBundle()
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
+            new BG\QuoteBundle\BGQuoteBundle(),
+            new BG\CustomerBundle\BGCustomerBundle(),
+            new BG\SlipBundle\BGSlipBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

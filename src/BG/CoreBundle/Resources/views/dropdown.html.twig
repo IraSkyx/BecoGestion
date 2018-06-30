@@ -1,0 +1,15 @@
+<div class="row">
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="{{ path('BG_QuoteBundle_new') }}">Nouveau devis</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('BG_CoreBundle') }}">Accéder aux devis</a>
+    <a class="dropdown-item" href="{{ path('BG_QuoteBundle_archives') }}">Accéder aux archives de devis</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('BG_BillBundle') }}">Accéder aux factures</a>
+    <a class="dropdown-item" href="{{ path('BG_BillBundle_archives') }}">Accéder aux archives de factures</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ path('BG_CustomerBundle') }}">Gestion des clients</a>
+    <a class="dropdown-item" href="{{ path('BG_CoreBundle_settings') }}">Gestion des paramètres</a>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+BG_BillBundle:
+    path:     /
+    defaults: { _controller: BGBillBundle:Bill:index }
+
+BG_BillBundle_archives:
+    path:     /archives
+    defaults: { _controller: BGBillBundle:Bill:archives }
+
+BG_BillBundle_pick:
+    path:     /pick/{id}
+    defaults: { _controller: BGBillBundle:Bill:pick }
+    requirements:
+        id:   \d+
+
+BG_BillBundle_generate:
+    path:     /generate/{id}
+    defaults: { _controller: BGBillBundle:Bill:generate }
+    requirements:
+        id:   \d+
+
+BG_BillBundle_validate:
+      path:     /validate/{id}
+      defaults: { _controller: BGBillBundle:Bill:validate }
+      requirements:
+          id:   \d+
+
+BG_BillBundle_invalidate:
+      path:     /invalidate/{id}
+      defaults: { _controller: BGBillBundle:Bill:invalidate }
+      requirements:
+          id:   \d+
+
+BG_BillBundle_production:
+    path:     /production/{id}
+    defaults: { _controller: BGBillBundle:Bill:production }
+    requirements:
+        id:   \d+
+
+BG_BillBundle_service:
+    path:     /service/{id}
+    defaults: { _controller: BGBillBundle:Bill:service }
+    requirements:
+        id:   \d+
+
+BG_BillBundle_view:
+    path:     /view/{id}
+    defaults: { _controller: BGBillBundle:Bill:view }
+    requirements:
+        id:   \d+

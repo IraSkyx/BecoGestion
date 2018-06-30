@@ -1,3 +1,4 @@
+//Dynamic addition of forms 
 $(document).ready(function() {
   var $wrapper = $('.js-services-wrapper');
 
@@ -25,27 +26,40 @@ $(document).ready(function() {
       $(this).parent().before(newForm);
   });
 });
-
+//Dynamic addition of forms
 
 $(document).ready(function(){
 
+  //FlashBag
   $('.flash').delay(2000).fadeOut('slow');
+  //FlashBag
 
-  $('#bg_corebundle_customer_customer').on("select2:select", function(e) {
-    window.location.replace(Routing.generate('BG_CoreBundle_customers', { action: $('#bg_corebundle_customer_customer').val() } ));
+  //Access from BGCustomer/Options to BGCustomer/Modify
+  $('#bg_customerbundle_customer_customer').on("select2:select", function(e) {
+    window.location.replace(Routing.generate('BG_CustomerBundle_modify', { id: $('#bg_customerbundle_customer_customer').val() } ));
   });
-});
+  //Access from BGCustomer/Options to BGCustomer/Modify
 
-$(document).ready(function(){
-
+  //Invoice generation confirmation
   $('#generateInvoice').on("click", function(e) {
     if (confirm('Êtes-vous sûr de vouloir générer une facture ?') == false) {
       e.preventDefault();
       return false;
     }
   });
+  //Invoice generation confirmation
+
+  //Slip generation confirmation
+  $('#generateSlip').on("click", function(e) {
+    if (confirm('Êtes-vous sûr de vouloir générer un bordereau ?') == false) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  //Slip generation confirmation
 });
 
+//Handle for plans in quote creation/modification
 $(document).ready(function(){
   jQuery.expr[':'].regex = function(elem, index, match) {
       var matchParams = match[3].split(','),
@@ -177,3 +191,4 @@ $(document).ready(function(){
   });
 
 });
+//Handle for plans in quote creation/modification

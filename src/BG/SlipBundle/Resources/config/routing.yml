@@ -1,0 +1,22 @@
+BG_SlipBundle:
+    path:     /{id}
+    defaults: { _controller: BGSlipBundle:Slip:index }
+    requirements:
+        id:   \d+
+
+BG_SlipBundle_view:
+    path:     /view
+    defaults: { _controller: BGSlipBundle:Slip:view }
+
+BG_SlipBundle_generate:
+    path:     /generate/{id}
+    defaults: { _controller: BGSlipBundle:Slip:generate }
+    requirements:
+        id:   \d+
+
+BG_SlipBundle_labels:
+    path:     /labels/{id}
+    defaults: { _controller: BGSlipBundle:Slip:labels }
+    requirements:
+        id:   \d+
+

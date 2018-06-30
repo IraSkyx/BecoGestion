@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    {% block head %}
+      <meta charset="utf-8">
+      <title>{% block title %}Facture n°{{ bill.id }}{% endblock %}</title>
+      <link rel="icon" type="image/png" href="{{ asset('bundles/bgbill/imgs/logo.png') }}" />
+
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/bgbill/css/becogestion-bill.css') }}" type="text/css" />
+
+    {% endblock %}
+  </head>
+
+  <body>
+    <div class="container-fluid">
+
+      <!-- Header -->
+      <div class="row justify-content-end small" align="center">
+        <strong>BUREAU D'ÉTUDES BÂTIMENT</strong></br>
+        17, Rue Danielle Casanova, 77130 MONTEREAU</br>
+        TÉL : 01 60 74 42 25 - FAX : 09 70 32 83 90</br>
+        Email : bureau.etude@becofer.fr
+      </div>
+
+      <div class="row justify-content-start small"><strong>FACTURE N°{{ bill.id }}</strong></div>
+      <table>
+        <tbody>
+          <tr>
+            <td class="small">Date</td>
+            <td class="small" align="center">{{ bill.creationDate|date('d-m-Y') }}</td>
+          <tr>
+          <tr>
+            <td class="small">Réf devis</td>
+            <td class="small" align="center">{{ bill.ref }}</td>
+          <tr>
+          <tr>
+            <td class="small">Client</td>
+            <td class="small" align="center">{{ bill.customer }}</td>
+          <tr>
+          <tr>
+            <td class="small">ID CEE</td>
+            <td class="small" align="center">12332443</td>
+          <tr>
+          <tr>
+            <td class="small">Dossier</td>
+            <td class="small" align="center">{{ bill.name }}</td>
+          <tr>
+        </tbody>
+      </table>
+      <!-- Header -->
+
+    </br>
+
+        <!-- Service Body -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="3"><h6>SERVICES</h6></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td><strong>DÉSIGNATION</strong></td>
+                  <td><strong>P.U HT EN €</strong></td>
+                  <td><strong>P.U TTC EN €</strong></td>
+                </tr>
+
+                {% for service in bill.services %}
+                      <tr>
+                          <td>{{ service.level }} {{ service.drawing }}</td>
+                          <td>{{ (service.billed) * 0.2 }}</td>
+                          <td>{{ (service.billed + (service.billed * bill.vat)) * 0.2 }}</td>
+                      </tr>
+                {% endfor %}
+
+                <tr>
+                  <td rowspan="4">
+                    <p class="align-items-center" align="left">
+                      <strong>CONDITIONS DE PAIEMENT : PAR CHEQUE</strong></br>
+                      Nos factures sont payables au comptant net sans escompte.</br>
+                      Les pénalités de retard sont égales à 1.5 fois le taux d’intérêt légal
+                      </br>(conformément à la loi 92-1442 du 31/12/92)</br>
+                      <strong>DATE DE RÉGLEMENT : écheance le : {{ bill.payementDate|date('d/m/Y') }}</strong>
+                    </p>
+                  </td>
+                  <td class="small"><strong>TOTAL HT</strong></td>
+                  <td>{{ totalet * 0.2 }}</td>
+                </tr>
+
+                <tr>
+                  <td class="small"><strong>TVA {{ bill.vat * 100 }} %</strong></td>
+                  <td>{{ vat * 0.2 }}</td>
+                </tr>
+
+                <tr>
+                  <td class="small"><strong>TOTAL TTC</strong></td>
+                  <td>{{ (totalet * 0.2) + (vat * 0.2) }}</td>
+                </tr>
+
+                <tr>
+                  <td class="small"><strong>NET A PAYER</strong></td>
+                  <td>{{ (totalet * 0.2) + (vat * 0.2) }}</td>
+                </tr>
+
+              </tbody>
+            </table>
+        </div>
+      <!-- Service Body -->
+
+    </div>
+
+    <hr>
+
+  </body>
+</html>

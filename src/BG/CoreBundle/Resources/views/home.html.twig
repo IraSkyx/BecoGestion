@@ -1,0 +1,54 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <div class="container-fluid align-items-center card wizard-card">
+  <h1 class="row justify-content-center">BECO GESTION</h1>
+  <hr class="row">
+  <h1 class="row justify-content-center small">{% if app.request.attributes.get('_route') == "BG_QuoteBundle_archives" %}ARCHIVES DE {% endif %}DEVIS</h1>
+
+  {{ include('BGCoreBundle::dropdown.html.twig') }}
+
+  <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Réf Devis</th>
+            <th>Nom</th>
+            <th>Status</th>
+            <th>Client</th>
+            <th>Date de création</th>
+            <th>Bordereau d'envoi</th>
+            <th>Facture</th>
+            <th>Gérer</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for quote in quotes %}
+                <tr>
+                    <td>{{ quote.id }}</td>
+
+                    <td>{{ quote.name }}</td>
+
+                    <td><button type="button" class="btn btn-{{ quote.status.type }}">{{ quote.status.message }}</button></td>
+
+                    <td>{{ quote.customer }}</td>
+
+                    <td>{{ quote.date|date('d-m-Y')  }}</td>
+
+                    <td><a id="generateSlip" {% if quote.status.message == 'En cours' %} class="disabled" {% endif %} href="{{ path('BG_SlipBundle_generate', {'id': quote.id}) }}"><i class="fas fa-envelope" aria-hidden="true"></i></a></td>
+                    
+                    <td><a id="generateInvoice" {% if quote.status.message == 'En cours' %} class="disabled"{% endif %} href="{{ path('BG_QuoteBundle_advancement', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                    
+                    <td><a href="{{ path('BG_QuoteBundle_view', {'id': quote.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a></td>
+                </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

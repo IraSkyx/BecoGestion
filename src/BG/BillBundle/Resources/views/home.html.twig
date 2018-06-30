@@ -1,0 +1,63 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <div class="container-fluid align-items-center card wizard-card">
+  <h1 class="row justify-content-center">BECO GESTION</h1>
+  <hr class="row">
+  <h1 class="row justify-content-center small">{% if app.request.attributes.get('_route') == "BG_BillBundle_archives" %}ARCHIVES DE {% endif %}FACTURES</h1>
+
+  {{ include('BGCoreBundle::dropdown.html.twig') }}
+
+  <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Réf Facture</th>
+            <th>Status</th>
+            <th>Client</th>
+            <th>Date d'émission</th>
+            <th>Date de paiement</th>
+            {% if app.request.attributes.get('_route') != "BG_BillBundle_archives" %}
+              <th>Valider</th>
+              <th>Supprimer</th>
+            {% endif %}
+            <th>Production</th>
+            <th>Service</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for bill in bills %}
+                <tr>
+                    <td>{{ bill.id }}</td>
+
+                    <td><button type="button" class="btn btn-{{ bill.status.type}}">{{ bill.status.message }}</button></td>
+
+                    <td>{{ bill.customer.companyName }}</td>
+
+                    <td>{{ bill.creationDate|date('d-m-Y')  }}</td>
+
+                    <td>{{ bill.payementDate|date('d-m-Y')  }}</td>
+
+                    {% if app.request.attributes.get('_route') != "BG_BillBundle_archives" %}
+                      <td><a href="{{ path('BG_BillBundle_pick', {'id': bill.id}) }}"><i class="fas fa-check" aria-hidden="true"></i></a></td>
+                      <td><a href="{{ path('BG_BillBundle_invalidate', {'id': bill.id}) }}"><i class="fas fa-times" aria-hidden="true"></i></a></td>
+                    {% endif %}
+
+                    <td><a href="{{ path('BG_BillBundle_production', {'id': bill.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+
+                    <td><a href="{{ path('BG_BillBundle_service', {'id': bill.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+
+                    <td><a href="{{ path('BG_BillBundle_view', {'id': bill.id}) }}"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
+                </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

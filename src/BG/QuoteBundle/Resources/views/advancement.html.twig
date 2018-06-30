@@ -1,0 +1,45 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <h3 class="wizard-title">Indiquer les avancements</h3>
+    <hr>
+
+    {{ form_start(form) }}
+      <table class="table table-striped">
+        <thead>
+          <th>Niveau</th>
+          <th>Dessin</th>
+          <th>Temps ingénieur</th>
+          <th>Temps dessinateur</th>
+          <th>Avancement</th>
+        </thead>
+        <tbody>
+          {% for building in form.buildings %}
+            <td colspan="6">Bâtiment N° {{ building.num.vars.value }}</td>
+            {{ form_row(building.num) }}
+            {% for service in building.services %}
+              {% if service.isUsed.vars.data %}
+                <tr>
+                  <td>{{ form_row(service.level) }}</td>
+                  <td>{{ form_row(service.drawing) }}</td>
+                  <td>{{ form_row(service.engTime) }}</td>
+                  <td>{{ form_row(service.drawTime) }}</td>
+                  <td>{{ form_row(service.advancement, {'attr': {'min': service.advancement.vars.value, 'max': '100'}}) }}</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+        <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+
+  </div>
+
+  {{ parent() }}
+
+{% endblock %}

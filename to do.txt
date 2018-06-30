@@ -1,2 +1,0 @@
-event :
-Si je modif tva change tous les devis en cours/en attente

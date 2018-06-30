@@ -3,19 +3,15 @@
   <head>
     {% block head %}
       <meta charset="utf-8">
-      <title>{% block title %}BecoGestion{% endblock %}</title>
+      <title>BecoGestion</title>
       <link rel="icon" type="image/png" href="{{ asset('bundles/bgbill/imgs/logo.png') }}" />
 
       <!--   Core CSS Files   -->
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous" type="text/css" >
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" type="text/css" >
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" integrity="sha256-Zlen06xFBs47DKkjTfT2O2v/jpTpLyH513khsWb8aSU=" crossorigin="anonymous" type="text/css" />
 
-      {% stylesheets filter='cssrewrite, ?scssphp'
-      'bundles/bgcore/css/becogestion.css'
-      'bundles/bgcore/css/select2.min.css'
-      'bundles/bgcore/css/material-bootstrap-wizard.css'
-      %}
+      {% stylesheets filter='cssrewrite, ?scssphp' 'bundles/bgcore/css/*' %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
       {% endstylesheets %}
 
@@ -23,6 +19,9 @@
   </head>
 
   <body>
+
+    {{ include('BGCoreBundle::menu.html.twig') }}
+
     {% block body %}
 
     <div class="flash">
@@ -35,19 +34,19 @@
 
       {% block scripts %}
         <!--   Core JS Files   -->
-        <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+        <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous" type="text/javascript"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js" integrity="sha256-S0OSS1VIFhO4U2RG9P5K0TuApj8mW6JYMGFFVbCNaPw=" crossorigin="anonymous" type="text/javascript"></script>
 
         {% javascripts
         'bundles/fosjsrouting/js/router.min.js'
         'bundles/tetranzselect2entity/js/select2entity.js'
         'bundles/bgcore/js/becogestion.js'
         %}
-          <script type="text/javascript" src="{{ asset_url }}"></script>
+          <script src="{{ asset_url }}" type="text/javascript"></script>
         {% endjavascripts %}
-        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}" type="text/javascript"></script>
 
       {% endblock %}
 

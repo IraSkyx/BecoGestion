@@ -1,0 +1,51 @@
+BG_QuoteBundle_new:
+    path:     /new/{nbBuilding}
+    defaults: { _controller: BGQuoteBundle:Quote:new, nbBuilding: 1  }
+    requirements:
+        nbBuilding:   \d+
+
+BG_QuoteBundle_modify:
+    path:     /modify/{id}
+    defaults: { _controller: BGQuoteBundle:Quote:modify }
+    requirements:
+        id:   \d+
+
+BG_QuoteBundle_view:
+    path:     /view/{id}
+    defaults: { _controller: BGQuoteBundle:Quote:view }
+    requirements:
+        id:   \d+
+
+BG_QuoteBundle_archives:
+    path:     /archives
+    defaults: { _controller: BGQuoteBundle:Quote:archives }
+
+BG_QuoteBundle_change:
+    path:     /change/{id}/{status}
+    defaults: { _controller: BGQuoteBundle:Quote:change }
+    requirements:
+        id:   \d+
+        status: "awaiting|ongoing|finished|cancelled"
+
+BG_QuoteBundle_changebuildings:
+    path:     /change/{id}/{bid}/{action}
+    defaults: { _controller: BGQuoteBundle:Quote:changeBuildings }
+    requirements:
+        id:   \d+
+        bid:   \d+
+        action:   "add|remove"
+
+BG_QuoteBundle_advancement:
+    path:     /advancement/{id}
+    defaults: { _controller: BGQuoteBundle:Quote:advancement }
+    requirements:
+        id:   \d+
+
+BG_QuoteBundle_round:
+    path:     /round/{id}/{value}
+    defaults: { _controller: BGQuoteBundle:Quote:round }
+    requirements:
+        id:   \d+
+        value:   \d+
+    options:
+        expose: true

@@ -1,0 +1,38 @@
+{% extends "BGCoreBundle::layout.html.twig" %}
+
+{% block body %}
+
+  <div class="container-fluid card wizard-card" data-color="blue">
+
+    <h1 class="row form-signin-heading justify-content-center" align="center">Bordereaux du devis N°{{ quote.id  }}</h1>
+    <hr>
+    <h1 class="row form-signin-heading justify-content-center small">Chantier {{ quote.name }}</h1>
+    
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date d'émission</th>
+            <th>Suivi par</th>
+            <th>Voir</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if slips|length == 0 %}
+          <tr><td colspan="3">Aucun bordereau n'a encore été généré</td></tr>
+          {% endif %}
+          {% for slip in slips %}
+            <tr>
+              <td>{{ slip.date|date('d/m/Y') }}</td>
+              <td>{{ slip.followedBy }}</td>
+              <td><a href="{{ path('BG_SlipBundle_view', {'id': slip.id}) }}"><i class="fas fa-eye"></i></a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{{ parent() }}
+
+{% endblock %}

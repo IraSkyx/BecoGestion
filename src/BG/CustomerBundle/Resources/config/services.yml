@@ -1,0 +1,4 @@
+services:
+#    bg_customer.example:
+#        class: BG\CustomerBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
