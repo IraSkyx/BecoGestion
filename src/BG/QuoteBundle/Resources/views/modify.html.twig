@@ -38,33 +38,13 @@
             <tbody>
               {% for service in building.services %}
 
-              {% set class = 'hide-NA' %}
-
-              {% if service.level.vars.value == 'PH -1' %}
-                {% set class = 'hide--1' %}
-              {% elseif service.level.vars.value == 'PH -2' %}
-                {% set class = 'hide--2' %}
-              {% elseif service.level.vars.value == 'PH -3' %}
-                {% set class = 'hide--3' %}
-              {% elseif service.level.vars.value == 'PH -4' %}
-                {% set class = 'hide--4' %}
-              {% elseif service.level.vars.value == 'PH -5' %}
-                {% set class = 'hide--5' %}
-              {% elseif service.level.vars.value == 'PH 1' %}
-                {% set class = 'hide-1' %}
-              {% elseif service.level.vars.value == 'PH 2' %}
-                {% set class = 'hide-2' %}
-              {% elseif service.level.vars.value == 'PH 3' %}
-                {% set class = 'hide-3' %}
-              {% elseif service.level.vars.value == 'PH 4' %}
-                {% set class = 'hide-4' %}
-              {% elseif service.level.vars.value == 'PH 5' %}
-                {% set class = 'hide-5' %}
-              {% elseif service.level.vars.value == 'PH RDJ' %}
-                {% set class = 'hide-RDJ' %}
-              {% elseif service.level.vars.value in ['Soubassement', 'Escaliers infra', 'PH RDC'] %}
-                {% set class = 'hide-0' %}
-              {% endif %}
+                {% if service.level.vars.value in ['Soubassement', 'Escaliers infra', 'PH RDC'] %}
+                  {% set class = 'hide-0' %}
+                {% elseif 'PH' in service.level.vars.value %}
+                  {% set class =  ["hide-", service.level.vars.value|replace({'PH ': ''})]|join %}
+                {% else %}
+                  {% set class = 'hide-NA' %}
+                {% endif %}
 
                 <tr class="{{ class }}" data-attribute="{{ building.num.vars.value - 1 }}">
                   <td>{{ form_row(service.isUsed) }}</td>

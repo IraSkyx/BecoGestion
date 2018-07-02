@@ -60,7 +60,7 @@ $(document).ready(function(){
 });
 
 //Handle for plans in quote creation/modification
-$(document).ready(function(){
+document.addEventListener("DOMContentLoaded", function(event){
   jQuery.expr[':'].regex = function(elem, index, match) {
       var matchParams = match[3].split(','),
           validLabels = /^(data|css):/,
@@ -75,7 +75,7 @@ $(document).ready(function(){
   }
 
   function hideShowFloors(value, building) {
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 10; i++) {
       if(i < value){
           $('.hide-' + i).filter(function() {
             return $(this).data("attribute") == building
@@ -130,7 +130,7 @@ $(document).ready(function(){
   }
 
   function selectAll(value, building) {
-    for (var i = -5; i < 6; i++) {
+    for (var i = -5; i < 10; i++) {
       $('.hide-' + i).filter(function() {
         return $(this).data("attribute") == building && $(this).is(":visible")
       }).find('.form-check-input').prop("checked", value);
@@ -141,30 +141,30 @@ $(document).ready(function(){
   }
 
   for (var i = 0; i < $('.js-services-mywrapper').data('index'); i++){
-    hideShowFloors($('bg_corebundle_quote_buildings_' + i + '_floors').val(), i);
-    hideShowBasements($('bg_corebundle_quote_buildings_' + i + '_basements').val(), i);
-    hideShowGardenLevel($('bg_corebundle_quote_buildings_' + i + '_gardenLevel').prop("checked"), i);
+    hideShowFloors($('bg_quotebundle_quote_buildings_' + i + '_floors').val(), i);
+    hideShowBasements($('bg_quotebundle_quote_buildings_' + i + '_basements').val(), i);
+    hideShowGardenLevel($('bg_quotebundle_quote_buildings_' + i + '_gardenLevel').prop("checked"), i);
   }
 
-  $('input:regex(id,bg_corebundle_quote_buildings_[0-9]+_floors)').on('keydown change', function(e){
+  $('input:regex(id,bg_quotebundle_quote_buildings_[0-9]+_floors)').on('keydown change', function(e){
     hideShowFloors(this.value, parseInt(this.id.match(/\d+/g).map(Number)));
   });
 
-  $('input:regex(id,bg_corebundle_quote_buildings_[0-9]+_basements)').on('keydown change', function(e){
+  $('input:regex(id,bg_quotebundle_quote_buildings_[0-9]+_basements)').on('keydown change', function(e){
     hideShowBasements(this.value, parseInt(this.id.match(/\d+/g).map(Number)));
   });
 
-  $('input:regex(id,bg_corebundle_quote_buildings_[0-9]+_gardenLevel)').change(function(e){
+  $('input:regex(id,bg_quotebundle_quote_buildings_[0-9]+_gardenLevel)').change(function(e){
     hideShowGardenLevel(this.checked, parseInt(this.id.match(/\d+/g).map(Number)));
   });
 
-  $('input:regex(id,selector[0-9]+)').change(function(e){
+  $('#selector').change(function(e){
     selectAll(this.checked, parseInt(this.id.match(/\d+/g).map(Number)) - 1);
   });
 
   $('#showAll').on('click', function(e){
     var building = $(this).data("attribute");
-    for (var i = -5; i < 6; i++) {
+    for (var i = -5; i < 10; i++) {
       $('.hide-' + i).filter(function() {
         return $(this).data("attribute") == building
       }).show("slow");
@@ -174,7 +174,7 @@ $(document).ready(function(){
 
   $('#hideAll').on('click', function(e){
     var building = $(this).data("attribute");
-    for (var i = -5; i < 6; i++) {
+    for (var i = -5; i < 10; i++) {
       $('.hide-' + i).filter(function() {
         return $(this).data("attribute") == building && $(this).find('.form-check-input').is(":checked") == false
       }).hide("slow");
@@ -184,11 +184,14 @@ $(document).ready(function(){
     }).hide("slow");
     e.preventDefault();
   });
-
-  $('#round').on("click", function(e) {
-    if($('#roundValue').val().length)
-      window.location.replace(Routing.generate('BG_CoreBundle_round', { id: $('#roundValue').data("attribute"), value: $('#roundValue').val() } ));
-  });
-
 });
 //Handle for plans in quote creation/modification
+
+//Modal for quote round
+  function modal(id) {
+    apprise('Indiquer le montant', {'input':true}, function(res) {
+      if(res)
+        window.location.replace(Routing.generate('BG_QuoteBundle_round', { id: id, value: res } ));
+    });
+  }
+//Modal for quote round

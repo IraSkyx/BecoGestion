@@ -3,7 +3,8 @@
 namespace BG\QuoteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use BG\BillBundle\Entity\Invoice;
+use BG\BillBundle\Entity\Bill;
+use BG\CustomerBundle\Entity\Customer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -126,33 +127,33 @@ class Quote
       return $serv;
     }
 
-    public function generateInvoice() : Invoice
+    public function generateBill() : Bill
     {
-      $invoice = new Invoice();
-      $invoice->setRef($this->getId());
-      $invoice->setName($this->getName());
-      $invoice->setCreationDate(new \DateTime('NOW'));
-      $invoice->setPayementDate(new \DateTime('NOW'));
-      $invoice->getPayementDate()->modify('+'.$this->getDelay().' days');
-      $invoice->setEngRate($this->getEngRate());
-      $invoice->setDrawRate($this->getDrawRate());
-      $invoice->setVat($this->getVat());
-      $invoice->setStatus(new Status("warning","En attente"));
-      $invoice->setCustomer(Customer::clone($this->getCustomer()));
+      $bill = new Bill();
+      $bill->setRef($this->getId());
+      $bill->setName($this->getName());
+      $bill->setCreationDate(new \DateTime('NOW'));
+      $bill->setPayementDate(new \DateTime('NOW'));
+      $bill->getPayementDate()->modify('+'.$this->getDelay().' days');
+      $bill->setEngRate($this->getEngRate());
+      $bill->setDrawRate($this->getDrawRate());
+      $bill->setVat($this->getVat());
+      $bill->setStatus(new Status("warning","En attente"));
+      $bill->setCustomer(Customer::clone($this->getCustomer()));
 
       foreach($this->getBuildings() as $building)
       {
         foreach($building->getServices() as $service)
         {
           if($service->getIsUsed())
-            $invoice->addService($this->billService($service));
+            $bill->addService($this->billService($service));
         }
         foreach($building->getSpecialServices() as $specialService){
-          $invoice->addService($this->billService($specialService));
+          $bill->addService($this->billService($specialService));
         }
       }
 
-      return $invoice;
+      return $bill;
     }
 
     /**
@@ -402,19 +403,60 @@ class Quote
      */
     public function reduce(int $value)
     {
-      while($this->getTotal() > $value)
-      {
+        $building = $this->getBuildings()->first();
+        $service = $building ->getServices()->first();
+        while(($value - $this->getTotal()) % $this->getEngRate() != 0)
+        {
+            if($service->getEngTime() - 0.1 > 0 && $service->getDrawTime() - 0.1 > 0)
+            {
+                $service->setEngTime($service->getEngTime() - 0.1);
+                if($this->getTotal() < $value)
+                    return;
+                $service->setDrawTime($service->getDrawTime() - 0.1);
+                if($this->getTotal() < $value)
+                    return;
+            }
+            else
+            {
+                $service = $building->getServices()->next();
+                if($service == NULL)
+                { 
+                    $building = $this->getBuildings()->next();
+                    if($building == NULL)
+                        return;
+                    $service = $building->getServices()->first();
+                }
+            }           
+        }
+    }
+
+    /**
+     * Adjust the total to a specific value.
+     *
+     */
+    public function adjust(int $value)
+    {
+        $service = $this->getBuildings()->first()->getServices()->first();
+        $service->setEngTime(0);
+        $delta = $value - $this->getTotal();
+        $service->setEngTime($delta/$this->getEngRate());
+        throw new \Exception("Delta: ".$delta." / Res: ". ($delta/$this->getEngRate()));
+    }
+
+    /**
+     * Floor all the service prices.
+     *
+     */
+    public function floor()
+    {
         foreach($this->getBuildings() as $building)
-          foreach($building->getServices() as $service)
-          {
-            if($service->getEngTime() - 0.1 > 0)
-              $service->setEngTime($service->getEngTime() - 0.1);
-            if($service->getDrawTime() - 0.1 > 0)
-              $service->setDrawTime($service->getDrawTime() - 0.1);
-            if($this->getTotal() < $value)
-              return;
-          }
-      }
+        {
+            foreach($building->getServices() as $service)
+            {
+                $service->setEngTime(floor($service->getEngTime()));
+                $service->setDrawTime(floor($service->getDrawTime()));
+            }
+        }
     }
 
     /**
@@ -423,15 +465,15 @@ class Quote
      */
     public function round(int $value)
     {
-      $total = $this->getTotal();
-      $service = $this->getBuildings()->first()->getServices()->first();
-      if($value > $total)
-        throw new \Exception("Veuillez indiquer une valeur inférieure au total");
-      else
-      {
-        $this->reduce($value);
-        $service->adjust($value - $total, $this->getEngRate(), $this->getDrawRate());
-      }
+        if($value > $this->getTotal())
+            throw new \Exception("Veuillez indiquer une valeur inférieure au total");
+      
+        $this->reduce($value); 
+        $this->floor(); 
+        $this->adjust($value);
+
+        if($value != $this->getTotal())
+            throw new \Exception("Erreur: Impossible d'arrondir le devis " . $this->getTotal());
     }
 
     /**
@@ -445,6 +487,6 @@ class Quote
       foreach($this->getBuildings() as $building)
         foreach($building->getServices() as $service)
           $total += (($service->getEngTime()*8)*$this->getEngRate()) + (($service->getDrawTime()*8)*$this->getDrawRate());
-      return $total;
+      return round($total);
     }
 }

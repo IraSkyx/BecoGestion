@@ -30,7 +30,7 @@ class QuoteType extends AbstractType
           ])
           ->add('delay', NumberType::class)
           ->add('customer', Select2EntityType::class, array(
-            'class' => '\BG\QuoteBundle\Entity\Customer',
+            'class' => '\BG\CustomerBundle\Entity\Customer',
             'multiple' => false,
             'label' => false,
             'delay' => 250,

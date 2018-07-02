@@ -4,6 +4,7 @@ namespace BG\SlipBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use BG\SlipBundle\Entity\Slip;
 use BG\SlipBundle\Form\SlipType;
 use BG\SlipBundle\Form\SlipLabelsType;
@@ -22,8 +23,8 @@ class SlipController extends Controller
 
     public function viewAction(int $id)
     {
-        $html = $this->renderView('@BGSlip/slip.html.twig', [
-            'slip' => $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Slip')->find($id)
+        $html = $this->renderView('@BGSlip/view.html.twig', [
+            'slip' => $this->getDoctrine()->getManager()->getRepository('BGSlipBundle:Slip')->find($id)
         ]); 
         return new Response($this->get('knp_snappy.pdf')->getOutputFromHtml($html), 200, [ 'Content-Type' => 'application/pdf']);
     }
@@ -33,26 +34,22 @@ class SlipController extends Controller
         $quote = $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->find($id);
         $slip = Slip::fromQuote($quote);
 
-        foreach($this->getDoctrine()->getManager()->getRepository('BGCustomerBundle:Representative')->findByIsBase(true) as $repr)
-            $slip->addRepresentative($repr);
-
         $form = $this->get('form.factory')->create(SlipType::class, $slip);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
-            $slip->addRepresentative(Representative::fromCustomer($slip->getCustomer()));
+            foreach($slip->getCustomer()->getRepresentatives() as $repr)
+                $slip->addRepresentative($repr->clone());
             $em = $this->getDoctrine()->getManager();
             $em->persist($slip);
             $em->flush();
 
-            return $this->redirectToRoute('BG_SlipBundle_labels', [
-                'id' => $slip->getId()
-            ]);
+            return $this->redirectToRoute('BG_SlipBundle_labels', ['id' => $slip->getId()]);
         }
 
         return $this->render('@BGSlip/new.html.twig', [
-        'form' => $form->createView(),
-        'slip' => $slip
+            'form' => $form->createView(),
+            'slip' => $slip
         ]);
     }
 
@@ -76,7 +73,7 @@ class SlipController extends Controller
             $em->persist($slip);
             $em->flush();
 
-            return $this->redirectToRoute('BG_SlipBundle_view', ['id' => $slip->getId()]);
+            return $this->redirectToRoute('BG_SlipBundle_view', ['id' => $id]);
         }
 
         return $this->render('@BGSlip/labels.html.twig', array(

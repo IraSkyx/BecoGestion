@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use BG\QuoteBundle\Form\BuildingLabels;
+use BG\QuoteBundle\Form\BuildingLabelsType;
 
 class SlipLabelsType extends AbstractType
 {

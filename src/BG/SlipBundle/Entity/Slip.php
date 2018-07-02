@@ -4,6 +4,7 @@ namespace BG\SlipBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use \Doctrine\Common\Collections\ArrayCollection;
+use BG\QuoteBundle\Entity\Building;
 
 /**
  * Slip

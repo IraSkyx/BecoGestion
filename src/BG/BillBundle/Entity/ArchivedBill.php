@@ -95,18 +95,18 @@ class ArchivedBill
   /**
    * Constructor
    */
-  public function __construct(Invoice $invoice)
+  public function __construct(Bill $bill)
   {
-    $this->ref = $invoice->getRef();
-    $this->name = $invoice->getName();
-    $this->creationDate = $invoice->getCreationDate();
-    $this->payementDate = $invoice->getPayementDate();
-    $this->engRate = $invoice->getEngRate();
-    $this->drawRate = $invoice->getDrawRate();
-    $this->vat = $invoice->getVat();
-    $this->status = $invoice->getStatus();
-    $this->customer = $invoice->getCustomer();
-    $this->services = $invoice->getServices();
+    $this->ref = $bill->getRef();
+    $this->name = $bill->getName();
+    $this->creationDate = $bill->getCreationDate();
+    $this->payementDate = $bill->getPayementDate();
+    $this->engRate = $bill->getEngRate();
+    $this->drawRate = $bill->getDrawRate();
+    $this->vat = $bill->getVat();
+    $this->status = $bill->getStatus();
+    $this->customer = $bill->getCustomer();
+    $this->services = $bill->getServices();
   }
 
     /**

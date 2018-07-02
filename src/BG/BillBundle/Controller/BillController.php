@@ -3,8 +3,10 @@
 namespace BG\BillBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use BG\BillBundle\Entity\ArchivedInvoice;
-use BG\BillBundle\Form\InvoiceType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use BG\BillBundle\Entity\ArchivedBill;
+use BG\BillBundle\Form\BillType;
 
 class BillController extends Controller
 {
@@ -24,8 +26,8 @@ class BillController extends Controller
 
   public function generateAction(int $id)
   {
-    $quote = $this->getDoctrine()->getManager()->getRepository('BGCoreBundle:Quote')->find($id);
-    $bill = $quote->generateInvoice();
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->find($id);
+    $bill = $quote->generateBill();
 
     $em = $this->getDoctrine()->getManager();
     $em->persist($bill);
@@ -130,13 +132,13 @@ class BillController extends Controller
 
   public function serviceAction(int $id)
   {
-    $invoice = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Bill')->find($id);
-    $totalet = $invoice->getTotalEt();
+    $bill = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Bill')->find($id);
+    $totalet = $bill->getTotalEt();
 
     $html = $this->renderView('@BGBill/service.html.twig', [
-      'invoice' => $invoice,
+      'bill' => $bill,
       'totalet' => $totalet,
-      'vat' => $totalet * $invoice->getVat()
+      'vat' => $totalet * $bill->getVat()
     ]);
 
     return new Response(

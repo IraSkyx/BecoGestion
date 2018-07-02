@@ -64,14 +64,20 @@ class Representative
     private $mail;
 
     /**
-     * Create from customer.
+     * Clone.
      *
      * @return Representative
      */
-     public static function fromCustomer(\BG\CustomerBundle\Entity\Customer $customer)
-     {
-         return (new Representative())->setIsBase(false)->setFunction($customer->getCompanyName())->setPhone($customer->getPhone())->setMail($customer->getMail());
-     }
+    public function clone() : Representative
+    {
+        return (new Representative())
+        ->setIsBase(false)
+        ->setFirstName($this->getFirstName())
+        ->setLastName($this->getLastName())
+        ->setFunction($this->getFunction())
+        ->setPhone($this->getPhone())
+        ->setMail($this->getMail());
+    }
 
     /**
      * Get id.

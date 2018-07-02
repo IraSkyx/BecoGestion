@@ -111,6 +111,24 @@ class Service
     return $service;
   }
 
+  /**
+     * Clone.
+     *
+     * @return Service
+     */
+    public function clone() : Service
+    {
+        return (new Service())
+        ->setIsUsed($this->getIsUsed())
+        ->setLevel($this->getLevel())
+        ->setDrawing($this->getDrawing())
+        ->setBilled($this->getBilled())
+        ->setEngTime($this->getEngTime())
+        ->setDrawTime($this->getDrawTime())
+        ->setGrade($this->getGrade())
+        ->setAdvancement($this->getAdvancement());
+    }
+
     /**
      * Get id.
      *

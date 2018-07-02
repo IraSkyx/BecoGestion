@@ -47,6 +47,4 @@ class QuoteInvoiceType extends AbstractType
     {
         return 'bg_quotebundle_quote';
     }
-
-
 }

@@ -5,6 +5,8 @@ namespace BG\CustomerBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 class RepresentativeType extends AbstractType
 {
@@ -18,8 +20,11 @@ class RepresentativeType extends AbstractType
           ->add('lastName')
           ->add('function')
           ->add('phone')
-          ->add('mail');
-    }/**
+          ->add('mail')
+          ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) { $event->getForm()->getData()->setIsBase(true); });
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)

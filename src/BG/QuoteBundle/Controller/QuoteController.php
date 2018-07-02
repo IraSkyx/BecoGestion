@@ -66,7 +66,6 @@ class QuoteController extends Controller
     public function viewAction(int $id)
     {
         $quote = $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->find($id);
-
         return $this->render('@BGQuote/view.html.twig', [
             'quote' => $quote,
             'total' => $quote->getTotal()
@@ -111,7 +110,7 @@ class QuoteController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
             $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('BG_QuoteBundle_view', ['id' => $id]);
+            return $this->redirectToRoute('BG_BillBundle_generate', ['id' => $id]);
         }
 
         return $this->render('@BGQuote/advancement.html.twig', [
@@ -124,8 +123,6 @@ class QuoteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->getRepository('BGQuoteBundle:Quote')->find($id)->round($value);
         $em->flush();
-        return $this->redirectToRoute('BG_QuoteBundle_view', [
-            'id' => $id
-        ]);
+        return $this->redirectToRoute('BG_QuoteBundle_view', ['id' => $id]);
     }
 }

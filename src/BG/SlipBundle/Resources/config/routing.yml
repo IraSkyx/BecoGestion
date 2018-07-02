@@ -5,8 +5,10 @@ BG_SlipBundle:
         id:   \d+
 
 BG_SlipBundle_view:
-    path:     /view
+    path:     /view/{id}
     defaults: { _controller: BGSlipBundle:Slip:view }
+    requirements:
+        id:   \d+
 
 BG_SlipBundle_generate:
     path:     /generate/{id}

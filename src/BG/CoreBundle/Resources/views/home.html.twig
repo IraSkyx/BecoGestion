@@ -37,9 +37,9 @@
 
                     <td>{{ quote.date|date('d-m-Y')  }}</td>
 
-                    <td><a id="generateSlip" {% if quote.status.message == 'En cours' %} class="disabled" {% endif %} href="{{ path('BG_SlipBundle_generate', {'id': quote.id}) }}"><i class="fas fa-envelope" aria-hidden="true"></i></a></td>
+                    <td><a id="generateSlip" {% if quote.status.message != 'En cours' %} class="disabled" {% endif %} href="{{ path('BG_SlipBundle_generate', {'id': quote.id}) }}"><i class="fas fa-envelope" aria-hidden="true"></i></a></td>
                     
-                    <td><a id="generateInvoice" {% if quote.status.message == 'En cours' %} class="disabled"{% endif %} href="{{ path('BG_QuoteBundle_advancement', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
+                    <td><a id="generateInvoice" {% if quote.status.message != 'En cours' %} class="disabled"{% endif %} href="{{ path('BG_QuoteBundle_advancement', {'id': quote.id}) }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a></td>
                     
                     <td><a href="{{ path('BG_QuoteBundle_view', {'id': quote.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a></td>
                 </tr>
