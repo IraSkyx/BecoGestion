@@ -5,13 +5,16 @@ namespace BG\QuoteBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use BG\BillBundle\Entity\Bill;
 use BG\CustomerBundle\Entity\Customer;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Validator\Constraints as Assert;
+use BG\SlipBundle\Entity\Slip;
 
 /**
  * Quote
  *
  * @ORM\Table(name="quote")
  * @ORM\Entity(repositoryClass="BG\QuoteBundle\Repository\QuoteRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Quote
 {
@@ -23,6 +26,13 @@ class Quote
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ref", type="string", length=255, nullable=true)
+     */
+    private $ref;
 
     /**
      * @var string
@@ -130,7 +140,8 @@ class Quote
     public function generateBill() : Bill
     {
       $bill = new Bill();
-      $bill->setRef($this->getId());
+      $bill->setQuoteId($this->getId());
+      $bill->setRef($this->getRef());
       $bill->setName($this->getName());
       $bill->setCreationDate(new \DateTime('NOW'));
       $bill->setPayementDate(new \DateTime('NOW'));
@@ -138,8 +149,8 @@ class Quote
       $bill->setEngRate($this->getEngRate());
       $bill->setDrawRate($this->getDrawRate());
       $bill->setVat($this->getVat());
-      $bill->setStatus(new Status("warning","En attente"));
-      $bill->setCustomer(Customer::clone($this->getCustomer()));
+      $bill->setStatus(new Status("warning","En attente de validation"));
+      $bill->setCustomer($this->getCustomer()->getCompanyName());
 
       foreach($this->getBuildings() as $building)
       {
@@ -156,6 +167,26 @@ class Quote
       return $bill;
     }
 
+    public function upgrade(Slip $slip) 
+    {
+        foreach($slip->getBuildings() as $building)
+        {
+            $services = $this->getBuildings()->get($building->getNum() - 1)->getServices();
+            foreach($building->getServices() as $service)
+            {
+                if(implode("", $service->getLabels()) != "")
+                {
+                    $toUpgrade = $services->filter(function($entry) use ($service) {
+                        return $entry->getLevel() == $service->getLevel() && $entry->getDrawing() == $service->getDrawing();
+                    })->first();
+
+                    if($toUpgrade != NULL)
+                        $toUpgrade->setGrade($toUpgrade->getGrade() + 1);   
+                }        
+            }
+        }
+    }
+
     /**
      * Get id.
      *
@@ -164,6 +195,39 @@ class Quote
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @ORM\PostPersist 
+     */
+    public function setReference(LifecycleEventArgs $args)
+    {
+        $this->setRef(date('d') . "-" . date('m') . "-" . $this->getId());
+        $args->getEntityManager()->flush();
+    }
+
+    /**
+     * Set ref.
+     *
+     * @param string $ref
+     *
+     * @return Quote
+     */
+    public function setRef($ref)
+    {
+        $this->ref = $ref;
+
+        return $this;
+    }
+
+    /**
+     * Get ref.
+     *
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
     }
 
     /**
@@ -403,77 +467,55 @@ class Quote
      */
     public function reduce(int $value)
     {
-        $building = $this->getBuildings()->first();
-        $service = $building ->getServices()->first();
-        while(($value - $this->getTotal()) % $this->getEngRate() != 0)
-        {
-            if($service->getEngTime() - 0.1 > 0 && $service->getDrawTime() - 0.1 > 0)
-            {
-                $service->setEngTime($service->getEngTime() - 0.1);
-                if($this->getTotal() < $value)
-                    return;
-                $service->setDrawTime($service->getDrawTime() - 0.1);
-                if($this->getTotal() < $value)
-                    return;
-            }
-            else
-            {
-                $service = $building->getServices()->next();
-                if($service == NULL)
-                { 
-                    $building = $this->getBuildings()->next();
-                    if($building == NULL)
-                        return;
-                    $service = $building->getServices()->first();
-                }
-            }           
-        }
-    }
-
-    /**
-     * Adjust the total to a specific value.
-     *
-     */
-    public function adjust(int $value)
-    {
-        $service = $this->getBuildings()->first()->getServices()->first();
-        $service->setEngTime(0);
-        $delta = $value - $this->getTotal();
-        $service->setEngTime($delta/$this->getEngRate());
-        throw new \Exception("Delta: ".$delta." / Res: ". ($delta/$this->getEngRate()));
-    }
-
-    /**
-     * Floor all the service prices.
-     *
-     */
-    public function floor()
-    {
+      while($this->getTotal() > $value)
+      {
         foreach($this->getBuildings() as $building)
         {
             foreach($building->getServices() as $service)
             {
-                $service->setEngTime(floor($service->getEngTime()));
-                $service->setDrawTime(floor($service->getDrawTime()));
+                if($service->getEngTime() - 0.1 > 0)
+                    $service->setEngTime($service->getEngTime() - 0.1);
+                if($service->getDrawTime() - 0.1 > 0)
+                    $service->setDrawTime($service->getDrawTime() - 0.1);
+                if($this->getTotal() < $value)
+                    return;
             }
         }
+      }
     }
 
     /**
      * Round the total to a specific value.
-     *
      */
     public function round(int $value)
     {
-        if($value > $this->getTotal())
-            throw new \Exception("Veuillez indiquer une valeur inférieure au total");
-      
-        $this->reduce($value); 
-        $this->floor(); 
-        $this->adjust($value);
+        $this->reduce($value);
 
-        if($value != $this->getTotal())
-            throw new \Exception("Erreur: Impossible d'arrondir le devis " . $this->getTotal());
+        foreach($this->getBuildings() as $building)
+            foreach($building->getServices() as $service)
+                $service->setEngTime($service->getEngTime() * $this->getEngRate());
+
+        $this->setEngRate(1);   
+
+        $delta = $value - $this->getTotal();
+        $service = $this->getBuildings()->first()->getServices()->first();
+
+        $service->setEngTime($service->getEngTime() + $delta/8);
+    }
+
+    /**
+     * Revert the round. 
+     */
+    public function revert(int $engRate)
+    {
+        foreach($this->getBuildings() as $building)
+            foreach($building->getServices() as $service)
+            {
+                $service->setEngTime(0);
+                $service->setDrawTime(0);
+            }             
+
+        $this->setEngRate($engRate);   
     }
 
     /**

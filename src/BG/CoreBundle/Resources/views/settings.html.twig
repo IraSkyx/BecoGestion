@@ -1,5 +1,16 @@
 {% extends "BGCoreBundle::layout.html.twig" %}
 
+{% import _self as formMacros %}
+{% macro printMemberPrototype(special) %}
+    <div class="w-25 row js-services-item justify-content-center">
+        <div class="col-md-9 align-self-center" align="center">
+            {{ form_errors(special) }}
+            {{ form_widget(special) }}
+        </div>
+        <div class="col-md-3 align-self-center" align="center"><a class="js-remove-services" href="#"><i class="fa fa-times" style="color:red;"></i></a></div>
+    </div>
+{% endmacro %}
+
 {% block body %}
 
   <div class="container-fluid card wizard-card" data-color="blue">
@@ -22,6 +33,18 @@
             <div class="col">
               {{ form_row(form.vat) }}
             </div>
+          </div>
+        </div>
+        <div class="well">
+          <h4 class="wizard-title">Membres</h4>
+          <hr>
+          <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printMemberPrototype(form.members.vars.prototype)|e('html_attr') }}" data-index="{{ form.members|length }}">
+              {% for member in form.members %}
+                {{ formMacros.printMemberPrototype(member) }}
+              {% endfor %}
+              <div class="row justify-content-center">
+                  <a class="a-white btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter un membre</a>
+              </div>
           </div>
         </div>
         <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>

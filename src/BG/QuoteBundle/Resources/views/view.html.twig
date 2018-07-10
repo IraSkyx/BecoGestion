@@ -5,7 +5,7 @@
   <div class="container-fluid card wizard-card" data-color="blue">
 
     <div class="d-flex">
-      <h2 class="offset-md-1 col-md-10 form-signin-heading" align="center">Devis N°{{ quote.id }}</h2>
+      <h2 class="offset-md-1 col-md-10 form-signin-heading" align="center">Devis N°{{ quote.ref }}</h2>
       <button class="col-md-1 btn btn-{{ quote.status.type }}" type="button">{{ quote.status.message }}</button>
     </div>
 
@@ -15,6 +15,7 @@
         <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ path('BG_SlipBundle', {'id': quote.id}) }}">Historique des bordereaux</a>
             <a class="dropdown-item" href="#" onclick="modal({{ quote.id }});">Arrondir le devis</a>
+            <a class="dropdown-item" href="{{ path('BG_QuoteBundle_revert', {'id': quote.id}) }}">Réinitialiser</a>
             <h6 class="dropdown-header">Changer le status</h6>
             <a class="dropdown-item" href="{{ path('BG_QuoteBundle_change', {'id': quote.id, 'status': 'awaiting'}) }}">En attente</a>
             <a class="dropdown-item" href="{{ path('BG_QuoteBundle_change', {'id': quote.id, 'status': 'ongoing'}) }}">En cours</a>
@@ -33,7 +34,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th><div class="check"><label><input id="selector" type="checkbox" name="optionsCheckboxes"></label> Sélection</div></th>
+              <!--<th><div class="check"><label><input id="selector" type="checkbox" name="optionsCheckboxes"></label> Sélection</div></th>-->
               <th>Désignation</th>
               <th>Indice</th>
               <th>Temps ingénieur</th>
@@ -48,11 +49,11 @@
           {% for service in building.services %}
             {% if service.isUsed %}
               <tr>
-                <td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>
+                <!--<<td><div class="check"><label><input type="checkbox" name="optionsCheckboxes"></label></div></td>-->
                 <td>{{ service.level }} - {{ service.drawing }}</td>
                 <td>{{ service.grade|index }}</td>
-                <td>{{ service.engTime }}</td>
-                <td>{{ service.drawTime }}</td>
+                <td>{{ service.engTime|number_format(2, ',', ' ') }}</td>
+                <td>{{ service.drawTime|number_format(2, ',', ' ') }}</td>
               </tr>
             {% endif %}
           {% endfor %}

@@ -5,7 +5,7 @@
 
 html, body {
   font-size: 100%;
-  background-image: url('../imgs/background.png');
+  background-image: url('../imgs/Background.png');
   background-attachment: fixed;
   font-family: Roboto;
   background-size: cover;
@@ -60,14 +60,17 @@ a, a:hover {
 }
 
 h1 {
-  font-family: 'Bebas Neue' !important;
-  font-size: 15vh !important;
+  font-family: 'Roboto' !important;
+  font-size: 5em !important;
+  margin: 1rem !important;
   word-wrap: break-word;
+  text-align: center;
+  font-weight: bolder;
 }
 
 h1.small {
   font-family: 'Roboto' !important;
-  font-size: 2vh !important;
+  font-size: 2em !important;
 }
 
 .btn.btn-primary {
@@ -99,12 +102,8 @@ h3 {
    text-align: center;
  }
 
-.btn-margin-left {
-  margin-left:1vh;
-}
-
-.fas {
-  font-size: 1.5em;
+.fas, .fa {
+  font-size: 2em;
   margin: 1vh;
 }
 
@@ -128,4 +127,9 @@ h3 {
   margin-bottom: 0;
   display: table;
   table-layout: fixed;
+}
+
+.page-item.active > .page-link {
+  background-color: #00bcd4 !important;
+  border-color: #00bcd4 !important;
 }

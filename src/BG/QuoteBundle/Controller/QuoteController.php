@@ -4,10 +4,12 @@ namespace BG\QuoteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use BG\QuoteBundle\Form\QuoteType;
 use BG\QuoteBundle\Entity\Quote;
 use BG\QuoteBundle\Entity\Building;
 use BG\QuoteBundle\Form\QuoteInvoiceType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class QuoteController extends Controller
 {
@@ -52,9 +54,7 @@ class QuoteController extends Controller
 
             $request->getSession()->getFlashBag()->add('notice', 'Devis modifié.');
 
-            return $this->redirectToRoute('BG_QuoteBundle_view', [
-                'id' => $id
-            ]);
+            return $this->redirectToRoute('BG_QuoteBundle_view', ['id' => $id]);
         }
 
         return $this->render('@BGQuote/modify.html.twig', [
@@ -72,11 +72,15 @@ class QuoteController extends Controller
         ]);
     }
 
-    public function archivesAction()
+    public function archivesAction(Request $request)
     {
-        return $this->render('@BGCore/home.html.twig', [
-            'quotes' => $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->findAllByStatus(["Terminé", "Annulé"])
-        ]);
+        $pagination = $this->get('knp_paginator')->paginate(
+            $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->getFindAllByStatusQuery(["Terminé", "Annulé"]),
+            $request->query->getInt('page', 1),
+            10
+        );
+    
+        return $this->render('@BGCore/home.html.twig', array('pagination' => $pagination));
     }
 
     public function changeAction(Request $request, int $id, string $status)
@@ -121,8 +125,33 @@ class QuoteController extends Controller
     public function roundAction(int $id, int $value)
     {
         $em = $this->getDoctrine()->getManager();
-        $em->getRepository('BGQuoteBundle:Quote')->find($id)->round($value);
+        $quote = $em->getRepository('BGQuoteBundle:Quote')->find($id);
+
+        if(count($em->getRepository('BGBillBundle:Bill')->findByRef($quote->getRef())) > 0 || count($em->getRepository('BGSlipBundle:Slip')->findByRef($quote->getRef())) > 0)
+            return new JsonResponse(array("error" => "Impossible de modifier, des factures ou des bordereaux ont déja été générées."), 419);
+
+        $quote->round($value);
+
         $em->flush();
+
+        return new JsonResponse(200);
+    }
+
+    public function revertAction(Request $request, int $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $quote = $em->getRepository('BGQuoteBundle:Quote')->find($id);
+
+        if(count($em->getRepository('BGBillBundle:Bill')->findByRef($quote->getRef())) > 0 || count($em->getRepository('BGSlipBundle:Slip')->findByRef($quote->getRef())) > 0)
+        {
+            $this->get('session')->getFlashBag()->add('danger', 'Impossible de modifier, des factures ou des bordereaux ont déja été générées.');
+        }
+        else
+        {
+            $quote->revert($em->getRepository('BGCoreBundle:Parameters')->find(1)->getEngRate());
+            $em->flush();
+        }
+
         return $this->redirectToRoute('BG_QuoteBundle_view', ['id' => $id]);
     }
 }

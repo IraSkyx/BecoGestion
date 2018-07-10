@@ -138,6 +138,9 @@ document.addEventListener("DOMContentLoaded", function(event){
     $('.hide-RDJ').filter(function() {
       return $(this).data("attribute") == building && $(this).is(":visible")
     }).find('.form-check-input').prop("checked", value);
+    $('.hide-NA').filter(function() {
+      return $(this).data("attribute") == building && $(this).is(":visible")
+    }).find('.form-check-input').prop("checked", value);
   }
 
   for (var i = 0; i < $('.js-services-mywrapper').data('index'); i++){
@@ -158,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function(event){
     hideShowGardenLevel(this.checked, parseInt(this.id.match(/\d+/g).map(Number)));
   });
 
-  $('#selector').change(function(e){
+  $('input:regex(id,selector[0-9]+)').change(function(e){
     selectAll(this.checked, parseInt(this.id.match(/\d+/g).map(Number)) - 1);
   });
 
@@ -191,7 +194,15 @@ document.addEventListener("DOMContentLoaded", function(event){
   function modal(id) {
     apprise('Indiquer le montant', {'input':true}, function(res) {
       if(res)
-        window.location.replace(Routing.generate('BG_QuoteBundle_round', { id: id, value: res } ));
+        $.ajax({
+          url: Routing.generate('BG_QuoteBundle_round', { id: id, value: res } ), 
+          success: function(){
+            window.location.replace(Routing.generate('BG_QuoteBundle_view', { id: id } ));
+          },
+          error: function(json){    
+            $(".aErrors").html('<h2 class="small" style="color:red;">' + json.responseJSON['error'] + '</h2>');
+          }
+        });
     });
   }
 //Modal for quote round

@@ -6,9 +6,19 @@ BG_BillBundle_archives:
     path:     /archives
     defaults: { _controller: BGBillBundle:Bill:archives }
 
+BG_BillBundle_pending:
+    path:     /pending
+    defaults: { _controller: BGBillBundle:Bill:pending }
+
 BG_BillBundle_pick:
     path:     /pick/{id}
     defaults: { _controller: BGBillBundle:Bill:pick }
+    requirements:
+        id:   \d+
+
+BG_BillBundle_paid:
+    path:     /paid/{id}
+    defaults: { _controller: BGBillBundle:Bill:paid }
     requirements:
         id:   \d+
 

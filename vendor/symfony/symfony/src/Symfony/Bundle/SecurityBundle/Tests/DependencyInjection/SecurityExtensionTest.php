@@ -123,6 +123,35 @@ class SecurityExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('security.access.role_hierarchy_voter'));
     }
 
+    public function testGuardHandlerIsPassedStatelessFirewalls()
+    {
+        $container = $this->getRawContainer();
+
+        $container->loadFromExtension('security', array(
+            'providers' => array(
+                'default' => array('id' => 'foo'),
+            ),
+
+            'firewalls' => array(
+                'some_firewall' => array(
+                    'pattern' => '^/admin',
+                    'http_basic' => null,
+                    'logout_on_user_change' => true,
+                ),
+                'stateless_firewall' => array(
+                    'pattern' => '/.*',
+                    'stateless' => true,
+                    'http_basic' => null,
+                    'logout_on_user_change' => true,
+                ),
+            ),
+        ));
+
+        $container->compile();
+        $definition = $container->getDefinition('security.authentication.guard_handler');
+        $this->assertSame(array('stateless_firewall'), $definition->getArgument(2));
+    }
+
     /**
      * @group legacy
      * @expectedDeprecation Not setting "logout_on_user_change" to true on firewall "some_firewall" is deprecated as of 3.4, it will always be true in 4.0.
@@ -251,6 +280,28 @@ class SecurityExtensionTest extends TestCase
                 'default' => array(
                     'http_basic' => array('provider' => 'second'),
                     'logout_on_user_change' => true,
+                ),
+            ),
+        ));
+
+        $container->compile();
+        $this->addToAssertionCount(1);
+    }
+
+    public function testPerListenerProviderWithRememberMe()
+    {
+        $container = $this->getRawContainer();
+        $container->loadFromExtension('security', array(
+            'providers' => array(
+                'first' => array('id' => 'foo'),
+                'second' => array('id' => 'bar'),
+            ),
+
+            'firewalls' => array(
+                'default' => array(
+                    'form_login' => array('provider' => 'second'),
+                    'logout_on_user_change' => true,
+                    'remember_me' => array('secret' => 'baz'),
                 ),
             ),
         ));

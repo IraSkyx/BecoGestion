@@ -376,7 +376,7 @@ class Service
      */
     public function __toString()
     {
-      return "{$this->level} - {$this->drawing}";
+      return $this->level == "N/A" ? "{$this->drawing}" : "{$this->level} - {$this->drawing}";
     }
 
     /**

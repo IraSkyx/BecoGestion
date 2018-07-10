@@ -22,11 +22,18 @@ class ArchivedBill
   private $id;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(name="ref", type="integer")
-   */
-  private $ref;
+    * @var int
+    *
+    * @ORM\Column(name="quote_id", type="integer")
+    */
+    private $quote_id;
+
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="ref", type="string", length=255)
+    */
+    private $ref;
 
   /**
    * @var string
@@ -48,6 +55,13 @@ class ArchivedBill
    * @ORM\Column(name="payement_date", type="datetime")
    */
   private $payementDate;
+
+  /**
+   * @var boolean
+   *
+   * @ORM\Column(name="is_paid", type="boolean")
+   */
+  private $isPaid;
 
   /**
    * @var float
@@ -97,7 +111,9 @@ class ArchivedBill
    */
   public function __construct(Bill $bill)
   {
+    $this->quote_id = $bill->getQuoteId();
     $this->ref = $bill->getRef();
+    $this->isPaid = false;
     $this->name = $bill->getName();
     $this->creationDate = $bill->getCreationDate();
     $this->payementDate = $bill->getPayementDate();
@@ -120,9 +136,33 @@ class ArchivedBill
     }
 
     /**
+     * Set quote_id.
+     *
+     * @param int $quote_id
+     *
+     * @return ArchivedBill
+     */
+    public function setQuoteId($quote_id)
+    {
+        $this->quote_id = $quote_id;
+
+        return $this;
+    }
+
+    /**
+     * Get quote_id.
+     *
+     * @return int
+     */
+    public function getQuoteId()
+    {
+        return $this->quote_id;
+    }
+
+    /**
      * Set ref.
      *
-     * @param int $ref
+     * @param string $ref
      *
      * @return ArchivedBill
      */
@@ -136,11 +176,35 @@ class ArchivedBill
     /**
      * Get ref.
      *
-     * @return int
+     * @return string
      */
     public function getRef()
     {
         return $this->ref;
+    }
+
+    /**
+     * Set isPaid.
+     *
+     * @param bool $isPaid
+     *
+     * @return ArchivedBill
+     */
+    public function setIsPaid($isPaid)
+    {
+        $this->isPaid = $isPaid;
+
+        return $this;
+    }
+
+    /**
+     * Get isPaid.
+     *
+     * @return bool
+     */
+    public function getIsPaid()
+    {
+        return $this->isPaid;
     }
 
     /**

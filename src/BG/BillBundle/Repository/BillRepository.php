@@ -10,10 +10,10 @@ namespace BG\BillBundle\Repository;
  */
 class BillRepository extends \Doctrine\ORM\EntityRepository
 {
-  public function findAllByStatus(array $status)
+  public function getFindAllByStatusQuery(array $status)
   {
-    $query = $this->_em->createQuery('SELECT q FROM BGBillBundle:Bill q, BGQuoteBundle:Status s WHERE q.status = s.id AND s.message IN (:status)');
+    $query = $this->_em->createQuery('SELECT q FROM BGBillBundle:Bill q JOIN BGQuoteBundle:Status s WHERE q.status = s.id AND s.message IN (:status)');
     $query->setParameter('status', $status);
-    return $query->getResult();
+    return $query;
   }
 }

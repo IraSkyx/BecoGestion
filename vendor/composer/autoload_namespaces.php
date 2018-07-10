@@ -10,6 +10,7 @@ return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Tetranz\\Select2EntityBundle' => array($vendorDir . '/tetranz/select2entity-bundle'),
     'SensioLabs\\Security' => array($vendorDir . '/sensiolabs/security-checker'),
+    'Knp\\Component' => array($vendorDir . '/knplabs/knp-components/src'),
     'JsonpCallbackValidator' => array($vendorDir . '/willdurand/jsonp-callback-validator/src'),
     'JSqueeze' => array($vendorDir . '/patchwork/jsqueeze/class'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),

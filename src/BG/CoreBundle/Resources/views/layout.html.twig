@@ -30,6 +30,18 @@
               {{ flash_message }}
           </div>
       {% endfor %}
+
+      {% for flash_message in app.session.flashBag.get('danger') %}
+          <div class="alert alert-danger">
+              {{ flash_message }}
+          </div>
+      {% endfor %}
+
+      {% for flash_message in app.session.flashBag.get('warning') %}
+          <div class="alert alert-warning">
+              {{ flash_message }}
+          </div>
+      {% endfor %}
     </div>
 
       {% block scripts %}

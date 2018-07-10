@@ -15,6 +15,14 @@ td {
   border-right: 1px solid #dee2e6; 
 }
 
+.td-size {
+  width:170px;
+}
+
+.th-max {
+  width:100px;
+}
+
 .table-header-rotated {
   margin-right:30px;
 }
@@ -28,6 +36,11 @@ td {
    vertical-align: middle;
    text-align: center;
  }
+
+.td-margin {
+  padding-right: 10px;
+  padding-left: 10px;
+}
 
  .table-header-rotated th.rotate-45{
    height: 80px;

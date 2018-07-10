@@ -25,9 +25,9 @@
         </thead>
         <tbody>
 
-          {% for quote in quotes %}
+          {% for quote in pagination %}
                 <tr>
-                    <td>{{ quote.id }}</td>
+                    <td>{{ quote.ref }}</td>
 
                     <td>{{ quote.name }}</td>
 
@@ -47,6 +47,11 @@
 
         </tbody>
       </table>
+
+      <div class="navigation">
+          {{ knp_pagination_render(pagination) }}
+      </div>
+      
   </div>
 
   {{ parent() }}

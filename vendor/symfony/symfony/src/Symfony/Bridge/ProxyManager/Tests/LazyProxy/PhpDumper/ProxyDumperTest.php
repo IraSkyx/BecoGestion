@@ -61,6 +61,14 @@ class ProxyDumperTest extends TestCase
         );
     }
 
+    public function testDeterministicProxyCode()
+    {
+        $definition = new Definition(__CLASS__);
+        $definition->setLazy(true);
+
+        $this->assertSame($this->dumper->getProxyCode($definition), $this->dumper->getProxyCode($definition));
+    }
+
     public function testGetProxyFactoryCode()
     {
         $definition = new Definition(__CLASS__);
@@ -72,6 +80,34 @@ class ProxyDumperTest extends TestCase
         $this->assertStringMatchesFormat(
             '%A$wrappedInstance = $this->getFoo2Service(false);%w$proxy->setProxyInitializer(null);%A',
             $code
+        );
+    }
+
+    /**
+     * @dataProvider getPrivatePublicDefinitions
+     */
+    public function testCorrectAssigning(Definition $definition, $access)
+    {
+        $definition->setLazy(true);
+
+        $code = $this->dumper->getProxyFactoryCode($definition, 'foo', '$this->getFoo2Service(false)');
+
+        $this->assertStringMatchesFormat('%A$this->'.$access.'[\'foo\'] = %A', $code);
+    }
+
+    public function getPrivatePublicDefinitions()
+    {
+        return array(
+            array(
+                (new Definition(__CLASS__))
+                    ->setPublic(false),
+                'privates',
+            ),
+            array(
+                (new Definition(__CLASS__))
+                    ->setPublic(true),
+                'services',
+            ),
         );
     }
 

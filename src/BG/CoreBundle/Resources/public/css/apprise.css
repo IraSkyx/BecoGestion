@@ -30,8 +30,9 @@
 	padding:20px;
 	color:#333;
 	text-shadow:0px 1px 0px #fff;
+	text-align: center;
 	}
-.appriseInner button
+/*.appriseInner button
 	{
 	border:1px solid #bbb;
 	-moz-border-radius:3px;
@@ -56,10 +57,10 @@
 .appriseInner button:hover
 	{
 	color:#d85054;
-	}
+	}*/
 .aButtons, .aInput
 	{
-	margin:20px 10px 0px 10px;
+	margin:1em;
 	text-align:center;
 	}
 .aTextbox

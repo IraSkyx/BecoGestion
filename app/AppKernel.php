@@ -28,6 +28,7 @@ class AppKernel extends Kernel
             new BG\QuoteBundle\BGQuoteBundle(),
             new BG\CustomerBundle\BGCustomerBundle(),
             new BG\SlipBundle\BGSlipBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

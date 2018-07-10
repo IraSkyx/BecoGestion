@@ -31,19 +31,19 @@ class SlipController extends Controller
 
     public function generateAction(Request $request, int $id)
     {
-        $quote = $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->find($id);
-        $slip = Slip::fromQuote($quote);
+        $em = $this->getDoctrine()->getManager();
+        $quote = $em->getRepository('BGQuoteBundle:Quote')->find($id);
 
-        $form = $this->get('form.factory')->create(SlipType::class, $slip);
+        $slip = Slip::fromQuote($quote);
+        foreach($em->getRepository('BGCustomerBundle:Representative')->findByIsBase(true) as $repr) 
+            $slip->addRepresentative($repr->__toString());
+    
+        $form = $this->get('form.factory')->create(SlipType::class, $slip, ['entity_manager' => $em]);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) 
         {
-            foreach($slip->getCustomer()->getRepresentatives() as $repr)
-                $slip->addRepresentative($repr->clone());
-            $em = $this->getDoctrine()->getManager();
             $em->persist($slip);
             $em->flush();
-
             return $this->redirectToRoute('BG_SlipBundle_labels', ['id' => $slip->getId()]);
         }
 
@@ -61,7 +61,7 @@ class SlipController extends Controller
             foreach($building->getServices() as $service)
             {
                 $service->setLabels(array());
-                for($i = 0, $count = count($slip->getRepresentatives()); $i < $count; $i++)
+                for($i = 0, $count = count($slip->getRepresentatives()); $i < $count; ++$i)
                     $service->addLabel('');
             }
 
@@ -71,6 +71,10 @@ class SlipController extends Controller
         {
             $em = $this->getDoctrine()->getManager();
             $em->persist($slip);
+
+            $quote = $em->getRepository('BGQuoteBundle:Quote')->find($slip->getQuoteId());
+            $quote->upgrade($slip);
+
             $em->flush();
 
             return $this->redirectToRoute('BG_SlipBundle_view', ['id' => $id]);

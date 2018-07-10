@@ -25,27 +25,28 @@
       </div>
 
       <div class="row justify-content-start small"><strong>FACTURE N°{{ bill.id }}</strong></div>
+      <br/>
       <table>
         <tbody>
           <tr>
-            <td class="small">Date</td>
-            <td class="small" align="center">{{ bill.creationDate|date('d-m-Y') }}</td>
+            <td class="small td-margin">Date</td>
+            <td class="small td-margin" align="center">{{ bill.creationDate|date('d-m-Y') }}</td>
           <tr>
           <tr>
-            <td class="small">Réf devis</td>
-            <td class="small" align="center">{{ bill.ref }}</td>
+            <td class="small td-margin">Réf devis</td>
+            <td class="small td-margin" align="center">{{ bill.ref }}</td>
           <tr>
           <tr>
-            <td class="small">Client</td>
-            <td class="small" align="center">{{ bill.customer }}</td>
+            <td class="small td-margin">Client</td>
+            <td class="small td-margin" align="center">{{ bill.customer }}</td>
           <tr>
           <tr>
-            <td class="small">ID CEE</td>
-            <td class="small" align="center">12332443</td>
+            <td class="small td-margin">ID CEE</td>
+            <td class="small td-margin" align="center">12332443</td>
           <tr>
           <tr>
-            <td class="small">Dossier</td>
-            <td class="small" align="center">{{ bill.name }}</td>
+            <td class="small td-margin">Dossier</td>
+            <td class="small td-margin" align="center">{{ bill.name }}</td>
           <tr>
         </tbody>
       </table>
@@ -71,9 +72,9 @@
 
               {% for service in bill.services %}
                     <tr>
-                        <td>{{ service.level }} {{ service.drawing }}</td>
-                        <td>{{ (service.billed) * 0.8 }}</td>
-                        <td>{{ (service.billed + (service.billed * bill.vat)) * 0.8 }}</td>
+                        <td>{{ service }}</td>
+                        <td class="td-size">{{ ((service.billed) * 0.8)|number_format(2, ',', ' ') }}</td>
+                        <td class="td-size">{{ ((service.billed + (service.billed * bill.vat)) * 0.8)|number_format(2, ',', ' ') }}</td>
                     </tr>
               {% endfor %}
 
@@ -94,16 +95,16 @@
 
                 {% for service in bill.services %}
                       <tr>
-                          <td>{{ service.level }} {{ service.drawing }}</td>
-                          <td>{{ (service.billed) * 0.2 }}</td>
-                          <td>{{ (service.billed + (service.billed * bill.vat)) * 0.2 }}</td>
+                          <td>{{ service }}</td>
+                          <td class="td-size">{{ ((service.billed) * 0.2)|number_format(2, ',', ' ') }}</td>
+                          <td class="td-size">{{ ((service.billed + (service.billed * bill.vat)) * 0.2)|number_format(2, ',', ' ') }}</td>
                       </tr>
                 {% endfor %}
 
                 <tr>
                   <td rowspan="4">
                     <p class="align-items-center" align="left">
-                      <strong>CONDITIONS DE PAIEMENT : PAR CHEQUE</strong></br>
+                      <strong>CONDITIONS DE PAIEMENT : PAR CHÈQUE</strong></br>
                       Nos factures sont payables au comptant net sans escompte.</br>
                       Les pénalités de retard sont égales à 1.5 fois le taux d’intérêt légal
                       </br>(conformément à la loi 92-1442 du 31/12/92)</br>
@@ -111,22 +112,22 @@
                     </p>
                   </td>
                   <td class="small"><strong>TOTAL HT</strong></td>
-                  <td>{{ totalet }}</td>
+                  <td>{{ totalet|number_format(2, ',', ' ') }} €</td>
                 </tr>
 
                 <tr>
                   <td class="small"><strong>TVA {{ bill.vat * 100 }} %</strong></td>
-                  <td>{{ vat }}</td>
+                  <td>{{ vat|number_format(2, ',', ' ') }} €</td>
                 </tr>
 
                 <tr>
                   <td class="small"><strong>TOTAL TTC</strong></td>
-                  <td>{{ totalet + vat }}</td>
+                  <td>{{ (totalet + vat)|number_format(2, ',', ' ') }} €</td>
                 </tr>
 
                 <tr>
                   <td class="small"><strong>NET A PAYER</strong></td>
-                  <td>{{ totalet + vat }}</td>
+                  <td>{{ (totalet + vat)|number_format(2, ',', ' ') }} €</td>
                 </tr>
 
               </tbody>

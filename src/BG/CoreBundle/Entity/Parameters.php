@@ -45,6 +45,13 @@ class Parameters
     private $vat;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="members", type="simple_array", nullable=false)
+     */
+    private $members;
+
+    /**
      * Constructor.
      *
      */
@@ -143,5 +150,34 @@ class Parameters
     public function getVat()
     {
         return $this->vat;
+    }
+
+    /**
+     * Set members.
+     *
+     * @param array|null $members
+     *
+     * @return Service
+     */
+    public function setMembers($members = null)
+    {
+        $this->members = $members;
+
+        return $this;
+    }
+
+    /**
+     * Get members.
+     *
+     * @return array|null
+     */
+    public function getMembers()
+    {
+        return $this->members;
+    }
+
+    public function addLabel(string $value)
+    {
+      $this->members[] = $value;
     }
 }

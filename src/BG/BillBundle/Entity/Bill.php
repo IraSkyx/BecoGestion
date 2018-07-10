@@ -22,11 +22,18 @@ class Bill
   private $id;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(name="ref", type="integer")
-   */
-  private $ref;
+    * @var int
+    *
+    * @ORM\Column(name="quote_id", type="integer")
+    */
+    private $quote_id;
+
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="ref", type="string", length=255)
+    */
+    private $ref;
 
   /**
    * @var string
@@ -79,9 +86,9 @@ class Bill
   private $status;
 
   /**
-   * @var Customer
+   * @var string
    *
-   * @ORM\ManyToOne(targetEntity="BG\CustomerBundle\Entity\Customer" , cascade={"persist", "remove"})
+   * @ORM\Column(name="customer", type="string", length=255)
    */
   private $customer;
 
@@ -103,9 +110,33 @@ class Bill
     }
 
     /**
+     * Set quote_id.
+     *
+     * @param int $quote_id
+     *
+     * @return Bill
+     */
+    public function setQuoteId($quote_id)
+    {
+        $this->quote_id = $quote_id;
+
+        return $this;
+    }
+
+    /**
+     * Get quote_id.
+     *
+     * @return int
+     */
+    public function getQuoteId()
+    {
+        return $this->quote_id;
+    }
+
+    /**
      * Set ref.
      *
-     * @param int $ref
+     * @param string $ref
      *
      * @return Bill
      */
@@ -119,7 +150,7 @@ class Bill
     /**
      * Get ref.
      *
-     * @return int
+     * @return string
      */
     public function getRef()
     {
@@ -269,7 +300,7 @@ class Bill
     {
         return $this->vat;
     }
-
+    
     /**
      * Set status.
      *
@@ -297,11 +328,11 @@ class Bill
     /**
      * Set customer.
      *
-     * @param \BG\CustomerBundle\Entity\Customer|null $customer
+     * @param string $customer
      *
      * @return Bill
      */
-    public function setCustomer(\BG\CustomerBundle\Entity\Customer $customer = null)
+    public function setCustomer($customer)
     {
         $this->customer = $customer;
 
@@ -311,7 +342,7 @@ class Bill
     /**
      * Get customer.
      *
-     * @return \BG\CoreBundle\Entity\Customer|null
+     * @return string
      */
     public function getCustomer()
     {

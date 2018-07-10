@@ -23,12 +23,20 @@ class QuoteType extends AbstractType
     {
         $builder
           ->add('name', TextType::class)
-          ->add('engRate', MoneyType::class)
-          ->add('drawRate', MoneyType::class)
-          ->add('vat', PercentType::class, [
-            'scale' => 2
+          ->add('engRate', MoneyType::class, [
+            'currency' => 'EUR',
+            'attr' => array('style' => 'height: 5em')
           ])
-          ->add('delay', NumberType::class)
+          ->add('drawRate', MoneyType::class, [
+            'attr' => array('style' => 'height: 5em')
+          ])
+          ->add('vat', PercentType::class, [
+            'scale' => 2,
+            'attr' => array('style' => 'height: 5em')
+          ])
+          ->add('delay', NumberType::class, [
+            'attr' => array('style' => 'height: 5em')
+          ])
           ->add('customer', Select2EntityType::class, array(
             'class' => '\BG\CustomerBundle\Entity\Customer',
             'multiple' => false,
@@ -42,11 +50,11 @@ class QuoteType extends AbstractType
             'placeholder' => 'Choisir un client'
           ))
           ->add('buildings', CollectionType::class, [
-          'entry_type'   => BuildingType::class,
-          'allow_add'    => true,
-          'allow_delete' => true,
-          'label' => false,
-          'prototype'    => true
+            'entry_type'   => BuildingType::class,
+            'allow_add'    => true,
+            'allow_delete' => true,
+            'label'        => false,
+            'prototype'    => true
           ])
           ->add('save',  SubmitType::class);
     }

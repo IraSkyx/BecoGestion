@@ -8,6 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\PercentType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ParametersType extends AbstractType
 {
@@ -22,8 +24,16 @@ class ParametersType extends AbstractType
         ->add('vat', PercentType::class, [
           'scale' => 2
         ])
+        ->add('members', CollectionType::class, [
+            'entry_type' => TextType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => false
+          ])
         ->add('save', SubmitType::class);
-    }/**
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)

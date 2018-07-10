@@ -10,18 +10,37 @@ use BG\BillBundle\Form\BillType;
 
 class BillController extends Controller
 {
-  public function indexAction()
+  public function indexAction(Request $request)
   {
-    return $this->render('@BGBill/home.html.twig', array(
-      'bills' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Bill')->findAllByStatus(array("En attente"))
-    ));
+    $pagination = $this->get('knp_paginator')->paginate(
+        $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Bill')->getFindAllByStatusQuery(["En attente de validation"]),
+        $request->query->getInt('page', 1),
+        10
+    );
+
+    return $this->render('@BGBill/home.html.twig', array('pagination' => $pagination));
   }
 
-  public function archivesAction()
+  public function archivesAction(Request $request)
   {
-    return $this->render('@BGBill/home.html.twig', array(
-      'bills' => $this->getDoctrine()->getManager()->getRepository('BGBillBundle:ArchivedBill')->findAllByStatus(array("Terminé"))
-    ));
+    $pagination = $this->get('knp_paginator')->paginate(
+        $this->getDoctrine()->getManager()->getRepository('BGBillBundle:ArchivedBill')->getFindAllByStatusQuery(["Terminé"]),
+        $request->query->getInt('page', 1),
+        10
+    );
+
+    return $this->render('@BGBill/home.html.twig', array('pagination' => $pagination));
+  }
+
+  public function pendingAction(Request $request)
+  {
+    $pagination = $this->get('knp_paginator')->paginate(
+        $this->getDoctrine()->getManager()->createQuery("SELECT b FROM BGBillBundle:ArchivedBill b WHERE b.isPaid = 0"),
+        $request->query->getInt('page', 1),
+        10
+    );
+
+    return $this->render('@BGBill/home.html.twig', array('pagination' => $pagination));
   }
 
   public function generateAction(int $id)
@@ -40,7 +59,7 @@ class BillController extends Controller
   {
     $em = $this->getDoctrine()->getManager();
     $bill = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Bill')->find($id);
-    $quote = $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->find($bill->getRef());
+    $quote = $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->find($bill->getQuoteId());
 
     if($bill->getStatus()->getMessage() == 'En attente')
     {
@@ -78,6 +97,17 @@ class BillController extends Controller
     ]);
   }
 
+  public function paidAction(int $id)
+  {
+    $bill = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:ArchivedBill')->find($id);
+    $bill->setIsPaid(true);
+    $bill->getStatus()->setType("success")->setMessage("Terminé");
+    
+    $this->getDoctrine()->getManager()->flush();
+
+    return $this->redirectToRoute('BG_BillBundle_archives');
+  }
+
   public function validateAction(int $id)
   {
     $bill = $this->getDoctrine()->getManager()->getRepository('BGBillBundle:Bill')->find($id);
@@ -88,9 +118,9 @@ class BillController extends Controller
       $archivedBill = new ArchivedBill($bill);
       $em = $this->getDoctrine()->getManager();
       $em->persist($archivedBill);
+      $em->remove($bill);
       $em->flush();
     }
-
     return $this->redirectToRoute('BG_BillBundle');
   }
 

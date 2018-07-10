@@ -51,7 +51,8 @@
         <thead>
           <tr>
             <!-- First column header is not rotated -->
-            <th class="th-border">DÉSIGNATION</th>
+            <th>DÉSIGNATION</th>
+            <th class="th-max">INDICE</th>
             <!-- Following headers are rotated -->
             {% for representative in slip.representatives %}
               <th class="column criterion rotate-45"><div><span>{{ representative }}</span></div></th>
@@ -63,6 +64,7 @@
             {% for service in building.services %}
               <tr>
                 <td class="row-header small">{{ service }}</td>
+                <td class="th-max small">{{ service.grade|index }}</td>
                 {% for label in service.labels %}
                     <td>{{ label }}</td>
                 {% endfor %}
@@ -76,15 +78,7 @@
 
     <div class="break">
       <p class="row justify-content-center"><u>E : documents envoyés par mail</u></p>
-
-      <p class="row"><u>Documents transmis par courrier à :</u></p>
-
-      {% for representative in slip.representatives %}
-        {% if representative.isBase == false %}
-          <p class="row"> {{ representative }} :  </p>
-        {% endif %}
-      {% endfor %}
-
+      <br/>
       <p class="row">Vous remerciant de votre confiance, veuillez agréer, Messieurs, l’expression de nos sentiments distingués.</p>
     </div>
 

@@ -1,5 +1,16 @@
 {% extends "BGCoreBundle::layout.html.twig" %}
 
+{% import _self as formMacros %}
+{% macro printRepresentativePrototype(representative) %}
+    <div class="w-25 row js-services-item justify-content-center">
+        <div class="col-md-9 align-self-center" align="center">
+            {{ form_errors(representative) }}
+            {{ form_widget(representative) }}
+        </div>
+        <div class="col-md-3 align-self-center" align="center"><a class="js-remove-services" href="#"><i class="fa fa-times" style="color:red;"></i></a></div>
+    </div>
+{% endmacro %}
+
 {% block body %}
 
   <div class="container-fluid card wizard-card" data-color="blue">
@@ -14,8 +25,13 @@
           {{ form_row(form.followedBy) }}
         </div>
         <hr>
-        <div class="row justify-content-center">
-          {{ form_row(form.representatives) }}
+        <div class="js-services-wrapper d-flex flex-wrap justify-content-center" data-prototype="{{ formMacros.printRepresentativePrototype(form.representatives.vars.prototype)|e('html_attr') }}" data-index="{{ form.representatives|length }}">
+            {% for representative in form.representatives %}
+              {{ formMacros.printRepresentativePrototype(representative) }}
+            {% endfor %}
+            <div class="row justify-content-center">
+                <a class="a-white btn btn-success js-services-add" href="#"><i class="fa fa-plus-circle"></i> Ajouter un récepteur</a>
+            </div>
         </div>
       </div>
       <div class="form-group" align="center">{{ form_widget(form.save, {'attr': {'class': 'btn-info'}}) }}</div>

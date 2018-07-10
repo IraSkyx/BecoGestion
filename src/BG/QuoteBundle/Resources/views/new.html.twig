@@ -4,13 +4,13 @@
 {% macro printPrototype(building, nbBuilding) %}
     <div class="js-services-item">
         <div class="row align-items-center">
-          <div class="col-md-8">
+          <div class="col-sm-8">
             <legend class="col-form-legend required">Bâtiment N°{{ building.num.vars.value }}</legend>
           </div>
-          <div class="col-md-2">
+          <div class="col-sm-2">
             <a class="small" id="showAll" data-attribute="{{ (building.num.vars.value|number_format) - 1 }}" href="#"><i class="fa fa-filter" aria-hidden="true"></i> Tout montrer</a>
           </div>  
-          <div class="col-md-2">
+          <div class="col-sm-2">
             <a class="small" id="hideAll" data-attribute="{{ (building.num.vars.value|number_format) - 1 }}" href="#"><i class="fa fa-filter" aria-hidden="true"></i> Tout cacher</a>
           </div>
         </div>

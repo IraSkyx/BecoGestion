@@ -1,4 +1,5 @@
 services:
-#    bg_quote.example:
-#        class: BG\QuoteBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  bg_quote.twig.index_extension:
+    class: BG\QuoteBundle\Twig\IndexExtension
+    tags:
+      -  { name: twig.extension }

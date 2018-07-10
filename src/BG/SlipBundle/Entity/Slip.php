@@ -26,7 +26,14 @@ class Slip
     /**
      * @var int
      *
-     * @ORM\Column(name="ref", type="integer")
+     * @ORM\Column(name="quote_id", type="integer")
+     */
+    private $quote_id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ref", type="string", length=255)
      */
     private $ref;
 
@@ -59,13 +66,6 @@ class Slip
     private $date;
 
     /**
-     * @var Customer
-     *
-     * @ORM\ManyToOne(targetEntity="BG\CustomerBundle\Entity\Customer")
-     */
-    private $customer;
-
-    /**
      * @var Building
      *
      * @ORM\ManyToMany(targetEntity="BG\QuoteBundle\Entity\Building", cascade={"persist", "remove"})
@@ -73,10 +73,9 @@ class Slip
     private $buildings;
 
     /**
-     * @var Representative
+     * @var string|null
      *
-     * @ORM\ManyToMany(targetEntity="BG\CustomerBundle\Entity\Representative", cascade={"persist"})
-     * @ORM\OrderBy({"isBase" = "ASC"})
+     * @ORM\Column(name="representatives", type="simple_array", nullable=true)
      */
     private $representatives;
 
@@ -87,7 +86,7 @@ class Slip
     {
       $this->date = new \Datetime('NOW');
       $this->buildings = new \Doctrine\Common\Collections\ArrayCollection();
-      $this->representatives = new \Doctrine\Common\Collections\ArrayCollection();
+      $this->representatives = array();
     }
 
     /**
@@ -96,26 +95,22 @@ class Slip
     public static function fromQuote(\BG\QuoteBundle\Entity\Quote $quote)
     {
       $slip = new Slip();
-      $slip->ref = $quote->getId();
+      $slip->quote_id = $quote->getId();
+      $slip->ref = $quote->getRef();
       $slip->companyName = $quote->getCustomer()->getCompanyName();
       $slip->quoteName = $quote->getName();
-      $slip->customer = $quote->getCustomer();
 
       foreach($quote->getBuildings() as $building)
       {
         $build = Building::cloneNoServices($building);
         foreach($building->getServices() as $service)
-        {
-          if($service->getIsUsed())
-          {
-            $build->addService($service);
-          }
-        }
+            if($service->getIsUsed())
+                $build->addService($service->clone());
         $slip->addBuilding($build);
       }
 
       foreach($quote->getCustomer()->getRepresentatives() as $representative)
-        $slip->addRepresentative($representative);
+        $slip->addRepresentative($representative->__toString());
 
       return $slip;
     }
@@ -131,9 +126,33 @@ class Slip
     }
 
     /**
+     * Set quote_id.
+     *
+     * @param int $quote_id
+     *
+     * @return Slip
+     */
+    public function setQuoteId($quote_id)
+    {
+        $this->quote_id = $quote_id;
+
+        return $this;
+    }
+
+    /**
+     * Get quote_id.
+     *
+     * @return int
+     */
+    public function getQuoteId()
+    {
+        return $this->quote_id;
+    }
+
+    /**
      * Set ref.
      *
-     * @param int $ref
+     * @param string $ref
      *
      * @return Slip
      */
@@ -147,7 +166,7 @@ class Slip
     /**
      * Get ref.
      *
-     * @return int
+     * @return string
      */
     public function getRef()
     {
@@ -251,30 +270,6 @@ class Slip
     }
 
     /**
-     * Set customer.
-     *
-     * @param \BG\CustomerBundle\Entity\Customer $customer
-     *
-     * @return Slip
-     */
-    public function setCustomer(\BG\CustomerBundle\Entity\Customer $customer)
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    /**
-     * Get customer.
-     *
-     * @return \BG\CustomerBundle\Entity\Customer
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
-    }
-
-    /**
      * Add building.
      *
      * @param \BG\QuoteBundle\Entity\Building $building
@@ -311,38 +306,31 @@ class Slip
     }
 
     /**
-     * Add representative.
+     * Set representatives.
      *
-     * @param \BG\CustomerBundle\Entity\Representative $representative
+     * @param array|null $representatives
      *
-     * @return Slip
+     * @return Service
      */
-    public function addRepresentative(\BG\CustomerBundle\Entity\Representative $representative)
+    public function setRepresentatives($representatives = null)
     {
-        $this->representatives[] = $representative;
+        $this->representatives = $representatives;
 
         return $this;
     }
 
     /**
-     * Remove representative.
-     *
-     * @param \BG\CustomerBundle\Entity\Representative $representative
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeRepresentative(\BG\CustomerBundle\Entity\Representative $representative)
-    {
-        return $this->representatives->removeElement($representative);
-    }
-
-    /**
      * Get representatives.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array|null
      */
     public function getRepresentatives()
     {
         return $this->representatives;
+    }
+
+    public function addRepresentative(string $value)
+    {
+      $this->representatives[] = $value;
     }
 }

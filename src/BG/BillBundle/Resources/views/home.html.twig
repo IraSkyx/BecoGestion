@@ -29,13 +29,13 @@
         </thead>
         <tbody>
 
-          {% for bill in bills %}
+          {% for bill in pagination.items %}
                 <tr>
                     <td>{{ bill.id }}</td>
 
                     <td><button type="button" class="btn btn-{{ bill.status.type}}">{{ bill.status.message }}</button></td>
 
-                    <td>{{ bill.customer.companyName }}</td>
+                    <td>{{ bill.customer }}</td>
 
                     <td>{{ bill.creationDate|date('d-m-Y')  }}</td>
 
@@ -56,6 +56,10 @@
 
         </tbody>
       </table>
+  </div>
+
+  <div class="navigation">
+      {{ knp_pagination_render(pagination) }}
   </div>
 
   {{ parent() }}

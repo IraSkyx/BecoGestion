@@ -1,5 +1,1 @@
-services:
-    bg_corebundle.index:
-        class: BG\CoreBundle\Twig\Extension\IndexExtension
-        tags:
-          - { name: twig.extension }
+

@@ -8,11 +8,15 @@ use BG\CoreBundle\Form\ParametersType;
 
 class CoreController extends Controller
 {
-  public function indexAction()
+  public function indexAction(Request $request)
   {
-    return $this->render('@BGCore/home.html.twig', [
-      "quotes" => $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->findAllByStatus(array("En attente", "En cours"))
-    ]);
+    $pagination = $this->get('knp_paginator')->paginate(
+        $this->getDoctrine()->getManager()->getRepository('BGQuoteBundle:Quote')->getFindAllByStatusQuery(["En attente", "En cours"]),
+        $request->query->getInt('page', 1),
+        10
+    );
+
+    return $this->render('@BGCore/home.html.twig', array('pagination' => $pagination));
   }
 
   public function settingsAction(Request $request)
